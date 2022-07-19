@@ -5,7 +5,7 @@ const ANIMATION_MINIMUM_STEP_TIME = 100;
 
 export interface FlowingBalanceProps {
     balance: string;
-    balanceTimestamp: number;
+    balanceTimestamp: number | undefined;
     flowRate: string;
 }
 
@@ -74,7 +74,7 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
 
     return (
         <div>
-            <p>DAI balance: {formattedBalance}</p>
+            <p>AQUA0 balance: {formattedBalance}</p>
         </div>
     );
 };
