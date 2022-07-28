@@ -9,6 +9,7 @@ import FlowingBalance from "../components/FlowingBalance";
 import Header from "../components/Header";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
 import UpgradeWidget from "../components/widgets/UpgradeWidget";
+import DowngradeWidget from "../components/widgets/DowngradeWidget";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
@@ -84,6 +85,7 @@ const Home: NextPage = () => {
             <main className="flex flex-col items-center h-full text-white">
                 <CreateStreamWidget />
                 <UpgradeWidget />
+                <DowngradeWidget />
 
                 {balanceWei && balanceTimestamp && flowRateWei && (
                     <FlowingBalance
