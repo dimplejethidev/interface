@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Image from "next/image";
+import logo from "./../public/aqueduct-logo.png";
 
 const navItems: { label: string; page: string }[] = [
     { label: "Swap", page: "/" },
@@ -13,7 +15,7 @@ const Header = () => {
     const router = useRouter();
 
     return (
-        <header className="flex flex-row justify-between h-32 w-full">
+        <header className="flex flex-row justify-between h-20 w-full">
             <Head>
                 <title>Aqueduct</title>
                 <meta
@@ -22,8 +24,15 @@ const Header = () => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="p-1 border-solid border-teal-400 border-2">
-                <h1 className="text-3xl font-bold">Aqueduct</h1>
+            <div className="flex flex-row justify-between items-center p-3">
+                <h1 className="text-3xl font-bold pr-3">Aqueduct</h1>
+                <Image
+                    src={logo}
+                    alt="Aqueduct logo"
+                    layout="fixed"
+                    width="50px"
+                    height="50px"
+                />
             </div>
             <ul className="flex justify-between items-center h-9 w-100 p-3 m-2 bg-gray-800 rounded-2xl">
                 {navItems.map(({ label, page }) => (
