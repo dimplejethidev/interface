@@ -9,7 +9,6 @@ interface DowngradeProps {
 const Downgrade: NextPage<DowngradeProps> = ({ account }) => (
     <div>
         <Header account={account} />
-
         <DowngradeWidget />
     </div>
 );

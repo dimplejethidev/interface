@@ -4,13 +4,15 @@ import { Framework } from "@superfluid-finance/sdk-core";
 
 import FlowingBalance from "./FlowingBalance";
 import { useBalance } from "../context/balanceContext";
-import { useAccount } from "../context/accountContext";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
-const AccountBalance = () => {
+interface AccountBalanceProps {
+    account: string;
+}
+
+const AccountBalance = ({ account }: AccountBalanceProps) => {
     const { balance, updateBalance } = useBalance();
-    const { account } = useAccount();
 
     const getFlowInfo = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -24,7 +26,7 @@ const AccountBalance = () => {
 
         const accountFlowInfo = await superfluid.cfaV1.getAccountFlowInfo({
             superToken: "0x6130677802D32e430c72DbFdaf90d6d058137f0F", // gets the opposite token to the one I swapped. TODO: this needs to be dynamic
-            account: account.address,
+            account: account,
             providerOrSigner: provider,
         });
         console.log("Account flow info: ", accountFlowInfo);
