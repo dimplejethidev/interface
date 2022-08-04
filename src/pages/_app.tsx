@@ -67,11 +67,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         const { ethereum } = window;
         if (!ethereum) {
             console.log("Ethereum object not found");
+            showToast(ToastType.Error);
+            return;
         }
 
         try {
             const accounts = await ethereum.request({
-                method: "eth_requedstAccounts",
+                method: "eth_requestAccounts",
             });
 
             setAccount(accounts[0]);
