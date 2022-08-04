@@ -4,15 +4,17 @@ import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
 
-const Home: NextPage = () => {
+interface SwapProps {
+    account: string;
+}
+
+const Swap: NextPage<SwapProps> = ({ account }) => {
     return (
         <div>
-            <Header />
-            <main className="flex flex-col items-center h-full text-white">
-                <CreateStreamWidget />
-            </main>
+            <Header account={account} />
+            <CreateStreamWidget />
         </div>
     );
 };
 
-export default Home;
+export default Swap;

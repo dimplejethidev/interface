@@ -2,9 +2,14 @@ import type { NextPage } from "next";
 import Header from "../components/Header";
 import DowngradeWidget from "../components/widgets/DowngradeWidget";
 
-const Downgrade: NextPage = () => (
+interface DowngradeProps {
+    account: string;
+}
+
+const Downgrade: NextPage<DowngradeProps> = ({ account }) => (
     <div>
-        <Header />
+        <Header account={account} />
+
         <DowngradeWidget />
     </div>
 );

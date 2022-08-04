@@ -11,8 +11,13 @@ const navItems: { label: string; page: string }[] = [
     { label: "Downgrade", page: "/downgrade" },
 ];
 
-const Header = () => {
+interface HeaderProps {
+    account: string;
+}
+
+const Header = ({ account }: HeaderProps) => {
     const router = useRouter();
+    const accountTruncated = account.substring(0, 5) + "...";
 
     return (
         <header className="flex flex-row justify-between h-20 w-full">
@@ -48,7 +53,10 @@ const Header = () => {
                     </li>
                 ))}
             </ul>
-            <div className="p-1">Address: 0x123...</div>
+            <div className="p-1">
+                Address:{" "}
+                {accountTruncated === "" ? "0x123..." : accountTruncated}
+            </div>
         </header>
     );
 };
