@@ -30,17 +30,24 @@ const ToastMessage = ({ toastList, position, setList }: ToastMessageProps) => {
 
     // TODO: add styles to toast message
     return (
-        <div>
+        <div className="fixed z-10 bottom-8 right-4 animate-toast-in-right">
             {toastList.map((toast, index) => (
                 <div
                     key={index}
-                    className="toast-notification"
+                    className="h-20 w-88 p-4 mb-4 rounded-2xl text-white shadow-md opacity-90 hover:shadow-none hover:opacity-100 transition ease delay-300 animate-toast-in-right"
                     style={{ backgroundColor: toast.backgroundColor }}
                 >
-                    <button onClick={() => deleteToast(toast.id)}>X</button>
+                    <button
+                        className="float-right bg-none border-none text-white opacity-80 cursor-pointer"
+                        onClick={() => deleteToast(toast.id)}
+                    >
+                        X
+                    </button>
                     <div>
-                        <p>{toast.title}</p>
-                        <p>{toast.description}</p>
+                        <p className="font-bold text-left mt-0 mb-2 w-72 h-4">
+                            {toast.title}
+                        </p>
+                        <p className="m-0 text-left">{toast.description}</p>
                     </div>
                 </div>
             ))}

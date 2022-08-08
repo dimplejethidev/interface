@@ -73,7 +73,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         try {
             const accounts = await ethereum.request({
-                method: "eth_requestAccounts",
+                method: "eth_requostAccounts",
             });
 
             setAccount(accounts[0]);
