@@ -17,7 +17,7 @@ interface HeaderProps {
 
 const Header = ({ account }: HeaderProps) => {
     const router = useRouter();
-    const accountTruncated = account.substring(0, 5) + "...";
+    const accountTruncated = account.slice(0, 6) + "..." + account.slice(-4);
 
     return (
         <header className="flex flex-row justify-between h-20 w-full">
