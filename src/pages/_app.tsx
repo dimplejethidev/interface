@@ -73,7 +73,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         try {
             const accounts = await ethereum.request({
-                method: "eth_requostAccounts",
+                method: "eth_requestAccounts",
             });
 
             setAccount(accounts[0]);
@@ -90,7 +90,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div className={`w-full h-screen text-white ${tailwindGradient}`}>
             <BalanceProvider>
-                <Component {...pageProps} account={account} />
+                {account ? (
+                    <Component {...pageProps} account={account} />
+                ) : (
+                    <div className="h-full w-full flex justify-center items-center">
+                        <button
+                            onClick={connectWallet}
+                            className="w-100 h-12 p-2 border-none rounded-2xl bg-gradient-to-r from-sky-400 to-blue-500"
+                        >
+                            Connect Wallet
+                        </button>
+                    </div>
+                )}
                 <ToastMessage
                     toastList={list}
                     position="button-right"
