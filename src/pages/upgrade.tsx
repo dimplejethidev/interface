@@ -5,6 +5,7 @@ import UpgradeWidget from "../components/widgets/UpgradeWidget";
 interface UpgradeProps {
     account: string;
 }
+
 const Upgrade: NextPage<UpgradeProps> = ({ account }) => (
     <div>
         <Header account={account} />

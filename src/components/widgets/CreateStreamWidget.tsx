@@ -8,9 +8,8 @@ import WidgetContainer from "../WidgetContainer";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
-const SUPER_APP_ADDRESS = "0x35aE4f514a374900Ee47c489129C7d98739F9Aeb";
-const AQUEDUCT_TOKEN0_ADDRESS = "0x6130677802D32e430c72DbFdaf90d6d058137f0F";
-const AQUEDUCT_TOKEN1_ADDRESS = "0x9103E14E3AaF4E136BFe6AF1Bf2Aeff8fc5b99b9";
+const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
+const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
 
 const CreateStreamWidget = () => {
     const [address, setAddress] = useState("");
@@ -31,7 +30,7 @@ const CreateStreamWidget = () => {
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: address,
                 flowRate: swapFlowRate,
-                superToken: AQUEDUCT_TOKEN1_ADDRESS,
+                superToken: AQUEDUCT_TOKEN0_ADDRESS || "",
             });
             const result = await createFlowOperation.exec(signer);
             await result.wait();

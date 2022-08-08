@@ -8,26 +8,30 @@ import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
-const FDAI_ADDRESS = "0x88271d333C72e51516B67f5567c728E702b3eeE8";
-const AQUEDUCT_TOKEN0_ADDRESS = "0x6130677802D32e430c72DbFdaf90d6d058137f0F";
-const AQUEDUCT_TOKEN1_ADDRESS = "0x9103E14E3AaF4E136BFe6AF1Bf2Aeff8fc5b99b9";
+const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
+const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
+const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
 const DAI_ABI = DAIABI;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
 
 const DowngradeWidget = () => {
     const [amount, setAmount] = useState("");
+    console.log(FDAI_ADDRESS);
+    console.log(AQUEDUCT_TOKEN0_ADDRESS);
+    console.log(AQUEDUCT_TOKEN1_ADDRESS);
 
+    // TODO: Add dropdown for two AQUA tokens (AQUA0 & AQUA1)
     const downgrade = async (amount: string) => {
         try {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const daiContract = new ethers.Contract(
-                FDAI_ADDRESS,
+                FDAI_ADDRESS || "",
                 DAI_ABI,
                 signer
             );
             const aqueductToken = new ethers.Contract(
-                AQUEDUCT_TOKEN0_ADDRESS,
+                AQUEDUCT_TOKEN0_ADDRESS || "",
                 AQUEDUCT_TOKEN_ABI,
                 signer
             );
