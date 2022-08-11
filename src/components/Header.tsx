@@ -52,7 +52,7 @@ const Header = ({ account }: HeaderProps) => {
                     </li>
                 ))}
             </ul>
-            <div className="flex items-center h-10 px-4 bg-gray-800 rounded-2xl">
+            <div className="flex items-center h-9 px-4 bg-gray-800 rounded-2xl">
                 Address:{" "}
                 {account === ""
                     ? "0x123..."
