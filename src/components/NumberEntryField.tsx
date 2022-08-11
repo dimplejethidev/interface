@@ -18,7 +18,7 @@ const NumberEntryField = ({
                 className="h-20 text-2xl w-full pt-6 font-semibold bg-white/5 rounded-2xl px-4 numbers-font-2 text-white"
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
-                placeholder="0.0"
+                placeholder="0"
                 value={number}
                 onChange={(e) => {
                     if (e.target.value.match("^[0-9]*[.]?[0-9]*$") != null) {
