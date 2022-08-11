@@ -91,7 +91,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <div className={`w-full h-screen text-white ${tailwindGradient}`}>
             <BalanceProvider>
                 {account ? (
-                    <Component {...pageProps} account={account} />
+                    <Component
+                        {...pageProps}
+                        account={account}
+                        showToast={showToast}
+                    />
                 ) : (
                     <div className="h-full w-full flex justify-center items-center">
                         <button

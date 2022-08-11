@@ -5,18 +5,26 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import AddressEntryField from "../AddressEntryField";
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "../WidgetContainer";
+import ToastType from "../../types/toastType";
+import LoadingSpinner from "../LoadingSpinner";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
 const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
 
-const CreateStreamWidget = () => {
+interface CreateStreamWidgetProps {
+    showToast: (type: ToastType) => {};
+}
+
+const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const [address, setAddress] = useState("");
     const [swapFlowRate, setSwapFlowRate] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const swap = async () => {
         try {
+            setLoading(true);
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const chainId = await window.ethereum.request({
@@ -36,8 +44,12 @@ const CreateStreamWidget = () => {
             await result.wait();
 
             console.log("Stream created: ", result);
+            showToast(ToastType.Success);
+            setLoading(false);
         } catch (error) {
             console.log("Error: ", error);
+            showToast(ToastType.Error);
+            setLoading(false);
         }
     };
 
@@ -55,12 +67,18 @@ const CreateStreamWidget = () => {
                     setNumber={setSwapFlowRate}
                 />
 
-                <button
-                    className="h-14 bg-blue-500 font-bold rounded-2xl hover:outline outline-2 text-white"
-                    onClick={() => swap()}
-                >
-                    Swap
-                </button>
+                {loading ? (
+                    <div className="flex justify-center items-center h-14 bg-blue-500 rounded-2xl outline-2">
+                        <LoadingSpinner />
+                    </div>
+                ) : (
+                    <button
+                        className="h-14 bg-blue-500 font-bold rounded-2xl hover:outline outline-2 text-white"
+                        onClick={() => swap()}
+                    >
+                        Swap
+                    </button>
+                )}
             </WidgetContainer>
         </section>
     );
