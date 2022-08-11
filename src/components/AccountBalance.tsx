@@ -25,7 +25,7 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
         });
 
         const accountFlowInfo = await superfluid.cfaV1.getAccountFlowInfo({
-            superToken: "0x6130677802D32e430c72DbFdaf90d6d058137f0F", // gets the opposite token to the one I swapped. TODO: this needs to be dynamic
+            superToken: "0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00", // TODO: this needs to be dynamic
             account: account,
             providerOrSigner: provider,
         });
@@ -43,12 +43,16 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
         getFlowInfo();
     }, [account]);
 
+    // TODO: loop over user pool interactions and display each stream here
     return (
-        <FlowingBalance
-            balance={balance.balanceWei}
-            balanceTimestamp={balance.balanceTimestamp}
-            flowRate={balance.flowRateWei}
-        />
+        <div className="flex flex-col justify-start items-center w-full max-w-lg mt-12 pt-4 pb-8 space-y-2 rounded-3xl bg-gray-800">
+            <h3>Swaps</h3>
+            <FlowingBalance
+                balance={balance.balanceWei}
+                balanceTimestamp={balance.balanceTimestamp}
+                flowRate={balance.flowRateWei}
+            />
+        </div>
     );
 };
 

@@ -70,11 +70,14 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
     }, [balance, balanceTimestamp, flowRate]);
 
     // Assumes the token has 18 decimals
-    const formattedBalance = ethers.utils.formatEther(weiValue);
+    const formattedBalance = ethers.utils.formatEther(weiValue).substring(0, 8);
 
     return (
-        <div>
-            <p>AQUA0 balance: {formattedBalance}</p>
+        <div className="flex justify-center items-center h-14 w-full bg-white/5 hover:bg-white/20 font-bold">
+            <p className="font-bold text-xl">
+                {formattedBalance}{" "}
+                <span className="font-light text-sm text-blue-200">fDAIx</span>
+            </p>
         </div>
     );
 };
