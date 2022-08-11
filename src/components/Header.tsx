@@ -19,7 +19,7 @@ const Header = ({ account }: HeaderProps) => {
     const router = useRouter();
 
     return (
-        <header className="flex flex-row justify-between h-20 w-full">
+        <header className="flex flex-row justify-between items-center h-20 px-4 w-full">
             <Head>
                 <title>Aqueduct</title>
                 <meta
@@ -28,7 +28,7 @@ const Header = ({ account }: HeaderProps) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="flex flex-row justify-between items-center p-3">
+            <div className="flex flex-row justify-between items-center">
                 <h1 className="text-3xl font-bold pr-3">Aqueduct</h1>
                 <Image
                     src={logo}
@@ -38,11 +38,11 @@ const Header = ({ account }: HeaderProps) => {
                     height="50px"
                 />
             </div>
-            <ul className="flex justify-between items-center h-9 w-100 p-3 m-2 bg-gray-800 rounded-2xl">
+            <ul className="flex justify-between items-center h-9 w-100 px-1 bg-gray-800 rounded-2xl">
                 {navItems.map(({ label, page }) => (
                     <li
                         key={label}
-                        className={`rounded-2xl px-2 py-0.5 ${
+                        className={`rounded-xl px-2 py-0.5 ${
                             router.asPath === page ? "bg-white text-black" : ""
                         }`}
                     >
@@ -52,7 +52,7 @@ const Header = ({ account }: HeaderProps) => {
                     </li>
                 ))}
             </ul>
-            <div className="p-1">
+            <div className="flex items-center h-10 px-4 bg-gray-800 rounded-2xl">
                 Address:{" "}
                 {account === ""
                     ? "0x123..."

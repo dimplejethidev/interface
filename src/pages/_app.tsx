@@ -14,8 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     const [list, setList] = useState<Toast[]>([]);
     let toastProperties: Toast;
 
-    const tailwindGradient =
-        "bg-gradient-to-t from-gray-200 via-gray-400 to-gray-600";
+    const tailwindGradient = "bg-gradient-to-t from-blue-500 to-blue-600";
 
     const showToast = (type: ToastType) => {
         switch (type) {
