@@ -54,7 +54,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     };
 
     return (
-        <section className="flex flex-col items-center w-full text-white">
+        <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
                 <AddressEntryField
                     title="Address"
@@ -68,12 +68,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 />
 
                 {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-blue-500 rounded-2xl outline-2">
+                    <div className="flex justify-center items-center h-14 bg-gradient-to-t from-sky-500 to-blue-500 text-white rounded-2xl outline-2">
                         <LoadingSpinner />
                     </div>
                 ) : (
                     <button
-                        className="h-14 bg-blue-500 font-bold rounded-2xl hover:outline outline-2 text-white"
+                        className="h-14 bg-gradient-to-t from-sky-500 to-blue-500 text-white font-bold rounded-2xl hover:outline outline-2"
                         onClick={() => swap()}
                     >
                         Swap

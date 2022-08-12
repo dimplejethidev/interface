@@ -73,10 +73,10 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
     const formattedBalance = ethers.utils.formatEther(weiValue).substring(0, 8);
 
     return (
-        <div className="flex justify-center items-center h-14 w-full bg-white/5 hover:bg-white/20 font-bold">
+        <div className="flex justify-center items-center h-14 w-full bg-black/10 hover:bg-black/20 font-bold">
             <p className="font-bold text-xl">
                 {formattedBalance}{" "}
-                <span className="font-light text-sm text-blue-200">fDAIx</span>
+                <span className="font-light text-sm text-blue-500">fDAIx</span>
             </p>
         </div>
     );

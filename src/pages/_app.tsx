@@ -14,8 +14,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     const [list, setList] = useState<Toast[]>([]);
     let toastProperties: Toast;
 
-    const tailwindGradient = "bg-gradient-to-t from-blue-500 to-blue-600";
-
     const showToast = (type: ToastType) => {
         switch (type) {
             case ToastType.Success:
@@ -87,7 +85,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     }, []);
 
     return (
-        <div className={`w-full h-screen text-white ${tailwindGradient}`}>
+        <div className="w-full h-screen text-slate-500 bg-gradient-to-t from-sky-400 to-blue-500">
             <BalanceProvider>
                 {account ? (
                     <Component

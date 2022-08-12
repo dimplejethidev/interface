@@ -45,14 +45,18 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
 
     // TODO: loop over user pool interactions and display each stream here
     return (
-        <section className="flex flex-col items-center w-full">
-            <div className="flex flex-col w-full max-w-lg pt-4 pb-8 space-y-2 rounded-3xl bg-gray-800">
+        <section className="flex flex-col items-center w-full mt-12">
+            <div className="flex flex-col w-full max-w-lg pt-4 pb-8 space-y-2 rounded-3xl bg-white">
                 <p className="flex font-bold pb-2 pl-3">Swaps</p>
-                <FlowingBalance
-                    balance={balance.balanceWei}
-                    balanceTimestamp={balance.balanceTimestamp}
-                    flowRate={balance.flowRateWei}
-                />
+                {balance.balanceWei &&
+                    balance.balanceTimestamp &&
+                    balance.flowRateWei && (
+                        <FlowingBalance
+                            balance={balance.balanceWei}
+                            balanceTimestamp={balance.balanceTimestamp}
+                            flowRate={balance.flowRateWei}
+                        />
+                    )}
             </div>
         </section>
     );
