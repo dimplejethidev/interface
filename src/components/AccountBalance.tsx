@@ -25,7 +25,7 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
         });
 
         const accountFlowInfo = await superfluid.cfaV1.getAccountFlowInfo({
-            superToken: "0xF2d68898557cCb2Cf4C10c3Ef2B034b2a69DAD00", // TODO: this needs to be dynamic
+            superToken: "0xC0645f9306d5c26E2b890e87DF2Fb40Eaf122E56", // TODO: this needs to be dynamic
             account: account,
             providerOrSigner: provider,
         });
@@ -41,7 +41,7 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
 
     useEffect(() => {
         getFlowInfo();
-    }, [account]);
+    }, []);
 
     // TODO: loop over user pool interactions and display each stream here
     return (
@@ -49,14 +49,16 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
             <div className="flex flex-col w-full max-w-lg pt-4 pb-8 space-y-2 rounded-3xl bg-white">
                 <p className="flex font-bold pb-2 pl-3">Swaps</p>
                 {balance.balanceWei &&
-                    balance.balanceTimestamp &&
-                    balance.flowRateWei && (
-                        <FlowingBalance
-                            balance={balance.balanceWei}
-                            balanceTimestamp={balance.balanceTimestamp}
-                            flowRate={balance.flowRateWei}
-                        />
-                    )}
+                balance.balanceTimestamp &&
+                balance.flowRateWei ? (
+                    <FlowingBalance
+                        balance={balance.balanceWei}
+                        balanceTimestamp={balance.balanceTimestamp}
+                        flowRate={balance.flowRateWei}
+                    />
+                ) : (
+                    <p className="pl-3">No swaps in progress</p>
+                )}
             </div>
         </section>
     );

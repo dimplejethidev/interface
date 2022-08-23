@@ -18,7 +18,7 @@ interface CreateStreamWidgetProps {
 }
 
 const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
-    const [address, setAddress] = useState("");
+    const [pool, setPool] = useState("");
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -36,7 +36,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             });
 
             const createFlowOperation = superfluid.cfaV1.createFlow({
-                receiver: address,
+                receiver: pool,
                 flowRate: swapFlowRate,
                 superToken: AQUEDUCT_TOKEN0_ADDRESS || "",
             });
@@ -58,8 +58,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             <WidgetContainer title="Swap">
                 <AddressEntryField
                     title="Address"
-                    address={address}
-                    setAddress={setAddress}
+                    address={pool}
+                    setAddress={setPool}
                 />
                 <NumberEntryField
                     title="FlowRate ( wei / sec )"
