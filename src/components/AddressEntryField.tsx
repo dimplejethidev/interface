@@ -1,3 +1,6 @@
+import Dropdown from "./Dropdown";
+import { Token } from "../types/Token";
+
 interface AddressEntryFieldProps {
     title: string;
     address: string;
@@ -10,18 +13,18 @@ const AddressEntryField = ({
     setAddress,
 }: AddressEntryFieldProps) => {
     return (
-        <div className="bg-black/5 rounded-2xl">
-            <div className="absolute pl-4 pt-3 text-xs font-semibold">
-                {title}
+        <div>
+            <div className="absolute pl-4 pt-5 text-xs font-semibold">
+                Outbound token
             </div>
-            <input
-                className="h-20 text-2xl w-full pt-6 font-semibold bg-black/5 rounded-2xl px-4 numbers-font-2"
-                type="text"
-                placeholder="ex: 0xabc123..."
-                value={address}
-                onChange={(e) => {
-                    setAddress(e.target.value);
-                }}
+            <Dropdown
+                dropdownItems={[Token.ETHxp, Token.fDAIxp]}
+            />
+            <div className="absolute pl-4 pt-5 text-xs font-semibold">
+                Inbound token
+            </div>
+            <Dropdown
+                dropdownItems={[Token.fDAIxp, Token.ETHxp]}
             />
         </div>
     );

@@ -1,22 +1,23 @@
-import { useState } from "react";
+import { Token } from "../types/Token";
 
 interface DropdownProps {
-    dropdownItems: string[];
-    setPool: (pool: string) => void;
+    dropdownItems: Token[];
 }
 
-const Dropdown = ({ dropdownItems, setPool }: DropdownProps) => {
+const Dropdown = ({ dropdownItems }: DropdownProps) => {
+
     const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setPool(e.target.value);
     };
 
     return (
         <select
-            className="relative h-20 text-2xl w-full pt-6 font-semibold bg-black/10 rounded-2xl px-4 numbers-font-2"
+            className="h-20 text-2xl w-full pt-6 mt-2 font-semibold bg-black/10 rounded-2xl px-4 numbers-font-2 text-slate-500"
             onChange={handleChange}
         >
             {dropdownItems.map((item, index) => (
-                <option value={index}>{item}</option>
+                <option value={item} key={index}>
+                    {Token[item].toString()}
+                </option>
             ))}
         </select>
     );

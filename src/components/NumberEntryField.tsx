@@ -10,7 +10,7 @@ const NumberEntryField = ({
     setNumber,
 }: NumberEntryFieldProps) => {
     return (
-        <div className="rounded-2xl">
+        <div>
             <div className="absolute pl-4 pt-3 text-xs font-semibold">
                 {title}
             </div>

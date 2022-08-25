@@ -12,6 +12,7 @@ interface SwapProps {
 }
 
 const Swap: NextPage<SwapProps> = ({ account, showToast }) => {
+
     return (
         <div className="flex flex-col items-center">
             <Header account={account} />
