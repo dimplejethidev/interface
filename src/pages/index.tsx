@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import "tailwindcss/tailwind.css";
-import AccountBalance from "../components/AccountBalance";
 
 import Header from "../components/Header";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
+import AccountBalance from "../components/AccountBalance";
 import ToastType from "../types/toastType";
 
 interface SwapProps {
@@ -12,7 +12,6 @@ interface SwapProps {
 }
 
 const Swap: NextPage<SwapProps> = ({ account, showToast }) => {
-
     return (
         <div className="flex flex-col items-center">
             <Header account={account} />

@@ -1,4 +1,4 @@
 export enum Token {
-    ETHxp = 0,
-    fDAIxp = 1,
+    ETHxp = "ETHxp",
+    fDAIxp = "fDAIxp",
 }

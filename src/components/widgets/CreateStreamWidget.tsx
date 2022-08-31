@@ -7,6 +7,8 @@ import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "../WidgetContainer";
 import ToastType from "../../types/toastType";
 import LoadingSpinner from "../LoadingSpinner";
+import getPoolAddress from "../../helpers/getPool";
+import { useStore } from "../../store";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
@@ -18,6 +20,8 @@ interface CreateStreamWidgetProps {
 }
 
 const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+    const store = useStore();
+
     const [pool, setPool] = useState("");
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
@@ -34,6 +38,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 chainId: Number(chainId),
                 provider: provider,
             });
+
+            const pool = getPoolAddress(store.inboundToken, store.outboundToken);
 
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: pool,
@@ -56,11 +62,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
-                <AddressEntryField
-                    title="Address"
-                    address={pool}
-                    setAddress={setPool}
-                />
+                <AddressEntryField />
                 <NumberEntryField
                     title="FlowRate ( wei / sec )"
                     number={swapFlowRate}
