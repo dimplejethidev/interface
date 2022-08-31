@@ -8,8 +8,6 @@ import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/toastType";
 import LoadingSpinner from "../LoadingSpinner";
 
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
-
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
 const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;

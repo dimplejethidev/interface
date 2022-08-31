@@ -6,8 +6,6 @@ import FlowingBalance from "./FlowingBalance";
 import { useBalance } from "../context/balanceContext";
 import { useStore } from "../store";
 
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
-
 const AccountBalance = () => {
     const store = useStore();
     const { balance, updateBalance } = useBalance();
