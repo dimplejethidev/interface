@@ -4,7 +4,7 @@ import { Framework } from "@superfluid-finance/sdk-core";
 
 import AddressEntryField from "../AddressEntryField";
 import NumberEntryField from "../NumberEntryField";
-import WidgetContainer from "../WidgetContainer";
+import WidgetContainer from "./WidgetContainer";
 import ToastType from "../../types/toastType";
 import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";

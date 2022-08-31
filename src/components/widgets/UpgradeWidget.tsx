@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 
 import NumberEntryField from "../NumberEntryField";
-import WidgetContainer from "../WidgetContainer";
+import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/toastType";
