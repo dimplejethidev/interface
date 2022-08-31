@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
+import { useStore } from "../store";
 
 const navItems: { label: string; page: string }[] = [
     { label: "Swap", page: "/" },
@@ -11,12 +12,10 @@ const navItems: { label: string; page: string }[] = [
     { label: "Downgrade", page: "/downgrade" },
 ];
 
-interface HeaderProps {
-    account: string;
-}
-
-const Header = ({ account }: HeaderProps) => {
+const Header = () => {
     const router = useRouter();
+    const store = useStore();
+    const account = store.account;
 
     return (
         <header className="flex flex-row justify-between items-center h-20 px-4 mb-6 w-full">

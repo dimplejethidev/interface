@@ -6,58 +6,57 @@ import { BalanceProvider } from "../context/balanceContext";
 import ToastType from "../types/toastType";
 import ToastMessage from "../components/ToastMessage";
 import { Toast } from "../types/Toast";
-
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
+import { useStore } from "../store";
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [account, setAccount] = useState("");
-    const [list, setList] = useState<Toast[]>([]);
-    let toastProperties: Toast;
+    const store = useStore();
+    const [toastList, setToastList] = useState<Toast[]>([]);
+    let toast: Toast;
 
     const showToast = (type: ToastType) => {
         switch (type) {
             case ToastType.Success:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Success",
                     description: "Success message",
                     backgroundColor: "#5cb85c",
                 };
                 break;
             case ToastType.Error:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Error",
                     description: "An unexpected error has occured",
                     backgroundColor: "#d9534f",
                 };
                 break;
             case ToastType.Warning:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Warning",
                     description: "This is a warning toast component",
                     backgroundColor: "#f0ed4e",
                 };
                 break;
             case ToastType.Info:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Info",
                     description: "This is a info toast component",
                     backgroundColor: "#5bc0de",
                 };
                 break;
             default:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Toast message error",
                     description: "An unexpected error has occured",
                     backgroundColor: "#d9534f",
                 };
         }
 
-        setList([...list, toastProperties]);
+        setToastList([...toastList, toast]);
     };
 
     const connectWallet = async () => {
@@ -73,7 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 method: "eth_requestAccounts",
             });
 
-            setAccount(accounts[0]);
+            store.setAccount(accounts[0]);
         } catch (error) {
             console.log("Error: ", error);
             showToast(ToastType.Error);
@@ -87,12 +86,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div className="w-full h-screen text-slate-500 bg-gradient-to-t from-sky-400 to-blue-500">
             <BalanceProvider>
-                {account ? (
-                    <Component
-                        {...pageProps}
-                        account={account}
-                        showToast={showToast}
-                    />
+                {store.account ? (
+                    <Component {...pageProps} showToast={showToast} />
                 ) : (
                     <div className="h-full w-full flex justify-center items-center">
                         <button
@@ -104,9 +99,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     </div>
                 )}
                 <ToastMessage
-                    toastList={list}
+                    toastList={toastList}
                     position="button-right"
-                    setList={setList}
+                    setToastList={setToastList}
                 />
             </BalanceProvider>
         </div>

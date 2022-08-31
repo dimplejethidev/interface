@@ -4,13 +4,12 @@ import UpgradeWidget from "../components/widgets/UpgradeWidget";
 import ToastType from "../types/toastType";
 
 interface UpgradeProps {
-    account: string;
     showToast: (type: ToastType) => {};
 }
 
-const Upgrade: NextPage<UpgradeProps> = ({ account, showToast }) => (
+const Upgrade: NextPage<UpgradeProps> = ({ showToast }) => (
     <div>
-        <Header account={account} />
+        <Header />
         <UpgradeWidget showToast={showToast} />
     </div>
 );
