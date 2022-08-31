@@ -3,12 +3,11 @@ import { ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
 import FlowingBalance from "./FlowingBalance";
-import { useBalance } from "../context/balanceContext";
 import { useStore } from "../store";
 
 const AccountBalance = () => {
     const store = useStore();
-    const { balance, updateBalance } = useBalance();
+    const balance = store.balance;
 
     const getFlowInfo = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -28,7 +27,7 @@ const AccountBalance = () => {
         console.log("Account flow info: ", accountFlowInfo);
 
         const unixTimestamp = accountFlowInfo.timestamp.getTime() / 1000;
-        updateBalance({
+        store.setBalance({
             balanceWei: accountFlowInfo.deposit,
             balanceTimestamp: unixTimestamp,
             flowRateWei: accountFlowInfo.flowRate,
