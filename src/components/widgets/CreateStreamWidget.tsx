@@ -39,7 +39,10 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 provider: provider,
             });
 
-            const pool = getPoolAddress(store.inboundToken, store.outboundToken);
+            const pool = getPoolAddress(
+                store.inboundToken,
+                store.outboundToken
+            );
 
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: pool,

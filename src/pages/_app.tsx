@@ -6,11 +6,12 @@ import { BalanceProvider } from "../context/balanceContext";
 import ToastType from "../types/toastType";
 import ToastMessage from "../components/ToastMessage";
 import { Toast } from "../types/Toast";
+import { useStore } from "../store";
 
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [account, setAccount] = useState("");
+    const store = useStore();
     const [toastList, setToastList] = useState<Toast[]>([]);
     let toast: Toast;
 
@@ -73,7 +74,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 method: "eth_requestAccounts",
             });
 
-            setAccount(accounts[0]);
+            store.setAccount(accounts[0]);
         } catch (error) {
             console.log("Error: ", error);
             showToast(ToastType.Error);
@@ -87,12 +88,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <div className="w-full h-screen text-slate-500 bg-gradient-to-t from-sky-400 to-blue-500">
             <BalanceProvider>
-                {account ? (
-                    <Component
-                        {...pageProps}
-                        account={account}
-                        showToast={showToast}
-                    />
+                {store.account ? (
+                    <Component {...pageProps} showToast={showToast} />
                 ) : (
                     <div className="h-full w-full flex justify-center items-center">
                         <button

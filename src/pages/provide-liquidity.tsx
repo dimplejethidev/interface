@@ -1,14 +1,10 @@
 import type { NextPage } from "next";
 import Header from "../components/Header";
 
-interface ProvideLiquidityProps {
-    account: string;
-}
-
-const ProvideLiquidity: NextPage<ProvideLiquidityProps> = ({ account }) => {
+const ProvideLiquidity: NextPage = () => {
     return (
         <div>
-            <Header account={account} />
+            <Header />
             provide liquidity
         </div>
     );

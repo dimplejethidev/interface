@@ -4,13 +4,12 @@ import DowngradeWidget from "../components/widgets/DowngradeWidget";
 import ToastType from "../types/toastType";
 
 interface DowngradeProps {
-    account: string;
     showToast: (type: ToastType) => {};
 }
 
-const Downgrade: NextPage<DowngradeProps> = ({ account, showToast }) => (
+const Downgrade: NextPage<DowngradeProps> = ({ showToast }) => (
     <div>
-        <Header account={account} />
+        <Header />
         <DowngradeWidget showToast={showToast} />
     </div>
 );
