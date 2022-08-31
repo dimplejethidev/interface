@@ -1,5 +1,4 @@
-import { useStore } from "../store";
-import { Token } from "../types/Token";
+import Token from "../types/Token";
 
 interface DropdownProps {
     dropdownItems: Token[];

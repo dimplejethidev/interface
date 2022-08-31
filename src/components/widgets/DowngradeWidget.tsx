@@ -2,10 +2,10 @@ import { useState } from "react";
 import { ethers } from "ethers";
 
 import NumberEntryField from "../NumberEntryField";
-import WidgetContainer from "../WidgetContainer";
+import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
-import ToastType from "../../types/toastType";
+import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
@@ -59,7 +59,7 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     };
 
     return (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center w-full mt-12">
             <WidgetContainer title="Downgrade">
                 <NumberEntryField
                     title="Enter amount to downgrade here"

@@ -1,5 +1,5 @@
 import Dropdown from "./Dropdown";
-import { Token } from "../types/Token";
+import Token from "../types/Token";
 import { useStore } from "../store";
 
 const AddressEntryField = () => {

@@ -2,14 +2,14 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
+
 import logo from "./../../public/aqueduct-logo.png";
 import { useStore } from "../store";
 
 const navItems: { label: string; page: string }[] = [
     { label: "Swap", page: "/" },
     { label: "Provide Liquidity", page: "/provide-liquidity" },
-    { label: "Upgrade", page: "/upgrade" },
-    { label: "Downgrade", page: "/downgrade" },
+    { label: "Wrap / Unwrap", page: "/wrap" },
 ];
 
 const Header = () => {
