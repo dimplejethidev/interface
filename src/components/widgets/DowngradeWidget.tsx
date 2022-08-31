@@ -59,7 +59,7 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     };
 
     return (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center w-full mt-12">
             <WidgetContainer title="Downgrade">
                 <NumberEntryField
                     title="Enter amount to downgrade here"

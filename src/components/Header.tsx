@@ -8,8 +8,7 @@ import { useStore } from "../store";
 const navItems: { label: string; page: string }[] = [
     { label: "Swap", page: "/" },
     { label: "Provide Liquidity", page: "/provide-liquidity" },
-    { label: "Upgrade", page: "/upgrade" },
-    { label: "Downgrade", page: "/downgrade" },
+    { label: "Wrap / Unwrap", page: "/wrap" },
 ];
 
 const Header = () => {

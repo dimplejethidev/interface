@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Header from "../components/Header";
+import DowngradeWidget from "../components/widgets/DowngradeWidget";
 import UpgradeWidget from "../components/widgets/UpgradeWidget";
 import ToastType from "../types/toastType";
 
@@ -10,7 +11,10 @@ interface UpgradeProps {
 const Upgrade: NextPage<UpgradeProps> = ({ showToast }) => (
     <div>
         <Header />
-        <UpgradeWidget showToast={showToast} />
+        <main>
+            <UpgradeWidget showToast={showToast} />
+            <DowngradeWidget showToast={showToast} />
+        </main>
     </div>
 );
 
