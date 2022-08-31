@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from "react";
-import { Toast } from "../types/Toast";
+import IToast from "./../types/Toast";
 
 interface ToastMessageProps {
-    toastList: Toast[];
+    toastList: IToast[];
     position: string;
-    setToastList: (toast: Toast[]) => void;
+    setToastList: (toast: IToast[]) => void;
 }
 
 const ToastMessage = ({

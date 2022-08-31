@@ -5,7 +5,7 @@ import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
-import ToastType from "../../types/toastType";
+import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;

@@ -4,7 +4,7 @@ import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
 import AccountBalance from "../components/AccountBalance";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 
 interface SwapProps {
     showToast: (type: ToastType) => {};

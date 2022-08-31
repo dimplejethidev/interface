@@ -1,8 +1,8 @@
 enum ToastType {
-  Success = 0,
-  Error = 1,
-  Warning = 2,
-  Info = 3,
+    Success = 0,
+    Error = 1,
+    Warning = 2,
+    Info = 3,
 }
 
 export default ToastType;

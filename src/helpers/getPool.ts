@@ -1,4 +1,4 @@
-import { Token } from "../types/Token";
+import Token from "../types/Token";
 
 const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
     let pool: string;
@@ -11,7 +11,9 @@ const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
             pool = "0x2";
             break;
         default:
-            throw new Error(`Pool not found for tokens "${outboundToken}" and "${inboundToken}"`);
+            throw new Error(
+                `Pool not found for tokens "${outboundToken}" and "${inboundToken}"`
+            );
     }
 
     return pool;

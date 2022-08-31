@@ -1,6 +1,6 @@
 import create from "zustand";
-import { IBalance, initialBalance } from "./types/balance";
-import { Token } from "./types/Token";
+import { IBalance, initialBalance } from "./types/Balance";
+import Token from "./types/Token";
 
 interface StoreState {
     account: string;

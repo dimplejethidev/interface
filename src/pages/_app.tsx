@@ -2,15 +2,15 @@ import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 
 import "../styles/globals.css";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 import ToastMessage from "../components/ToastMessage";
-import { Toast } from "../types/Toast";
+import IToast from "../types/Toast";
 import { useStore } from "../store";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const store = useStore();
-    const [toastList, setToastList] = useState<Toast[]>([]);
-    let toast: Toast;
+    const [toastList, setToastList] = useState<IToast[]>([]);
+    let toast: IToast;
 
     const showToast = (type: ToastType) => {
         switch (type) {
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             default:
                 toast = {
                     id: toastList.length + 1,
-                    title: "Toast message error",
+                    title: "IToast message error",
                     description: "An unexpected error has occured",
                     backgroundColor: "#d9534f",
                 };
