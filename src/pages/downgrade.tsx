@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import DowngradeWidget from "../components/widgets/DowngradeWidget";
 import ToastType from "../types/toastType";
 
@@ -9,8 +10,8 @@ interface DowngradeProps {
 }
 
 const Downgrade: NextPage<DowngradeProps> = ({ account, showToast }) => (
-    <div>
-        <Header account={account} />
+    <div className="flex items-center">
+        <Sidebar account={account} />
         <DowngradeWidget showToast={showToast} />
     </div>
 );

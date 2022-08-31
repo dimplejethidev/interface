@@ -3,6 +3,7 @@ import "tailwindcss/tailwind.css";
 import AccountBalance from "../components/AccountBalance";
 
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
 import ToastType from "../types/toastType";
 
@@ -14,8 +15,8 @@ interface SwapProps {
 const Swap: NextPage<SwapProps> = ({ account, showToast }) => {
 
     return (
-        <div className="flex flex-col items-center">
-            <Header account={account} />
+        <div className="flex items-center">
+            <Sidebar account={account}/>
             <main className="flex flex-col w-4/5 justify-evenly">
                 <CreateStreamWidget showToast={showToast} />
                 <AccountBalance account={account} />

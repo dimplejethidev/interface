@@ -11,7 +11,7 @@ const Dropdown = ({ dropdownItems }: DropdownProps) => {
 
     return (
         <select
-            className="h-20 text-2xl w-full pt-6 mt-2 font-semibold bg-black/10 rounded-2xl px-4 numbers-font-2 text-slate-500"
+            className="h-20 text-2xl w-full pt-6 mt-2 font-semibold bg-white border-[1px] centered-shadow-sm rounded-2xl px-4 numbers-font-2 text-slate-500"
             onChange={handleChange}
         >
             {dropdownItems.map((item, index) => (

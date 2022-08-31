@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 interface ProvideLiquidityProps {
     account: string;
@@ -7,8 +8,8 @@ interface ProvideLiquidityProps {
 
 const ProvideLiquidity: NextPage<ProvideLiquidityProps> = ({ account }) => {
     return (
-        <div>
-            <Header account={account} />
+        <div className="flex items-center">
+            <Sidebar account={account} />
             provide liquidity
         </div>
     );
