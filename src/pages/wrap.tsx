@@ -1,18 +1,18 @@
 import type { NextPage } from "next";
-import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 import DowngradeWidget from "../components/widgets/DowngradeWidget";
 import UpgradeWidget from "../components/widgets/UpgradeWidget";
-import ToastType from "../types/ToastType";
+import ToastType from "../types/toastType";
 
 interface UpgradeProps {
     showToast: (type: ToastType) => {};
 }
 
 const Upgrade: NextPage<UpgradeProps> = ({ showToast }) => (
-    <div>
-        <Header />
-        <main>
+    <div className="flex items-center">
+        <Sidebar />
+        <main className="flex flex-col w-4/5 justify-evenly">
             <UpgradeWidget showToast={showToast} />
             <DowngradeWidget showToast={showToast} />
         </main>

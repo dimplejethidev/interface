@@ -5,7 +5,7 @@ import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
-import ToastType from "../../types/ToastType";
+import ToastType from "../../types/toastType";
 import LoadingSpinner from "../LoadingSpinner";
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
@@ -63,22 +63,22 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
 
     return (
         <section className="flex flex-col items-center w-full">
-            <WidgetContainer title="Upgrade">
+            <WidgetContainer title="Wrap">
                 <NumberEntryField
                     title="Enter amount to upgrade here"
                     number={amount}
                     setNumber={setAmount}
                 />
                 {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-gradient-to-t from-sky-500 to-blue-500 text-white rounded-2xl outline-2">
+                    <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
                         <LoadingSpinner />
                     </div>
                 ) : (
                     <button
-                        className="h-14 bg-gradient-to-t from-sky-500 to-blue-500 font-bold rounded-2xl text-white hover:outline outline-2"
+                        className="h-14 bg-aqueductBlue/90 font-bold rounded-2xl text-white hover:outline outline-2"
                         onClick={() => upgrade(amount)}
                     >
-                        Upgrade
+                        Wrap
                     </button>
                 )}
             </WidgetContainer>

@@ -5,7 +5,7 @@ import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
-import ToastType from "../../types/ToastType";
+import ToastType from "../../types/toastType";
 import LoadingSpinner from "../LoadingSpinner";
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
@@ -60,7 +60,7 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
 
     return (
         <section className="flex flex-col items-center w-full mt-12">
-            <WidgetContainer title="Downgrade">
+            <WidgetContainer title="Unwrap">
                 <NumberEntryField
                     title="Enter amount to downgrade here"
                     number={amount}
@@ -68,15 +68,15 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
                 />
 
                 {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-gradient-to-t from-sky-500 to-blue-500 text-white rounded-2xl outline-2">
+                    <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
                         <LoadingSpinner />
                     </div>
                 ) : (
                     <button
-                        className="h-14 bg-gradient-to-t from-sky-500 to-blue-500 font-bold rounded-2xl text-white hover:outline outline-2"
+                        className="h-14 bg-aqueductBlue/90 font-bold rounded-2xl text-white hover:outline outline-2"
                         onClick={() => downgrade(amount)}
                     >
-                        Downgrade
+                        Unwrap
                     </button>
                 )}
             </WidgetContainer>

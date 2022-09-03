@@ -19,6 +19,9 @@ module.exports = {
             animation: {
                 "toast-in-right": "toastInRight 0.7s",
             },
+            colors: {
+                "aqueductBlue": "#2662CB"
+            }
         },
     },
     plugins: [],

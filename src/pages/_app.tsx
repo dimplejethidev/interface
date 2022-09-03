@@ -2,10 +2,15 @@ import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 
 import "../styles/globals.css";
-import ToastType from "../types/ToastType";
+import ToastType from "../types/toastType";
 import ToastMessage from "../components/ToastMessage";
 import IToast from "../types/Toast";
 import { useStore } from "../store";
+
+import Image from "next/image";
+import logo from "./../../public/aqueduct-logo.png";
+
+declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 function MyApp({ Component, pageProps }: AppProps) {
     const store = useStore();
@@ -83,18 +88,31 @@ function MyApp({ Component, pageProps }: AppProps) {
     }, []);
 
     return (
-        <div className="w-full h-screen text-slate-500 bg-gradient-to-t from-sky-400 to-blue-500">
+        <div className="w-full h-screen text-slate-500">
             {store.account ? (
                 <Component {...pageProps} showToast={showToast} />
             ) : (
-                <div className="h-full w-full flex justify-center items-center">
-                    <button
-                        onClick={connectWallet}
-                        className="w-100 h-12 p-2 border-none rounded-2xl bg-gradient-to-r from-sky-400 to-blue-500"
-                    >
-                        Connect Wallet
-                    </button>
-                </div>
+                <div className="flex flex-col h-full w-full p-4">
+                        <div className="flex items-center space-x-2 text-aqueductBlue">
+                            <Image
+                                src={logo}
+                                alt="Aqueduct logo"
+                                layout="fixed"
+                                width="45px"
+                                height="45px"
+                                className="rounded-xl"
+                            />
+                            <h1 className="text-2xl font-bold pr-3">Aqueduct</h1>
+                        </div>
+                        <div className="h-full w-full flex justify-center items-center">
+                            <button
+                                onClick={connectWallet}
+                                className="w-100 h-12 px-6 border-none rounded-2xl bg-aqueductBlue/90 text-white"
+                            >
+                                Connect Wallet
+                            </button>
+                        </div>
+                    </div>
             )}
             <ToastMessage
                 toastList={toastList}

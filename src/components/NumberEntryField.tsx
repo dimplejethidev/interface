@@ -15,7 +15,7 @@ const NumberEntryField = ({
                 {title}
             </div>
             <input
-                className="h-20 text-2xl w-full pt-6 font-semibold bg-black/10 rounded-2xl px-4 numbers-font-2"
+                className="h-20 text-2xl w-full pt-6 font-semibold bg-white border-[1px] centered-shadow-sm rounded-2xl px-4 numbers-font-2"
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0"
