@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
+import { useStore } from "../store";
 
 interface SideBarTabProps {
     icon: any;
@@ -37,19 +38,16 @@ const SideBarTab: FC<SideBarTabProps> = ({
     )
 }
 
-interface SidebarProps {
-    account: string;
-}
-
 const navItems: { icon: any, label: string; page: string }[] = [
     { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
     { icon: <TbArrowsRight size={18} />, label: "Provide Liquidity", page: "/provide-liquidity" },
-    { icon: <TbCirclePlus size={18} />, label: "Upgrade", page: "/upgrade" },
-    { icon: <TbCircleMinus size={18} />, label: "Downgrade", page: "/downgrade" },
+    { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
 ];
 
-const Sidebar = ({ account }: SidebarProps) => {
+const Sidebar = () => {
     const router = useRouter();
+    const store = useStore();
+    const account = store.account;
 
     return (
         <header className="flex flex-col p-4 w-64 h-screen space-y-8 border-2 flex-shrink-0">
