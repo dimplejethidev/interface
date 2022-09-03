@@ -1,10 +1,11 @@
 export interface IBalance {
-  balanceWei: string;
-  balanceTimestamp: number;
-  flowRateWei: string;
+    balanceWei: string;
+    balanceTimestamp: number;
+    flowRateWei: string;
 }
 
-export type BalanceContextType = {
-  balance: IBalance;
-  updateBalance: (balance: IBalance) => void;
+export const initialBalance: IBalance = {
+    balanceWei: "0",
+    balanceTimestamp: 0,
+    flowRateWei: "0",
 };

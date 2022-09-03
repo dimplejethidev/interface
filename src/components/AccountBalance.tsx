@@ -3,16 +3,11 @@ import { ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
 import FlowingBalance from "./FlowingBalance";
-import { useBalance } from "../context/balanceContext";
+import { useStore } from "../store";
 
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
-
-interface AccountBalanceProps {
-    account: string;
-}
-
-const AccountBalance = ({ account }: AccountBalanceProps) => {
-    const { balance, updateBalance } = useBalance();
+const AccountBalance = () => {
+    const store = useStore();
+    const balance = store.balance;
 
     const getFlowInfo = async () => {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -26,13 +21,13 @@ const AccountBalance = ({ account }: AccountBalanceProps) => {
 
         const accountFlowInfo = await superfluid.cfaV1.getAccountFlowInfo({
             superToken: "0xC0645f9306d5c26E2b890e87DF2Fb40Eaf122E56", // TODO: this needs to be dynamic
-            account: account,
+            account: store.account,
             providerOrSigner: provider,
         });
         console.log("Account flow info: ", accountFlowInfo);
 
         const unixTimestamp = accountFlowInfo.timestamp.getTime() / 1000;
-        updateBalance({
+        store.setBalance({
             balanceWei: accountFlowInfo.deposit,
             balanceTimestamp: unixTimestamp,
             flowRateWei: accountFlowInfo.flowRate,

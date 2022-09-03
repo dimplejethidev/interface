@@ -2,10 +2,10 @@ import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 
 import "../styles/globals.css";
-import { BalanceProvider } from "../context/balanceContext";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 import ToastMessage from "../components/ToastMessage";
-import { Toast } from "../types/Toast";
+import IToast from "../types/Toast";
+import { useStore } from "../store";
 
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
@@ -13,54 +13,54 @@ import logo from "./../../public/aqueduct-logo.png";
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const [account, setAccount] = useState("");
-    const [list, setList] = useState<Toast[]>([]);
-    let toastProperties: Toast;
+    const store = useStore();
+    const [toastList, setToastList] = useState<IToast[]>([]);
+    let toast: IToast;
 
     const showToast = (type: ToastType) => {
         switch (type) {
             case ToastType.Success:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Success",
                     description: "Success message",
                     backgroundColor: "#5cb85c",
                 };
                 break;
             case ToastType.Error:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Error",
                     description: "An unexpected error has occured",
                     backgroundColor: "#d9534f",
                 };
                 break;
             case ToastType.Warning:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Warning",
                     description: "This is a warning toast component",
                     backgroundColor: "#f0ed4e",
                 };
                 break;
             case ToastType.Info:
-                toastProperties = {
-                    id: list.length + 1,
+                toast = {
+                    id: toastList.length + 1,
                     title: "Info",
                     description: "This is a info toast component",
                     backgroundColor: "#5bc0de",
                 };
                 break;
             default:
-                toastProperties = {
-                    id: list.length + 1,
-                    title: "Toast message error",
+                toast = {
+                    id: toastList.length + 1,
+                    title: "IToast message error",
                     description: "An unexpected error has occured",
                     backgroundColor: "#d9534f",
                 };
         }
 
-        setList([...list, toastProperties]);
+        setToastList([...toastList, toast]);
     };
 
     const connectWallet = async () => {
@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 method: "eth_requestAccounts",
             });
 
-            setAccount(accounts[0]);
+            store.setAccount(accounts[0]);
         } catch (error) {
             console.log("Error: ", error);
             showToast(ToastType.Error);
@@ -89,15 +89,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <div className="w-full h-screen text-slate-500">
-            <BalanceProvider>
-                {account ? (
-                    <Component
-                        {...pageProps}
-                        account={account}
-                        showToast={showToast}
-                    />
-                ) : (
-                    <div className="flex flex-col h-full w-full p-4">
+            {store.account ? (
+                <Component {...pageProps} showToast={showToast} />
+            ) : (
+                <div className="flex flex-col h-full w-full p-4">
                         <div className="flex items-center space-x-2 text-aqueductBlue">
                             <Image
                                 src={logo}
@@ -118,13 +113,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                             </button>
                         </div>
                     </div>
-                )}
-                <ToastMessage
-                    toastList={list}
-                    position="button-right"
-                    setList={setList}
-                />
-            </BalanceProvider>
+            )}
+            <ToastMessage
+                toastList={toastList}
+                position="button-right"
+                setToastList={setToastList}
+            />
         </div>
     );
 }

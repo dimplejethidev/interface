@@ -1,19 +1,23 @@
 import { useCallback, useEffect } from "react";
-import { Toast } from "../types/Toast";
+import IToast from "./../types/Toast";
 
 interface ToastMessageProps {
-    toastList: Toast[];
+    toastList: IToast[];
     position: string;
-    setList: (toast: Toast[]) => void;
+    setToastList: (toast: IToast[]) => void;
 }
 
-const ToastMessage = ({ toastList, position, setList }: ToastMessageProps) => {
+const ToastMessage = ({
+    toastList,
+    position,
+    setToastList,
+}: ToastMessageProps) => {
     const deleteToast = useCallback(
         (id: number) => {
             const toastListItems = toastList.filter((e) => e.id !== id);
-            setList(toastListItems);
+            setToastList(toastListItems);
         },
-        [toastList, setList]
+        [toastList, setToastList]
     );
 
     useEffect(() => {

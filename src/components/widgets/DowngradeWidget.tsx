@@ -2,13 +2,11 @@ import { useState } from "react";
 import { ethers } from "ethers";
 
 import NumberEntryField from "../NumberEntryField";
-import WidgetContainer from "../WidgetContainer";
+import WidgetContainer from "./WidgetContainer";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
-import ToastType from "../../types/toastType";
+import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
-
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
@@ -61,7 +59,7 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     };
 
     return (
-        <section className="flex flex-col items-center w-full">
+        <section className="flex flex-col items-center w-full mt-12">
             <WidgetContainer title="Downgrade">
                 <NumberEntryField
                     title="Enter amount to downgrade here"

@@ -1,4 +1,6 @@
-export enum Token {
-    ETHxp = 0,
-    fDAIxp = 1,
+enum Token {
+    ETHxp = "ETHxp",
+    fDAIxp = "fDAIxp",
 }
+
+export default Token;

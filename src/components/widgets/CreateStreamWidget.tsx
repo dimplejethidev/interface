@@ -4,11 +4,11 @@ import { Framework } from "@superfluid-finance/sdk-core";
 
 import AddressEntryField from "../AddressEntryField";
 import NumberEntryField from "../NumberEntryField";
-import WidgetContainer from "../WidgetContainer";
-import ToastType from "../../types/toastType";
+import WidgetContainer from "./WidgetContainer";
+import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
-
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
+import getPoolAddress from "../../helpers/getPool";
+import { useStore } from "../../store";
 
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
 const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
@@ -18,6 +18,8 @@ interface CreateStreamWidgetProps {
 }
 
 const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+    const store = useStore();
+
     const [pool, setPool] = useState("");
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
@@ -34,6 +36,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 chainId: Number(chainId),
                 provider: provider,
             });
+
+            const pool = getPoolAddress(
+                store.inboundToken,
+                store.outboundToken
+            );
 
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: pool,
@@ -56,11 +63,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
-                <AddressEntryField
-                    title="Address"
-                    address={pool}
-                    setAddress={setPool}
-                />
+                <AddressEntryField />
                 <NumberEntryField
                     title="FlowRate ( wei / sec )"
                     number={swapFlowRate}
