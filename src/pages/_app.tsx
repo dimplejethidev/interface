@@ -10,6 +10,41 @@ import { useStore } from "../store";
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
 
+// rainbow imports
+import '@rainbow-me/rainbowkit/styles.css';
+import {
+    getDefaultWallets,
+    RainbowKitProvider,
+    lightTheme
+} from '@rainbow-me/rainbowkit';
+import {
+    chain,
+    configureChains,
+    createClient,
+    WagmiConfig,
+} from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
+import { publicProvider } from 'wagmi/providers/public';
+import CustomAvatar from "../components/CustomAvatar";
+
+// rainbow setup
+const { chains, provider } = configureChains(
+    [chain.goerli],
+    [
+        //alchemyProvider({ apiKey: process.env.ALCHEMY_ID }),
+        publicProvider()
+    ]
+);
+const { connectors } = getDefaultWallets({
+    appName: 'My RainbowKit App',
+    chains
+});
+const wagmiClient = createClient({
+    autoConnect: true,
+    connectors,
+    provider
+})
+
 declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -51,6 +86,14 @@ function MyApp({ Component, pageProps }: AppProps) {
                     backgroundColor: "#5bc0de",
                 };
                 break;
+            case ToastType.ConnectWallet:
+                toast = {
+                    id: toastList.length + 1,
+                    title: "Error",
+                    description: "Please connect a wallet.",
+                    backgroundColor: "#FDB833",
+                };
+                break;
             default:
                 toast = {
                     id: toastList.length + 1,
@@ -84,15 +127,22 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
 
     useEffect(() => {
-        connectWallet();
+        //connectWallet();
     }, []);
 
     return (
-        <div className="w-full h-screen text-slate-500">
-            {store.account ? (
-                <Component {...pageProps} showToast={showToast} />
-            ) : (
-                <div className="flex flex-col h-full w-full p-4">
+        <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider 
+                chains={chains} 
+                theme={lightTheme({accentColor: '#2662CB'})}
+                avatar={CustomAvatar}
+            >
+            <div className="w-full h-screen text-slate-500 poppins-font">
+                {/*
+                {store.account ? (
+                    <Component {...pageProps} showToast={showToast} />
+                ) : (
+                    <div className="flex flex-col h-full w-full p-4">
                         <div className="flex items-center space-x-2 text-aqueductBlue">
                             <Image
                                 src={logo}
@@ -113,13 +163,17 @@ function MyApp({ Component, pageProps }: AppProps) {
                             </button>
                         </div>
                     </div>
-            )}
-            <ToastMessage
-                toastList={toastList}
-                position="button-right"
-                setToastList={setToastList}
-            />
-        </div>
+                )}
+                */}
+                <Component {...pageProps} showToast={showToast} />
+                <ToastMessage
+                    toastList={toastList}
+                    position="button-right"
+                    setToastList={setToastList}
+                />
+            </div>
+        </RainbowKitProvider>
+    </WagmiConfig >
     );
 }
 

@@ -9,6 +9,7 @@ import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
+import { useNetwork, useProvider, useSigner } from 'wagmi';
 
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
 const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
@@ -24,14 +25,19 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const provider = useProvider();
+    const { data: rainbowSigner } = useSigner();
+    const signer = rainbowSigner as ethers.Signer;
+    const { chain, chains } = useNetwork();
+
     const swap = async () => {
         try {
             setLoading(true);
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
-            const chainId = await window.ethereum.request({
-                method: "eth_chainId",
-            });
+
+            // check that wallet is connected by checking for signer
+            if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
+
+            const chainId = chain?.id;
             const superfluid = await Framework.create({
                 chainId: Number(chainId),
                 provider: provider,

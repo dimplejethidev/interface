@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
 import { useStore } from "../store";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import CustomWalletConnectButton from "./CustomWalletConnectButton";
 
 interface SideBarTabProps {
     icon: any;
@@ -68,8 +70,9 @@ const Sidebar = () => {
                     height="45px"
                     className="rounded-xl"
                 />
-                <h1 className="text-2xl font-bold pr-3">Aqueduct</h1>
+                <h1 className="text-2xl font-semibold pr-3 poppins-font">aqueduct</h1>
             </div>
+            {/*
             <div className="flex items-center p-4 bg-aqueductBlue/5 rounded-xl">
                 Address:{" "}
                 <span className="pl-1 text-aqueductBlue">
@@ -78,6 +81,9 @@ const Sidebar = () => {
                         : account.slice(0, 6) + "..." + account.slice(-4)}
                 </span>
             </div>
+            <ConnectButton showBalance={false} />
+            */}
+            <CustomWalletConnectButton />
             <ul className="space-y-3">
                 {navItems.map(({ icon, label, page }) => (
                     <SideBarTab icon={icon} label={label} page={page} />

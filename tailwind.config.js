@@ -20,7 +20,7 @@ module.exports = {
                 "toast-in-right": "toastInRight 0.7s",
             },
             colors: {
-                "aqueductBlue": "#2662CB"
+                "aqueductBlue": "#0460CE"
             }
         },
     },

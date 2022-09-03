@@ -7,6 +7,7 @@ import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
+import { useSigner } from 'wagmi';
 
 const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
 const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
@@ -22,12 +23,17 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const { data: rainbowSigner } = useSigner();
+    const signer = rainbowSigner as ethers.Signer;
+
     // TODO: Add dropdown for two AQUA tokens (AQUA0 & AQUA1)
     const upgrade = async (amount: string) => {
         try {
             setLoading(true);
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
+            
+            // check that wallet is connected by checking for signer
+            if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
+
             const daiContract = new ethers.Contract(
                 FDAI_ADDRESS || "",
                 DAI_ABI,
