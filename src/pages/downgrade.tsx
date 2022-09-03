@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Sidebar from "../components/Sidebar";
 import DowngradeWidget from "../components/widgets/DowngradeWidget";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 
 interface DowngradeProps {
     account: string;

@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 
 import "../styles/globals.css";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 import ToastMessage from "../components/ToastMessage";
 import IToast from "../types/Toast";
 import { useStore } from "../store";

@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 
 import DowngradeWidget from "../components/widgets/DowngradeWidget";
 import UpgradeWidget from "../components/widgets/UpgradeWidget";
-import ToastType from "../types/toastType";
+import ToastType from "../types/ToastType";
 
 interface UpgradeProps {
     showToast: (type: ToastType) => {};
