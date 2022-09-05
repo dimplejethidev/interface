@@ -8,10 +8,8 @@ import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import { useSigner } from 'wagmi';
+import { fDai, fDAIxp } from "./../../utils/constants";
 
-const FDAI_ADDRESS = process.env.NEXT_PUBLIC_FDAI_ADDRESS;
-const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
-const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
 
@@ -35,19 +33,19 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
             const daiContract = new ethers.Contract(
-                FDAI_ADDRESS || "",
+                fDai,
                 DAI_ABI,
                 signer
             );
-            console.log(AQUEDUCT_TOKEN0_ADDRESS);
+            
             const aqueductToken = new ethers.Contract(
-                AQUEDUCT_TOKEN0_ADDRESS || "",
+                fDAIxp,
                 AQUEDUCT_TOKEN_ABI,
                 signer
             );
 
             const approvedTransaction = await daiContract.approve(
-                AQUEDUCT_TOKEN0_ADDRESS,
+                fDAIxp,
                 amount
             );
             await approvedTransaction.wait();

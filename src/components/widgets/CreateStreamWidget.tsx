@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
-import AddressEntryField from "../AddressEntryField";
+import TokenSelectField from "../TokenSelectField";
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import ToastType from "../../types/ToastType";
@@ -10,9 +10,8 @@ import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import { useNetwork, useProvider, useSigner } from 'wagmi';
-
-const AQUEDUCT_TOKEN0_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN0_ADDRESS;
-const AQUEDUCT_TOKEN1_ADDRESS = process.env.NEXT_PUBLIC_AQUEDUCT_TOKEN1_ADDRESS;
+import Token from "../../types/Token";
+import { ETHxp, fDAIxp } from "./../../utils/constants";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -48,10 +47,13 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 store.outboundToken
             );
 
+            // TODO: Create getToken helper function
+            const token = store.outboundToken === Token.ETHxp ? ETHxp : fDAIxp;
+
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: pool,
                 flowRate: swapFlowRate,
-                superToken: AQUEDUCT_TOKEN0_ADDRESS || "",
+                superToken: token,
             });
             const result = await createFlowOperation.exec(signer);
             await result.wait();
@@ -69,7 +71,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
-                <AddressEntryField />
+                <TokenSelectField />
                 <NumberEntryField
                     title="FlowRate ( wei / sec )"
                     number={swapFlowRate}

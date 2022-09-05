@@ -2,7 +2,7 @@ import Dropdown from "./Dropdown";
 import Token from "../types/Token";
 import { useStore } from "../store";
 
-const AddressEntryField = () => {
+const TokenSelectField = () => {
     const store = useStore();
 
     return (
@@ -25,4 +25,4 @@ const AddressEntryField = () => {
     );
 };
 
-export default AddressEntryField;
+export default TokenSelectField;

@@ -45,8 +45,6 @@ const wagmiClient = createClient({
     provider
 })
 
-declare var window: any; // so that we can access ethereum object - TODO: add interface to more gracefully solve this
-
 function MyApp({ Component, pageProps }: AppProps) {
     const store = useStore();
     const [toastList, setToastList] = useState<IToast[]>([]);
