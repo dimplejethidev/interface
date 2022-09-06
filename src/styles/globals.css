@@ -1,13 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Red+Hat+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,43 +7,20 @@
 
 @layer components {
     .centered-shadow {
-        box-shadow: 0px 0px 15px rgba(225, 225, 225);;
+        box-shadow: 0px 0px 15px rgba(225, 225, 225);
+        ;
     }
+
     .centered-shadow-sm {
-        box-shadow: 0px 0px 8px rgba(235, 235, 235);;
+        box-shadow: 0px 0px 8px rgba(235, 235, 235);
+        ;
     }
-    .crimsontext-font {
-        font-family: 'Crimson Text', sans-serif;
-        font-weight: 300;
-    }
-    .text2-font {
-        font-family: 'Quicksand', sans-serif;
-    }
-    .figtree-font {
-        font-family: 'Figtree', sans-serif;
-    }
-    .dmmono-font {
-        font-family: 'DM Mono', monospace;
-    }
-    .rubik-font {
-        font-family: 'Rubik', sans-serif;
-    }
-    .space-font {
-        font-family: 'Space Grotesk', sans-serif;
-    }
-    .nunito-font {
-        font-family: 'Nunito Sans', sans-serif;
-    }
-    .montserrat-font {
-        font-family: 'Montserrat', sans-serif;
-    }
-    .arial-font {
-        font-family: Arial;
-    }
-    .lato-font {
-        font-family: 'Lato', sans-serif;
-    }
+
     .poppins-font {
         font-family: 'Poppins', sans-serif;
+    }
+
+    .monospace-font {
+        font-family: 'Red Hat Mono', monospace;
     }
 }

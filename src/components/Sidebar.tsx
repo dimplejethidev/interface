@@ -1,5 +1,6 @@
 import { FC, ReactElement, useEffect, useMemo, useState } from "react";
 import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus, TbCircleMinus } from "react-icons/tb"
+import { AiOutlineLineChart } from "react-icons/ai"
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -41,6 +42,7 @@ const SideBarTab: FC<SideBarTabProps> = ({
 }
 
 const navItems: { icon: any, label: string; page: string }[] = [
+    { icon: <AiOutlineLineChart size={18} />, label: "My Streams", page: "/my-streams" },
     { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
     { icon: <TbArrowsRight size={18} />, label: "Provide Liquidity", page: "/provide-liquidity" },
     { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
@@ -72,17 +74,6 @@ const Sidebar = () => {
                 />
                 <h1 className="text-2xl font-semibold pr-3 poppins-font">aqueduct</h1>
             </div>
-            {/*
-            <div className="flex items-center p-4 bg-aqueductBlue/5 rounded-xl">
-                Address:{" "}
-                <span className="pl-1 text-aqueductBlue">
-                    {account === ""
-                        ? "0x123..."
-                        : account.slice(0, 6) + "..." + account.slice(-4)}
-                </span>
-            </div>
-            <ConnectButton showBalance={false} />
-            */}
             <CustomWalletConnectButton />
             <ul className="space-y-3">
                 {navItems.map(({ icon, label, page }) => (

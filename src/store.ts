@@ -7,10 +7,12 @@ interface StoreState {
     balance: IBalance;
     outboundToken: Token;
     inboundToken: Token;
+    selectedToken: Token;
     setAccount: (account: string) => void;
     setBalance: (balance: IBalance) => void;
     setOutboundToken: (token: Token) => void;
     setInboundToken: (token: Token) => void;
+    setSelectedToken: (token: Token) => void;
 }
 
 export const useStore = create<StoreState>()((set) => ({
@@ -24,4 +26,6 @@ export const useStore = create<StoreState>()((set) => ({
         set((state) => ({ ...state, outboundToken })),
     setInboundToken: (inboundToken: Token) =>
         set((state) => ({ ...state, inboundToken })),
+    setSelectedToken: (selectedToken: Token) =>
+        set((state) => ({ ...state, selectedToken })),
 }));

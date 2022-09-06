@@ -67,7 +67,7 @@ const CustomWalletConnectButton = () => {
                                         src={makeBlockie(account.address)}
                                         className='w-8 h-8 rounded-lg'
                                     />
-                                    <p className='text-aqueductBlue2 text-gray-600 font-medium'>
+                                    <p className='text-aqueductBlue2 text-gray-600 font-medium monospace-font'>
                                         {account.address && (account.address.slice(0, 6) + "..." + account.address.slice(-4))}
                                     </p>
                                 </button>

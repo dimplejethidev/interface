@@ -1,5 +1,6 @@
 import { FC, ReactElement, useEffect, useMemo, useState } from "react";
 import { BigNumberish, ethers } from "ethers";
+import { useStore } from "../store";
 
 const ANIMATION_MINIMUM_STEP_TIME = 100;
 
@@ -15,9 +16,10 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
     flowRate,
 }): ReactElement => {
     const [weiValue, setWeiValue] = useState<BigNumberish>(balance);
+    const store = useStore();
 
-    const balanceTimestampMs = useMemo(
-        () => ethers.BigNumber.from(balanceTimestamp).mul(1000),
+    const balanceTimestampBigNumber = useMemo(
+        () => ethers.BigNumber.from(balanceTimestamp),
         [balanceTimestamp]
     );
 
@@ -28,6 +30,7 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
         }
 
         const balanceBigNumber = ethers.BigNumber.from(balance);
+        console.log(balanceBigNumber)
 
         let stopAnimation = false;
         let lastAnimationTimestamp: DOMHighResTimeStamp = 0;
@@ -51,9 +54,9 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
                 setWeiValue(
                     balanceBigNumber.add(
                         currentTimestampBigNumber
-                            .sub(balanceTimestampMs)
+                            .sub(balanceTimestampBigNumber)
                             .mul(flowRateBigNumber)
-                            .div(1000)
+                            .div(1)
                     )
                 );
 
@@ -73,10 +76,10 @@ const FlowingBalance: FC<FlowingBalanceProps> = ({
     const formattedBalance = ethers.utils.formatEther(weiValue).substring(0, 8);
 
     return (
-        <div className="flex justify-center items-center h-14 w-full bg-black/10 hover:bg-black/20 font-bold">
-            <p className="font-bold text-xl">
+        <div className="flex justify-center items-center h-14 w-full font-bold">
+            <p className="font-bold text-7xl monospace-font text-gray-600 tracking-widest">
                 {formattedBalance}{" "}
-                <span className="font-light text-sm text-blue-500">fDAIx</span>
+                <span className="font-light text-xl text-blue-500 tracking-normal">{store.selectedToken}</span>
             </p>
         </div>
     );
