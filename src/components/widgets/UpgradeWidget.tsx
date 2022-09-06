@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
@@ -8,7 +8,7 @@ import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import { useSigner } from 'wagmi';
-import { fDai, fDAIxp } from "./../../utils/constants";
+import { fDAI, fDAIxp, fUSDC, fUSDCxp } from "./../../utils/constants";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -28,30 +28,33 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     const upgrade = async (amount: string) => {
         try {
             setLoading(true);
+
+            // format ether
+            const formattedAmount: BigNumber = ethers.utils.parseUnits(amount, "ether");
             
             // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
             const daiContract = new ethers.Contract(
-                fDai,
+                fUSDC, //fDAI,
                 DAI_ABI,
                 signer
             );
             
             const aqueductToken = new ethers.Contract(
-                fDAIxp,
+                fUSDCxp, //fDAIxp,
                 AQUEDUCT_TOKEN_ABI,
                 signer
             );
 
             const approvedTransaction = await daiContract.approve(
-                fDAIxp,
-                amount
+                fUSDCxp, //fDAIxp,
+                formattedAmount
             );
             await approvedTransaction.wait();
             console.log("spend approved: ", approvedTransaction);
 
-            const upgradedTransaction = await aqueductToken.upgrade(amount, {
+            const upgradedTransaction = await aqueductToken.upgrade(formattedAmount, {
                 gasLimit: 500000,
             });
             await upgradedTransaction.wait();

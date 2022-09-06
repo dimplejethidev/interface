@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
@@ -28,6 +28,9 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     const downgrade = async (amount: string) => {
         try {
             setLoading(true);
+
+            // format ether
+            const formattedAmount: BigNumber = ethers.utils.parseUnits(amount, "ether");
             
             // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
@@ -45,12 +48,12 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
 
             const approvedTransaction = await daiContract.approve(
                 fDAIxp,
-                amount
+                formattedAmount
             );
             await approvedTransaction.wait();
             console.log("spend approved: ", approvedTransaction);
 
-            const downgradedTransaction = await aqueductToken.downgrade(amount);
+            const downgradedTransaction = await aqueductToken.downgrade(formattedAmount);
             await downgradedTransaction.wait();
             console.log("Downgraded tokens: ", downgradedTransaction);
             showToast(ToastType.Success);

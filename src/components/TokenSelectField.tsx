@@ -9,12 +9,12 @@ const TokenSelectField = () => {
         <div>
             <Dropdown
                 title='Outbound token'
-                dropdownItems={[Token.ETHxp, Token.fDAIxp]}
+                dropdownItems={[Token.ETHxp, Token.fDAIxp, Token.fUSDCxp]}
                 setToken={store.setOutboundToken}
             />
             <Dropdown
                 title='Inbound token'
-                dropdownItems={[Token.fDAIxp, Token.ETHxp]}
+                dropdownItems={[Token.fDAIxp, Token.ETHxp, Token.fUSDCxp]}
                 setToken={store.setInboundToken}
             />
         </div>

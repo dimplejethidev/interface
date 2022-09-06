@@ -1,5 +1,5 @@
 import Token from "../types/Token";
-import { ETHxpfDAIxpPool, fDAIxpETHxpPool } from "./../utils/constants";
+import { ETHxpfDAIxpPool, fDAIxpETHxpPool, fDAIxpfUSDCxpPool } from "./../utils/constants";
 
 const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
     let pool: string;
@@ -10,6 +10,12 @@ const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
             break;
         case inboundToken === Token.fDAIxp && outboundToken === Token.ETHxp:
             pool = fDAIxpETHxpPool;
+            break;
+        case inboundToken === Token.fDAIxp && outboundToken === Token.fUSDCxp:
+            pool = fDAIxpfUSDCxpPool;
+            break;
+        case inboundToken === Token.fUSDCxp && outboundToken === Token.fDAIxp:
+            pool = fDAIxpfUSDCxpPool;
             break;
         default:
             throw new Error(

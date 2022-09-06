@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
 import TokenSelectField from "../TokenSelectField";
@@ -11,7 +11,7 @@ import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import { useNetwork, useProvider, useSigner } from 'wagmi';
 import Token from "../../types/Token";
-import { ETHxp, fDAIxp } from "./../../utils/constants";
+import { ETHxp, fDAIxp, fUSDCxp } from "./../../utils/constants";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -33,6 +33,9 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         try {
             setLoading(true);
 
+            // format ether
+            const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
+
             // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
@@ -48,11 +51,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             );
 
             // TODO: Create getToken helper function
-            const token = store.outboundToken === Token.ETHxp ? ETHxp : fDAIxp;
+            const token = store.outboundToken === Token.ETHxp ? ETHxp : ( store.outboundToken === Token.fDAIxp ? fDAIxp : fUSDCxp );
 
             const createFlowOperation = superfluid.cfaV1.createFlow({
                 receiver: pool,
-                flowRate: swapFlowRate,
+                flowRate: formattedFlowRate.toString(),
                 superToken: token,
             });
             const result = await createFlowOperation.exec(signer);
@@ -73,7 +76,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             <WidgetContainer title="Swap">
                 <TokenSelectField />
                 <NumberEntryField
-                    title="FlowRate ( wei / sec )"
+                    title="FlowRate ( ether / sec )"
                     number={swapFlowRate}
                     setNumber={setSwapFlowRate}
                 />
