@@ -12,6 +12,7 @@ import { useStore } from "../../store";
 import { useNetwork, useProvider, useSigner } from 'wagmi';
 import Token from "../../types/Token";
 import { ETHxp, fDAIxp, fUSDCxp } from "./../../utils/constants";
+import tokens from "../../utils/tokens";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -51,19 +52,21 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             );
 
             // TODO: Create getToken helper function
-            const token = store.outboundToken === Token.ETHxp ? ETHxp : ( store.outboundToken === Token.fDAIxp ? fDAIxp : fUSDCxp );
+            const token = tokens.get(store.outboundToken)?.address;
 
-            const createFlowOperation = superfluid.cfaV1.createFlow({
-                receiver: pool,
-                flowRate: formattedFlowRate.toString(),
-                superToken: token,
-            });
-            const result = await createFlowOperation.exec(signer);
-            await result.wait();
+            if (token) {
+                const createFlowOperation = superfluid.cfaV1.createFlow({
+                    receiver: pool,
+                    flowRate: formattedFlowRate.toString(),
+                    superToken: token,
+                });
+                const result = await createFlowOperation.exec(signer);
+                await result.wait();
 
-            console.log("Stream created: ", result);
-            showToast(ToastType.Success);
-            setLoading(false);
+                console.log("Stream created: ", result);
+                showToast(ToastType.Success);
+                setLoading(false);
+            }
         } catch (error) {
             console.log("Error: ", error);
             showToast(ToastType.Error);

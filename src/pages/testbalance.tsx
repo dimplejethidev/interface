@@ -8,9 +8,9 @@ const TestBalance: NextPage = () => {
 
     return (
         <div className="flex space-x-16 h-screen w-screen items-center justify-center">
-            <AnimatedBalance value={num.toString()} />
+            <AnimatedBalance value={num.toString()} isIncreasing={false} />
             <button onClick={() => {
-                setNum(n => n + 1)
+                setNum(n => n - 1)
                 //const min = 100;
                 //const max = 0;
                 //setNum((Math.random() * (max - min + 1)) + min);

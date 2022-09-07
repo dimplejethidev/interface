@@ -20,7 +20,7 @@ const ProvideLiquidity: NextPage = () => {
                     <div className="w-44">
                         <Dropdown
                             title='Token'
-                            dropdownItems={[Token.ETHxp, Token.fDAIxp]}
+                            dropdownItems={[Token.fDAIxp, Token.fUSDCxp]}
                             setToken={store.setSelectedToken}
                         />
                     </div>
@@ -30,5 +30,5 @@ const ProvideLiquidity: NextPage = () => {
         </div>
     );
 };
-//10000000000000000
+
 export default ProvideLiquidity;

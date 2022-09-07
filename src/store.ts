@@ -20,6 +20,7 @@ export const useStore = create<StoreState>()((set) => ({
     balance: initialBalance,
     outboundToken: Token.ETHxp,
     inboundToken: Token.fDAIxp,
+    selectedToken: Token.fDAIxp,
     setAccount: (account: string) => set((state) => ({ ...state, account })),
     setBalance: (balance: IBalance) => set((state) => ({ ...state, balance })),
     setOutboundToken: (outboundToken: Token) =>

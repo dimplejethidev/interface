@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-function AnimatedDigit({ digit }: { digit: number }) {
+const increasingNumbers = [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9];
+const decreasingNumbers = increasingNumbers.slice().reverse();
+
+function AnimatedDigit({ digit, isIncreasing }: { digit: number, isIncreasing: boolean }) {
     const ref = useRef<HTMLDivElement>(null);
     const [offset, setOffset] = useState(0);
     const [previousDigit, setPreviousDigit] = useState(digit);
@@ -8,12 +11,12 @@ function AnimatedDigit({ digit }: { digit: number }) {
     const [currentTimeout, setCurrentTimeout] = useState<NodeJS.Timeout>();
     const tapeLength = 6; // 8 units (count from 0)
     const [tapePosition, setTapePosition] = useState(0);
-
+    
     useEffect(() => {
         if (ref.current) {
             // update tape position
             var updatedTapePosition = tapePosition;
-            if (previousDigit > digit) {
+            if ((isIncreasing && previousDigit > digit) || (!isIncreasing && previousDigit < digit) ) {
                 setTapePosition(t => t + 1);
                 updatedTapePosition += 1;
             }
@@ -21,7 +24,7 @@ function AnimatedDigit({ digit }: { digit: number }) {
             // animate to new digit
             setPauseAnimation(false);
             const wrapperPos = ref.current.getBoundingClientRect().y;
-            const digitPos = ref.current.children.item((updatedTapePosition * 10) + digit)?.getBoundingClientRect().y;
+            const digitPos = ref.current.children.item((updatedTapePosition * 10) + (isIncreasing ? digit : (9 - digit)))?.getBoundingClientRect().y;
             if (digitPos) {
                 setOffset(
                     wrapperPos - digitPos
@@ -58,7 +61,7 @@ function AnimatedDigit({ digit }: { digit: number }) {
             className={!pauseAnimation ? 'transition-all ease-in-out duration-300' : ''}
         >
             {
-                [0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9].map(d => {
+                (isIncreasing ? increasingNumbers : decreasingNumbers).map(d => {
                     return (
                         <div>
                             {d}
@@ -70,7 +73,7 @@ function AnimatedDigit({ digit }: { digit: number }) {
     )
 }
 
-function AnimatedBalance({ value }: { value: string }) {
+function AnimatedBalance({ value, isIncreasing }: { value: string, isIncreasing: boolean  }) {
     return (
         <div className="flex space-x-2 text-7xl h-[4.5rem] overflow-hidden monospace-font text-gray-7000 text-aqueductBlue font-bold">
             {
@@ -83,7 +86,7 @@ function AnimatedBalance({ value }: { value: string }) {
                         )
                     } else {
                         return (
-                            <AnimatedDigit digit={parseInt(digit)} />
+                            <AnimatedDigit digit={parseInt(digit)} isIncreasing={isIncreasing} />
                         )
                     }
                 })
