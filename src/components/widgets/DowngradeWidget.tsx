@@ -9,6 +9,9 @@ import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import { useSigner } from 'wagmi';
 import { fDAIxp } from "./../../utils/constants";
+import Dropdown from "../Dropdown";
+import Token from "./../../types/Token";
+import tokens from "../../utils/tokens";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -19,12 +22,12 @@ interface DowngradeWidgetProps {
 
 const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     const [amount, setAmount] = useState("");
+    const [downgradeToken, setDowngradeToken] = useState<Token>(Token.ETHxp);
     const [loading, setLoading] = useState(false);
 
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
 
-    // TODO: Add dropdown for two AQUA tokens (AQUA0 & AQUA1)
     const downgrade = async (amount: string) => {
         try {
             setLoading(true);
@@ -35,25 +38,27 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
             // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
-            const daiContract = new ethers.Contract(
-                fDAIxp,
+            const underlyingToken = tokens.get(downgradeToken!.toString())?.address;
+            const underlyingTokenContract = new ethers.Contract(
+                underlyingToken || "",
                 DAI_ABI,
                 signer
             );
-            const aqueductToken = new ethers.Contract(
+
+            const wrappedTokenContract = new ethers.Contract(
                 fDAIxp,
                 AQUEDUCT_TOKEN_ABI,
                 signer
             );
 
-            const approvedTransaction = await daiContract.approve(
+            const approvedTransaction = await underlyingTokenContract.approve(
                 fDAIxp,
                 formattedAmount
             );
             await approvedTransaction.wait();
             console.log("spend approved: ", approvedTransaction);
 
-            const downgradedTransaction = await aqueductToken.downgrade(formattedAmount);
+            const downgradedTransaction = await wrappedTokenContract.downgrade(formattedAmount);
             await downgradedTransaction.wait();
             console.log("Downgraded tokens: ", downgradedTransaction);
             showToast(ToastType.Success);
@@ -68,6 +73,11 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full mt-12">
             <WidgetContainer title="Unwrap">
+            <Dropdown
+                    title="Downgrade"
+                    dropdownItems={[Token.ETHxp, Token.fDAIxp, Token.fUSDCxp]}
+                    setToken={setDowngradeToken}
+                />
                 <NumberEntryField
                     title="Enter amount to downgrade here"
                     number={amount}

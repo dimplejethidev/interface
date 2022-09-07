@@ -7,8 +7,12 @@ import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
-import { useSigner } from 'wagmi';
+import { useSigner } from "wagmi";
 import { fDAI, fDAIxp, fUSDC, fUSDCxp } from "./../../utils/constants";
+import Dropdown from "../Dropdown";
+import Token from "./../../types/Token";
+import tokens from "../../utils/tokens";
+import { useStore } from "../../store";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -19,44 +23,57 @@ interface UpgradeWidgetProps {
 
 const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     const [amount, setAmount] = useState("");
+    const [upgradeToken, setUpgradeToken] = useState<Token>(Token.ETHxp);
     const [loading, setLoading] = useState(false);
 
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
 
-    // TODO: Add dropdown for two AQUA tokens (AQUA0 & AQUA1)
     const upgrade = async (amount: string) => {
         try {
             setLoading(true);
 
             // format ether
-            const formattedAmount: BigNumber = ethers.utils.parseUnits(amount, "ether");
-            
-            // check that wallet is connected by checking for signer
-            if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
+            const formattedAmount: BigNumber = ethers.utils.parseUnits(
+                amount,
+                "ether"
+            );
 
-            const daiContract = new ethers.Contract(
-                fUSDC, //fDAI,
+            // check that wallet is connected by checking for signer
+            if (signer == null || signer == undefined) {
+                showToast(ToastType.ConnectWallet);
+                setLoading(false);
+                return;
+            }
+            
+            // TODO: Could we use the Superfluid SDK here to get the underlying token?
+            const underlyingToken = tokens.get(upgradeToken!.toString())?.address;
+            const underlyingTokenContract = new ethers.Contract(
+                underlyingToken || "",
                 DAI_ABI,
                 signer
             );
             
-            const aqueductToken = new ethers.Contract(
+            const wrappedTokenContract = new ethers.Contract(
                 fUSDCxp, //fDAIxp,
                 AQUEDUCT_TOKEN_ABI,
                 signer
-            );
-
-            const approvedTransaction = await daiContract.approve(
+                );
+                
+            const approvedTransaction = await underlyingTokenContract.approve(
                 fUSDCxp, //fDAIxp,
                 formattedAmount
             );
             await approvedTransaction.wait();
             console.log("spend approved: ", approvedTransaction);
 
-            const upgradedTransaction = await aqueductToken.upgrade(formattedAmount, {
-                gasLimit: 500000,
-            });
+            // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
+            const upgradedTransaction = await wrappedTokenContract.upgrade(
+                formattedAmount,
+                {
+                    gasLimit: 500000,
+                }
+            );
             await upgradedTransaction.wait();
             console.log("Upgraded tokens: ", upgradedTransaction);
             showToast(ToastType.Success);
@@ -71,6 +88,11 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Wrap">
+                <Dropdown
+                    title="Upgrade"
+                    dropdownItems={[Token.ETHxp, Token.fDAIxp, Token.fUSDCxp]}
+                    setToken={setUpgradeToken}
+                />
                 <NumberEntryField
                     title="Enter amount to upgrade here"
                     number={amount}

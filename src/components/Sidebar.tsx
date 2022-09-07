@@ -77,7 +77,7 @@ const Sidebar = () => {
             <CustomWalletConnectButton />
             <ul className="space-y-3">
                 {navItems.map(({ icon, label, page }) => (
-                    <SideBarTab icon={icon} label={label} page={page} />
+                    <SideBarTab icon={icon} label={label} page={page} key={label} />
                 ))}
             </ul>
         </header>
