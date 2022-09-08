@@ -96,15 +96,15 @@ const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
     return (
         <Select
             components={{ Control, Option }}
-            isSearchable
-            name="emoji"
-            placeholder={selectTokenOption.label}
-            // @ts-ignore
-            imgUrl={selectTokenOption.imgUrl}
+            onChange={onChange}
             options={options}
             styles={customStyles}
+            // @ts-ignore
+            imgUrl={selectTokenOption.imgUrl}
+            placeholder={selectTokenOption.label}
+            isSearchable
+            isClearable
             isMulti={false}
-            onChange={onChange}
             instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
         />
     );
