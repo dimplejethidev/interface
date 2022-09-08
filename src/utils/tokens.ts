@@ -6,14 +6,6 @@ interface TokenData {
     address: string;
 }
 
-/*
-const tokens: TokenData[] = [
-    { name: Token.ETHxp, address: ETHxp },
-    { name: Token.fDAIxp, address: fDAIxp },
-    { name: Token.fUSDCxp, address: fUSDCxp },
-]
-*/
-
 const tokens = new Map<string, TokenData>([
     [Token.ETHxp, { name: Token.ETHxp, address: ETHxp }],
     [Token.fDAIxp, { name: Token.fDAIxp, address: fDAIxp }],

@@ -75,7 +75,7 @@ function AnimatedDigit({ digit, isIncreasing }: { digit: number, isIncreasing: b
 
 function AnimatedBalance({ value, isIncreasing }: { value: string, isIncreasing: boolean  }) {
     return (
-        <div className="flex space-x-2 text-7xl h-[4.5rem] overflow-hidden monospace-font text-gray-7000 text-aqueductBlue font-bold">
+        <div className="flex space-x-2 text-6xl h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
             {
                 value.split('').map(digit => {
                     if (digit == '.') {

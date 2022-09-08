@@ -1,5 +1,6 @@
 import { FC, ReactElement, useEffect, useMemo, useState } from "react";
 import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus, TbCircleMinus } from "react-icons/tb"
+import { MdAttachMoney } from "react-icons/md"
 import { AiOutlineLineChart } from "react-icons/ai"
 import Head from "next/head";
 import Link from "next/link";
@@ -15,6 +16,14 @@ interface SideBarTabProps {
     label: string;
     page: string;
 }
+
+const navItems: { icon: any, label: string; page: string }[] = [
+    { icon: <AiOutlineLineChart size={18} />, label: "My Streams", page: "/my-streams" },
+    { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
+    { icon: <TbArrowsRight size={18} />, label: "Provide Liquidity", page: "/provide-liquidity" },
+    { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
+    { icon: <MdAttachMoney size={18} />, label: "My Rewards", page: "/my-rewards" },
+];
 
 const SideBarTab: FC<SideBarTabProps> = ({
     icon,
@@ -40,13 +49,6 @@ const SideBarTab: FC<SideBarTabProps> = ({
         </button>
     )
 }
-
-const navItems: { icon: any, label: string; page: string }[] = [
-    { icon: <AiOutlineLineChart size={18} />, label: "My Streams", page: "/my-streams" },
-    { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
-    { icon: <TbArrowsRight size={18} />, label: "Provide Liquidity", page: "/provide-liquidity" },
-    { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
-];
 
 const Sidebar = () => {
     const router = useRouter();

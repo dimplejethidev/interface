@@ -16,7 +16,6 @@ const Swap: NextPage<SwapProps> = ({ showToast }) => {
             <Sidebar />
             <main className="flex flex-col w-4/5 justify-evenly">
                 <CreateStreamWidget showToast={showToast} />
-                <AccountBalance />
             </main>
         </div>
     );
