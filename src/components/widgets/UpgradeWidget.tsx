@@ -23,7 +23,7 @@ interface UpgradeWidgetProps {
 
 const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     const [amount, setAmount] = useState("");
-    const [upgradeToken, setUpgradeToken] = useState<Token>(Token.ETHxp);
+    const [upgradeToken, setUpgradeToken] = useState<Token>(Token.fDAIxp);
     const [loading, setLoading] = useState(false);
 
     const { data: rainbowSigner } = useSigner();
@@ -45,39 +45,39 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
                 setLoading(false);
                 return;
             }
-            
+
             // TODO: Could we use the Superfluid SDK here to get the underlying token?
-            const underlyingToken = tokens.get(upgradeToken!.toString())?.address;
+            const underlyingTokenAddress = tokens.get(upgradeToken)?.underlyingToken;
+            console.log(underlyingTokenAddress)
             const underlyingTokenContract = new ethers.Contract(
-                underlyingToken || "",
+                underlyingTokenAddress || "",
                 DAI_ABI,
                 signer
             );
-            
-            const wrappedTokenContract = new ethers.Contract(
-                fUSDCxp, //fDAIxp,
-                AQUEDUCT_TOKEN_ABI,
-                signer
-                );
-                
-            const approvedTransaction = await underlyingTokenContract.approve(
-                fUSDCxp, //fDAIxp,
-                formattedAmount
-            );
-            await approvedTransaction.wait();
-            console.log("spend approved: ", approvedTransaction);
 
-            // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
-            const upgradedTransaction = await wrappedTokenContract.upgrade(
-                formattedAmount,
-                {
-                    gasLimit: 500000,
-                }
-            );
-            await upgradedTransaction.wait();
-            console.log("Upgraded tokens: ", upgradedTransaction);
-            showToast(ToastType.Success);
-            setLoading(false);
+            const upgradeTokenAddress = tokens.get(upgradeToken)?.address;
+            if (upgradeTokenAddress) {
+                console.log(upgradeTokenAddress)
+                const wrappedTokenContract = new ethers.Contract(
+                    upgradeTokenAddress,
+                    AQUEDUCT_TOKEN_ABI,
+                    signer
+                );
+
+                const approvedTransaction = await underlyingTokenContract.approve(
+                    upgradeTokenAddress,
+                    formattedAmount
+                );
+                await approvedTransaction.wait();
+                console.log("spend approved: ", approvedTransaction);
+
+                // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
+                const upgradedTransaction = await wrappedTokenContract.upgrade(formattedAmount);
+                await upgradedTransaction.wait();
+                console.log("Upgraded tokens: ", upgradedTransaction);
+                showToast(ToastType.Success);
+                setLoading(false);
+            }
         } catch (error) {
             console.log("Upgrade error: ", error);
             showToast(ToastType.Error);
@@ -90,7 +90,7 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             <WidgetContainer title="Wrap">
                 <Dropdown
                     title="Upgrade"
-                    dropdownItems={[Token.ETHxp, Token.fDAIxp, Token.fUSDCxp]}
+                    dropdownItems={[Token.fDAIxp, Token.fUSDCxp]}
                     setToken={setUpgradeToken}
                 />
                 <NumberEntryField

@@ -18,8 +18,8 @@ interface StoreState {
 export const useStore = create<StoreState>()((set) => ({
     account: "",
     balance: initialBalance,
-    outboundToken: Token.ETHxp,
-    inboundToken: Token.fDAIxp,
+    outboundToken: Token.fDAIxp,
+    inboundToken: Token.fUSDCxp,
     selectedToken: Token.fDAIxp,
     setAccount: (account: string) => set((state) => ({ ...state, account })),
     setBalance: (balance: IBalance) => set((state) => ({ ...state, balance })),

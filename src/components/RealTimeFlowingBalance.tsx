@@ -39,7 +39,6 @@ const RealTimeFlowingBalance = (): ReactElement => {
             // set token0 state
             const initialBalance0 = (await tokenContract0.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).toString())).availableBalance;
             const futureBalance0 = (await tokenContract0.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).add(REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME / 1000).toString())).availableBalance;
-            console.log(initialBalance0.toString());
             setIsIncreasing0(futureBalance0.sub(initialBalance0).toNumber() >= 0);
             setCurrentBalance0(initialBalance0)
             setFlowRate0(futureBalance0.sub(initialBalance0).div(REFRESH_INTERVAL));
@@ -47,7 +46,6 @@ const RealTimeFlowingBalance = (): ReactElement => {
             // set token1 state
             const initialBalance1 = (await tokenContract1.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).toString())).availableBalance;
             const futureBalance1 = (await tokenContract1.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).add(REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME / 1000).toString())).availableBalance;
-            console.log(initialBalance1.toString());
             setIsIncreasing1(futureBalance1.sub(initialBalance1).toNumber() >= 0);
             setCurrentBalance1(initialBalance1)
             setFlowRate1(futureBalance1.sub(initialBalance1).div(REFRESH_INTERVAL));
@@ -103,7 +101,7 @@ const RealTimeFlowingBalance = (): ReactElement => {
                         <div className="w-full h-full overflow-hidden">
                             <div className="w-full h-40 bg-aqueductBlue/90" />
                             <div className={"w-full h-80 bg-blue-400 animate-ping " + 
-                                ((isIncreasing0 && isIncreasing1) || (!isIncreasing0 && !isIncreasing1) && 'opacity-0')} />
+                                (flowRate0.eq(0) && flowRate1.eq(0) && 'opacity-0')} />
                         </div>
                     </div>
                 </div>
