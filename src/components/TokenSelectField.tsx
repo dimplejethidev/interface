@@ -1,20 +1,17 @@
-import Dropdown from "./Dropdown";
-import Token from "../types/Token";
 import { useStore } from "../store";
+import TokenDropdown from "./TokenDropdown";
 
 const TokenSelectField = () => {
     const store = useStore();
 
     return (
         <div>
-            <Dropdown
-                title='Outbound token'
-                dropdownItems={[Token.fDAIxp, Token.fUSDCxp]}
+            <TokenDropdown 
+                selectTokenOption={store.outboundToken}
                 setToken={store.setOutboundToken}
             />
-            <Dropdown
-                title='Inbound token'
-                dropdownItems={[Token.fUSDCxp, Token.fDAIxp]}
+            <TokenDropdown 
+                selectTokenOption={store.inboundToken}
                 setToken={store.setInboundToken}
             />
         </div>

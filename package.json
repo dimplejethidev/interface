@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=3002 next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -16,6 +16,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "react-select": "^5.4.0",
     "wagmi": "^0.6.4",
     "zustand": "^4.1.1"
   },

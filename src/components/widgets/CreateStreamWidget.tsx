@@ -34,10 +34,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         try {
             setLoading(true);
 
-            // format ether
             const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
 
-            // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
             const chainId = chain?.id;
@@ -47,12 +45,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             });
 
             const pool = getPoolAddress(
-                store.inboundToken,
-                store.outboundToken
+                store.inboundToken.value,
+                store.outboundToken.value
             );
-
-            // TODO: Create getToken helper function
-            const token = tokens.get(store.outboundToken)?.address;
+            
+            const token = tokens.get(store.outboundToken.label)?.address;
 
             if (token) {
                 const createFlowOperation = superfluid.cfaV1.createFlow({
