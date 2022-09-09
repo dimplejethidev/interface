@@ -19,8 +19,6 @@ const RealTimeFlowingBalance = (): ReactElement => {
     const store = useStore();
     const provider = useProvider();
     const { address } = useAccount();
-    const [isIncreasing0, setIsIncreasing0] = useState(true);
-    const [isIncreasing1, setIsIncreasing1] = useState(true);
 
     async function refresh() {
         // refresh vars
@@ -39,14 +37,12 @@ const RealTimeFlowingBalance = (): ReactElement => {
             // set token0 state
             const initialBalance0 = (await tokenContract0.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).toString())).availableBalance;
             const futureBalance0 = (await tokenContract0.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).add(REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME / 1000).toString())).availableBalance;
-            setIsIncreasing0(futureBalance0.sub(initialBalance0).toNumber() >= 0);
             setCurrentBalance0(initialBalance0)
             setFlowRate0(futureBalance0.sub(initialBalance0).div(REFRESH_INTERVAL));
 
             // set token1 state
             const initialBalance1 = (await tokenContract1.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).toString())).availableBalance;
             const futureBalance1 = (await tokenContract1.realtimeBalanceOf(address, currentTimestampBigNumber.div(1000).add(REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME / 1000).toString())).availableBalance;
-            setIsIncreasing1(futureBalance1.sub(initialBalance1).toNumber() >= 0);
             setCurrentBalance1(initialBalance1)
             setFlowRate1(futureBalance1.sub(initialBalance1).div(REFRESH_INTERVAL));
         }
@@ -92,12 +88,12 @@ const RealTimeFlowingBalance = (): ReactElement => {
                 </div>
                 <div className="flex items-center justify-center p-4 border-[1px] centered-shadow-sm rounded-2xl text-daiYellow">
                     <div className="flex items-center justify-center px-12 py-8 space-x-8 rounded-xl bg-daiYellow/10">
-                        <AnimatedBalance value={parseFloat(ethers.utils.formatEther(currentBalance0)).toFixed(6)} isIncreasing={isIncreasing0} />
+                        <AnimatedBalance value={parseFloat(ethers.utils.formatEther(currentBalance0)).toFixed(6)} isIncreasing={flowRate0.gte(0)} />
                         <img src='dai-logo.png' className='w-12 h-12' />
                     </div>
                 </div>
                 <div className="px-16 overflow-hidden">
-                    <div className={'w-40 h-40 border-[1px] centered-shadow-sm px-4 ' + (!isIncreasing0 && isIncreasing1 && 'rotate-180')}>
+                    <div className={'w-40 h-40 border-[1px] centered-shadow-sm px-4 ' + (flowRate1.gte(0) && 'rotate-180')}>
                         <div className="w-full h-full overflow-hidden">
                             <div className="w-full h-40 bg-aqueductBlue/90" />
                             <div className={"w-full h-80 bg-blue-400 animate-ping " + 
@@ -107,7 +103,7 @@ const RealTimeFlowingBalance = (): ReactElement => {
                 </div>
                 <div className="flex items-center justify-center p-4 border-[1px] centered-shadow-sm rounded-2xl text-usdcBlue">
                     <div className="flex items-center justify-center px-12 py-8 space-x-8 rounded-xl bg-usdcBlue/10">
-                        <AnimatedBalance value={parseFloat(ethers.utils.formatEther(currentBalance1)).toFixed(6)} isIncreasing={isIncreasing1} />
+                        <AnimatedBalance value={parseFloat(ethers.utils.formatEther(currentBalance1)).toFixed(6)} isIncreasing={flowRate1.gte(0)} />
                         <img src='usdc-logo.png' className='w-12 h-12' />
                     </div>
                 </div>
