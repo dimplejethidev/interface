@@ -15,28 +15,31 @@ type IsMulti = false;
 const customStyles: StylesConfig<TokenOption, IsMulti> = {
     menu: (provided) => ({
         ...provided,
-        borderRadius: 15,
-        marginTop: 0,
+        padding: 8,
+        borderRadius: 16,
+        marginTop: 10
     }),
     menuList: (provided) => ({
         ...provided,
         paddingTop: 0,
-        paddingBottom: 0,
+        paddingBottom: 0
     }),
     option: (provided) => ({
         ...provided,
         padding: 20,
-        borderRadius: 15,
+        borderRadius: 10,
         fontSize: "1.5rem",
-        fontWeight: 600,
+        fontWeight: 600
     }),
     control: (provided) => ({
         ...provided,
         padding: 20,
-        borderRadius: 15,
+        borderRadius: 16,
         fontSize: "1.5rem",
         fontWeight: 600,
         marginTop: 10,
+        borderWidth: 1,
+        borderColor: "rgb(229 231 235)"
     }),
 };
 
@@ -106,6 +109,7 @@ const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
             isClearable
             isMulti={false}
             instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
+            className="centered-shadow-sm rounded-2xl"
         />
     );
 };
