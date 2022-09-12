@@ -13,6 +13,7 @@ import Dropdown from "../Dropdown";
 import Token from "./../../types/Token";
 import tokens from "../../utils/tokens";
 import { useStore } from "../../store";
+import TokenDropdown from "../TokenDropdown";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -23,11 +24,11 @@ interface UpgradeWidgetProps {
 
 const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     const [amount, setAmount] = useState("");
-    const [upgradeToken, setUpgradeToken] = useState<Token>(Token.fDAIxp);
     const [loading, setLoading] = useState(false);
 
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
+    const store = useStore();
 
     const upgrade = async (amount: string) => {
         try {
@@ -47,7 +48,7 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             }
 
             // TODO: Could we use the Superfluid SDK here to get the underlying token?
-            const underlyingTokenAddress = tokens.get(upgradeToken)?.underlyingToken;
+            const underlyingTokenAddress = store.upgradeDowngradeToken.underlyingToken;
             console.log(underlyingTokenAddress)
             const underlyingTokenContract = new ethers.Contract(
                 underlyingTokenAddress || "",
@@ -55,29 +56,27 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
                 signer
             );
 
-            const upgradeTokenAddress = tokens.get(upgradeToken)?.address;
-            if (upgradeTokenAddress) {
-                console.log(upgradeTokenAddress)
-                const wrappedTokenContract = new ethers.Contract(
-                    upgradeTokenAddress,
-                    AQUEDUCT_TOKEN_ABI,
-                    signer
-                );
+            const upgradeTokenAddress = store.upgradeDowngradeToken.address;
+            console.log(upgradeTokenAddress)
+            const wrappedTokenContract = new ethers.Contract(
+                upgradeTokenAddress,
+                AQUEDUCT_TOKEN_ABI,
+                signer
+            );
 
-                const approvedTransaction = await underlyingTokenContract.approve(
-                    upgradeTokenAddress,
-                    formattedAmount
-                );
-                await approvedTransaction.wait();
-                console.log("spend approved: ", approvedTransaction);
+            const approvedTransaction = await underlyingTokenContract.approve(
+                upgradeTokenAddress,
+                formattedAmount
+            );
+            await approvedTransaction.wait();
+            console.log("spend approved: ", approvedTransaction);
 
-                // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
-                const upgradedTransaction = await wrappedTokenContract.upgrade(formattedAmount);
-                await upgradedTransaction.wait();
-                console.log("Upgraded tokens: ", upgradedTransaction);
-                showToast(ToastType.Success);
-                setLoading(false);
-            }
+            // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
+            const upgradedTransaction = await wrappedTokenContract.upgrade(formattedAmount);
+            await upgradedTransaction.wait();
+            console.log("Upgraded tokens: ", upgradedTransaction);
+            showToast(ToastType.Success);
+            setLoading(false);
         } catch (error) {
             console.log("Upgrade error: ", error);
             showToast(ToastType.Error);
@@ -88,19 +87,20 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Wrap">
-                <Dropdown
-                    title="Upgrade"
-                    dropdownItems={[Token.fDAIxp, Token.fUSDCxp]}
-                    setToken={setUpgradeToken}
-                />
-                <NumberEntryField
-                    title="Enter amount to upgrade here"
-                    number={amount}
-                    setNumber={setAmount}
-                />
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.upgradeDowngradeToken}
+                        setToken={store.setUpgradeDowngradeToken}
+                    />
+                    <NumberEntryField
+                        title="Enter amount to upgrade here"
+                        number={amount}
+                        setNumber={setAmount}
+                    />
+                </div>
                 {loading ? (
                     <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
-                        <LoadingSpinner />
+                        <LoadingSpinner size={30} />
                     </div>
                 ) : (
                     <button

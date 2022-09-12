@@ -10,12 +10,15 @@ import ethLogo from "./../../public/eth-logo.png";
 import daiLogo from "./../../public/dai-logo.png";
 import usdcLogo from "./../../public/usdc-logo.png";
 import { TokenOption } from "../types/TokenOption";
+import { ETHxp, fDAI, fDAIxp, fUSDC, fUSDCxp } from "../utils/constants";
+import tokens from "../utils/tokens";
 
 type IsMulti = false;
 const customStyles: StylesConfig<TokenOption, IsMulti> = {
     menu: (provided) => ({
         ...provided,
-        padding: 8,
+        paddingLeft: 8,
+        paddingRight: 8,
         borderRadius: 16,
         marginTop: 10
     }),
@@ -29,7 +32,11 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         padding: 20,
         borderRadius: 10,
         fontSize: "1.5rem",
-        fontWeight: 600
+        fontWeight: 600,
+        marginTop: 8,
+        marginBottom: 8,
+        display: 'flex',
+        alignItems: 'center'
     }),
     control: (provided) => ({
         ...provided,
@@ -42,24 +49,6 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         borderColor: "rgb(229 231 235)"
     }),
 };
-
-const options: TokenOption[] = [
-    {
-        label: "ETHxp",
-        value: Token.ETHxp,
-        imgUrl: ethLogo.src,
-    },
-    {
-        label: "fDAIxp",
-        value: Token.fDAIxp,
-        imgUrl: daiLogo.src,
-    },
-    {
-        label: "fUSDCxp",
-        value: Token.fUSDCxp,
-        imgUrl: usdcLogo.src,
-    },
-];
 
 const Control = ({ children, ...props }: ControlProps<TokenOption, false>) => {
     // @ts-ignore
@@ -75,7 +64,7 @@ const Control = ({ children, ...props }: ControlProps<TokenOption, false>) => {
 const Option = ({ children, ...props }: OptionProps<TokenOption, false>) => {
     return (
         <components.Option {...props}>
-            <img src={props.data.imgUrl} height="20px" width="20px" />
+            <img src={props.data.imgUrl} className='w-5 h-5 mr-3'/>
             {children}
         </components.Option>
     );
@@ -100,7 +89,7 @@ const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
         <Select
             components={{ Control, Option }}
             onChange={onChange}
-            options={options}
+            options={tokens}
             styles={customStyles}
             // @ts-ignore
             imgUrl={selectTokenOption.imgUrl}

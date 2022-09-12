@@ -11,11 +11,11 @@ const NumberEntryField = ({
 }: NumberEntryFieldProps) => {
     return (
         <div>
-            <div className="absolute pl-4 pt-3 text-xs font-semibold">
+            <div className="absolute pl-6 pt-4 text-xs font-semibold">
                 {title}
             </div>
             <input
-                className="h-20 text-2xl w-full pt-6 font-semibold bg-white border-[1px] border-gray-200 centered-shadow-sm rounded-2xl px-4 monospace-font tracking-widest"
+                className="h-[5.5rem] text-2xl w-full pt-7 font-semibold bg-white border-[1px] border-gray-200 centered-shadow-sm rounded-2xl px-6 monospace-font tracking-widest"
                 type="text"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 placeholder="0"

@@ -12,6 +12,8 @@ import { fDAIxp } from "./../../utils/constants";
 import Dropdown from "../Dropdown";
 import Token from "./../../types/Token";
 import tokens from "../../utils/tokens";
+import { useStore } from "../../store";
+import TokenDropdown from "../TokenDropdown";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -22,11 +24,11 @@ interface DowngradeWidgetProps {
 
 const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     const [amount, setAmount] = useState("");
-    const [downgradeToken, setDowngradeToken] = useState<Token>(Token.fDAIxp);
     const [loading, setLoading] = useState(false);
 
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
+    const store = useStore();
 
     const downgrade = async (amount: string) => {
         try {
@@ -38,20 +40,19 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
             // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
-            const downgradeTokenAddress = tokens.get(downgradeToken)?.address;
-            if (downgradeTokenAddress) {
-                const wrappedTokenContract = new ethers.Contract(
-                    downgradeTokenAddress,
-                    AQUEDUCT_TOKEN_ABI,
-                    signer
-                );
+            const downgradeTokenAddress = store.upgradeDowngradeToken.address;
 
-                const downgradedTransaction = await wrappedTokenContract.downgrade(formattedAmount);
-                await downgradedTransaction.wait();
-                console.log("Downgraded tokens: ", downgradedTransaction);
-                showToast(ToastType.Success);
-                setLoading(false);
-            }
+            const wrappedTokenContract = new ethers.Contract(
+                downgradeTokenAddress,
+                AQUEDUCT_TOKEN_ABI,
+                signer
+            );
+
+            const downgradedTransaction = await wrappedTokenContract.downgrade(formattedAmount);
+            await downgradedTransaction.wait();
+            console.log("Downgraded tokens: ", downgradedTransaction);
+            showToast(ToastType.Success);
+            setLoading(false);
         } catch (error) {
             console.log("Downgrade error: ", error);
             showToast(ToastType.Error);
@@ -62,20 +63,21 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
     return (
         <section className="flex flex-col items-center w-full mt-12">
             <WidgetContainer title="Unwrap">
-                <Dropdown
-                    title="Downgrade"
-                    dropdownItems={[Token.fDAIxp, Token.fUSDCxp]}
-                    setToken={setDowngradeToken}
-                />
-                <NumberEntryField
-                    title="Enter amount to downgrade here"
-                    number={amount}
-                    setNumber={setAmount}
-                />
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.upgradeDowngradeToken}
+                        setToken={store.setUpgradeDowngradeToken}
+                    />
+                    <NumberEntryField
+                        title="Enter amount to downgrade here"
+                        number={amount}
+                        setNumber={setAmount}
+                    />
+                </div>
 
                 {loading ? (
                     <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
-                        <LoadingSpinner />
+                        <LoadingSpinner size={30} />
                     </div>
                 ) : (
                     <button
