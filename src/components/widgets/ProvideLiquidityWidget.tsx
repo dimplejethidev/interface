@@ -14,17 +14,19 @@ import Token from "../../types/Token";
 import { ETHxp, fDAIxp, fUSDCxp } from "./../../utils/constants";
 import tokens from "../../utils/tokens";
 import { AiOutlineInfoCircle } from "react-icons/ai"
+import TokenDropdown from "../TokenDropdown";
 import PricingField from "../PricingField";
 
-interface CreateStreamWidgetProps {
+interface ProvideLiquidityWidgetProps {
     showToast: (type: ToastType) => {};
 }
 
-const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const store = useStore();
 
     const [pool, setPool] = useState("");
-    const [swapFlowRate, setSwapFlowRate] = useState("");
+    const [flowRate0, setFlowRate0] = useState("");
+    const [flowRate1, setFlowRate1] = useState("");
     const [loading, setLoading] = useState(false);
 
     const provider = useProvider();
@@ -33,11 +35,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const { chain } = useNetwork();
 
     const [token1Price, setToken1Price] = useState(0);
-    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
 
     const swap = async () => {
+        /*
         try {
             setLoading(true);
 
@@ -56,7 +58,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 store.outboundToken.value
             );
 
-            const token = store.outboundToken.address;
+            const token = tokens.get(store.outboundToken.label)?.address;
 
             if (token) {
                 const createFlowOperation = superfluid.cfaV1.createFlow({
@@ -76,6 +78,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             showToast(ToastType.Error);
             setLoading(false);
         }
+        */
     };
 
     // refresh spot pricing upon user input
@@ -103,8 +106,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 var token1Flow: BigNumber = await poolContract.getFlowIn(token1Address);
 
                 // calculate new flows
-                if (swapFlowRate != '') {
-                    token0Flow = token0Flow.add(swapFlowRate);
+                if (flowRate0 != '') {
+                    token0Flow = token0Flow.add(flowRate0);
+                }
+                if (flowRate1 != '') {
+                    token1Flow = token1Flow.add(flowRate1);
                 }
 
                 // calculate price multiple
@@ -112,12 +118,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     setToken1Price(
                         token1Flow.mul(100000).div(token0Flow).toNumber() / 100000
                     )
-                    setPriceMultiple(
-                        token1Flow.mul(BigNumber.from(2).pow(128)).div(token0Flow)
-                    )
                 } else {
                     setToken1Price(0);
-                    setPriceMultiple(BigNumber.from(0));
                 }
 
                 await new Promise(res => setTimeout(res, 900));
@@ -129,18 +131,34 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         }
 
         refreshPrice();
-    }, [swapFlowRate, store.inboundToken, store.outboundToken])
+    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken])
 
     return (
         <section className="flex flex-col items-center w-full">
-            <WidgetContainer title="Swap">
-                <TokenSelectField />
-                <NumberEntryField
-                    title="FlowRate ( ether / sec )"
-                    number={swapFlowRate}
-                    setNumber={setSwapFlowRate}
-                />
-                <PricingField refreshingPrice={refreshingPrice} token1Price={token1Price} priceMultiple={priceMultiple} swapFlowRate={swapFlowRate} poolExists={poolExists} />
+            <WidgetContainer title="Provide Liquidity">
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.outboundToken}
+                        setToken={store.setOutboundToken}
+                    />
+                    <NumberEntryField
+                        title="FlowRate ( ether / sec )"
+                        number={flowRate0}
+                        setNumber={setFlowRate0}
+                    />
+                </div>
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.inboundToken}
+                        setToken={store.setInboundToken}
+                    />
+                    <NumberEntryField
+                        title="FlowRate ( ether / sec )"
+                        number={flowRate1}
+                        setNumber={setFlowRate1}
+                    />
+                </div>
+                <PricingField refreshingPrice={refreshingPrice} token1Price={token1Price} poolExists={poolExists} />
 
                 {loading ? (
                     <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
@@ -151,13 +169,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                         className="h-14 bg-aqueductBlue/90 text-white font-bold rounded-2xl hover:outline outline-2"
                         onClick={() => swap()}
                     >
-                        Swap
+                        Provide Liquidity
                     </button>
                 )}
             </WidgetContainer>
         </section>
     );
 };
-//opacity={refreshingPrice ? 0 : 0.5}
 
-export default CreateStreamWidget;
+export default ProvideLiquidityWidget;

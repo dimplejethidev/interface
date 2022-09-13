@@ -6,8 +6,8 @@ import LoadingSpinner from "./LoadingSpinner";
 interface PricingFieldProps {
     refreshingPrice: boolean;
     token1Price: number;
-    priceMultiple: BigNumber;
-    swapFlowRate: string;
+    priceMultiple?: BigNumber;
+    swapFlowRate?: string;
     poolExists: boolean;
 }
 
@@ -29,9 +29,12 @@ const PricingField = ({ refreshingPrice, token1Price, priceMultiple, swapFlowRat
                         <p>
                             1 {store.outboundToken.label} = {token1Price != 0 ? token1Price : '<0.00001'} {store.inboundToken.label}
                         </p>
-                        <p>
-                            initial outgoing flowrate: {swapFlowRate != '' ? BigNumber.from(swapFlowRate).mul(priceMultiple).div(BigNumber.from(2).pow(128)).toString() : '_'} {store.inboundToken.label} / s
-                        </p>
+                        {
+                            priceMultiple && swapFlowRate &&
+                            <p>
+                                initial outgoing flowrate: {swapFlowRate != '' ? (BigNumber.from(swapFlowRate).mul(priceMultiple).div(BigNumber.from(2).pow(120)).toNumber() / 2 ** 8).toFixed(3) : '_'} {store.inboundToken.label} / s
+                            </p>
+                        }
                     </div>
                     :
                     <div>
@@ -41,8 +44,5 @@ const PricingField = ({ refreshingPrice, token1Price, priceMultiple, swapFlowRat
         </div>
     )
 }
-//priceMultiple.div(BigNumber.from(2).pow(112)).toNumber() / 2**16
-//swapFlowRate != '' ? BigNumber.from(swapFlowRate).mul(priceMultiple).div(BigNumber.from(2).pow(128)).toString() : '_'
-//swapFlowRate != '' ? BigNumber.from(swapFlowRate).mul(BigNumber.from(priceMultiple * 1000)).div(1000).toString() : '_'
 
 export default PricingField;
