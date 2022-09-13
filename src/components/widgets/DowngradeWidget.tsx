@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BigNumber, ethers } from "ethers";
+import { useSigner } from "wagmi";
 
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
@@ -7,11 +8,6 @@ import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
-import { useSigner } from 'wagmi';
-import { fDAIxp } from "./../../utils/constants";
-import Dropdown from "../Dropdown";
-import Token from "./../../types/Token";
-import tokens from "../../utils/tokens";
 import { useStore } from "../../store";
 import TokenDropdown from "../TokenDropdown";
 
@@ -23,22 +19,27 @@ interface DowngradeWidgetProps {
 }
 
 const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
-    const [amount, setAmount] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
     const store = useStore();
+
+    const [amount, setAmount] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const downgrade = async (amount: string) => {
         try {
             setLoading(true);
 
-            // format ether
-            const formattedAmount: BigNumber = ethers.utils.parseUnits(amount, "ether");
+            const formattedAmount: BigNumber = ethers.utils.parseUnits(
+                amount,
+                "ether"
+            );
 
-            // check that wallet is connected by checking for signer
-            if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
+            if (signer == null || signer == undefined) {
+                showToast(ToastType.ConnectWallet);
+                setLoading(false);
+                return;
+            }
 
             const downgradeTokenAddress = store.upgradeDowngradeToken.address;
 
@@ -48,9 +49,10 @@ const DowngradeWidget = ({ showToast }: DowngradeWidgetProps) => {
                 signer
             );
 
-            const downgradedTransaction = await wrappedTokenContract.downgrade(formattedAmount);
+            const downgradedTransaction = await wrappedTokenContract.downgrade(
+                formattedAmount
+            );
             await downgradedTransaction.wait();
-            console.log("Downgraded tokens: ", downgradedTransaction);
             showToast(ToastType.Success);
             setLoading(false);
         } catch (error) {

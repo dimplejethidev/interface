@@ -1,7 +1,7 @@
 enum Token {
     ETHxp = "ETHxp",
     fDAIxp = "fDAIxp",
-    fUSDCxp = 'fUSDCxp'
+    fUSDCxp = "fUSDCxp",
 }
 
 export default Token;

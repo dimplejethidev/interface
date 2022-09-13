@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Sidebar from "../components/Sidebar";
 import ProvideLiquidityWidget from "../components/widgets/ProvideLiquidityWidget";
-import WidgetContainer from "../components/widgets/WidgetContainer";
 import ToastType from "../types/ToastType";
 
 interface ProvideLiquidityProps {

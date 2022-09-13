@@ -1,11 +1,6 @@
 import type { NextPage } from "next";
-import Dropdown from "../components/Dropdown";
-import Token from "../types/Token";
 import Sidebar from "../components/Sidebar";
-import WidgetContainer from "../components/widgets/WidgetContainer";
-import { useStore } from "../store";
 import RealTimeFlowingBalance from "../components/RealTimeFlowingBalance";
-import { ethers } from "ethers";
 
 const MyStreams: NextPage = () => {
     return (
@@ -16,6 +11,6 @@ const MyStreams: NextPage = () => {
             </main>
         </div>
     );
-}
+};
 
 export default MyStreams;

@@ -10,21 +10,21 @@ const tokens: TokenOption[] = [
     {
         label: "ETHxp",
         value: Token.ETHxp,
-        imgUrl: ethLogo.src,
+        logo: ethLogo.src,
         address: ETHxp,
         underlyingToken: '0x0'
     },
     {
         label: "fDAIxp",
         value: Token.fDAIxp,
-        imgUrl: daiLogo.src,
+        logo: daiLogo.src,
         address: fDAIxp,
         underlyingToken: fDAI
     },
     {
         label: "fUSDCxp",
         value: Token.fUSDCxp,
-        imgUrl: usdcLogo.src,
+        logo: usdcLogo.src,
         address: fUSDCxp,
         underlyingToken: fUSDC
     },
