@@ -104,7 +104,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
                 // calculate new flows
                 if (swapFlowRate != '') {
-                    token0Flow = token0Flow.add(swapFlowRate);
+                    const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
+                    token0Flow = token0Flow.add(formattedFlowRate);
                 }
 
                 // calculate price multiple

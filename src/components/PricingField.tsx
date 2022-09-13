@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useStore } from "../store";
 import LoadingSpinner from "./LoadingSpinner";
@@ -32,7 +32,17 @@ const PricingField = ({ refreshingPrice, token1Price, priceMultiple, swapFlowRat
                         {
                             priceMultiple && swapFlowRate &&
                             <p>
-                                initial outgoing flowrate: {swapFlowRate != '' ? (BigNumber.from(swapFlowRate).mul(priceMultiple).div(BigNumber.from(2).pow(120)).toNumber() / 2 ** 8).toFixed(3) : '_'} {store.inboundToken.label} / s
+                                initial outgoing flowrate: {
+                                    swapFlowRate != ''
+                                        ? 
+                                        (
+                                            ethers.utils.parseUnits(swapFlowRate, "ether")
+                                            .mul(priceMultiple).div(BigNumber.from(2).pow(96)).div(BigNumber.from(10).pow(18)).toNumber() / 2 ** 32
+                                        ).toFixed(8)
+                                        :
+                                        '_'
+                                }
+                                {' ' + store.inboundToken.label} / s
                             </p>
                         }
                     </div>

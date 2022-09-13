@@ -39,11 +39,11 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const [poolExists, setPoolExists] = useState(true);
 
     const swap = async () => {
-        /*
         try {
             setLoading(true);
 
-            const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
+            const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
+            const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
 
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
@@ -58,18 +58,25 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                 store.outboundToken.value
             );
 
-            const token = tokens.get(store.outboundToken.label)?.address;
+            const token0 = store.outboundToken.address;
+            const token1 = store.inboundToken.address;
 
-            if (token) {
-                const createFlowOperation = superfluid.cfaV1.createFlow({
+            if (token0 && token1 && pool) {
+                const createFlowOperation0 = superfluid.cfaV1.createFlow({
                     receiver: pool,
-                    flowRate: formattedFlowRate.toString(),
-                    superToken: token,
+                    flowRate: formattedFlowRate0.toString(),
+                    superToken: token0,
                 });
-                const result = await createFlowOperation.exec(signer);
+                const createFlowOperation1 = superfluid.cfaV1.createFlow({
+                    receiver: pool,
+                    flowRate: formattedFlowRate1.toString(),
+                    superToken: token1,
+                });
+                const batchCall = superfluid.batchCall([createFlowOperation0, createFlowOperation1]);
+                const result = await batchCall.exec(signer);
                 await result.wait();
 
-                console.log("Stream created: ", result);
+                console.log("Streams created: ", result);
                 showToast(ToastType.Success);
                 setLoading(false);
             }
@@ -78,7 +85,6 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
             showToast(ToastType.Error);
             setLoading(false);
         }
-        */
     };
 
     // refresh spot pricing upon user input
@@ -107,10 +113,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
 
                 // calculate new flows
                 if (flowRate0 != '') {
-                    token0Flow = token0Flow.add(flowRate0);
+                    const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
+                    token0Flow = token0Flow.add(formattedFlowRate0);
                 }
                 if (flowRate1 != '') {
-                    token1Flow = token1Flow.add(flowRate1);
+                    const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
+                    token1Flow = token1Flow.add(formattedFlowRate1);
                 }
 
                 // calculate price multiple
@@ -124,7 +132,8 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
 
                 await new Promise(res => setTimeout(res, 900));
                 setRefreshingPrice(false);
-            } catch {
+            } catch(err) {
+                console.log(err)
                 setRefreshingPrice(false);
                 setPoolExists(false);
             }
