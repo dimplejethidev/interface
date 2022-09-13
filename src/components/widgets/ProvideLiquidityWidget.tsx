@@ -14,17 +14,19 @@ import Token from "../../types/Token";
 import { ETHxp, fDAIxp, fUSDCxp } from "./../../utils/constants";
 import tokens from "../../utils/tokens";
 import { AiOutlineInfoCircle } from "react-icons/ai"
+import TokenDropdown from "../TokenDropdown";
 import PricingField from "../PricingField";
 
-interface CreateStreamWidgetProps {
+interface ProvideLiquidityWidgetProps {
     showToast: (type: ToastType) => {};
 }
 
-const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const store = useStore();
 
     const [pool, setPool] = useState("");
-    const [swapFlowRate, setSwapFlowRate] = useState("");
+    const [flowRate0, setFlowRate0] = useState("");
+    const [flowRate1, setFlowRate1] = useState("");
     const [loading, setLoading] = useState(false);
 
     const provider = useProvider();
@@ -33,7 +35,6 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const { chain } = useNetwork();
 
     const [token1Price, setToken1Price] = useState(0);
-    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
 
@@ -41,7 +42,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         try {
             setLoading(true);
 
-            const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
+            const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
+            const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
 
             if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
 
@@ -56,18 +58,25 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 store.outboundToken.value
             );
 
-            const token = store.outboundToken.address;
+            const token0 = store.outboundToken.address;
+            const token1 = store.inboundToken.address;
 
-            if (token) {
-                const createFlowOperation = superfluid.cfaV1.createFlow({
+            if (token0 && token1 && pool) {
+                const createFlowOperation0 = superfluid.cfaV1.createFlow({
                     receiver: pool,
-                    flowRate: formattedFlowRate.toString(),
-                    superToken: token,
+                    flowRate: formattedFlowRate0.toString(),
+                    superToken: token0,
                 });
-                const result = await createFlowOperation.exec(signer);
+                const createFlowOperation1 = superfluid.cfaV1.createFlow({
+                    receiver: pool,
+                    flowRate: formattedFlowRate1.toString(),
+                    superToken: token1,
+                });
+                const batchCall = superfluid.batchCall([createFlowOperation0, createFlowOperation1]);
+                const result = await batchCall.exec(signer);
                 await result.wait();
 
-                console.log("Stream created: ", result);
+                console.log("Streams created: ", result);
                 showToast(ToastType.Success);
                 setLoading(false);
             }
@@ -103,9 +112,13 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 var token1Flow: BigNumber = await poolContract.getFlowIn(token1Address);
 
                 // calculate new flows
-                if (swapFlowRate != '') {
-                    const formattedFlowRate: BigNumber = ethers.utils.parseUnits(swapFlowRate, "ether");
-                    token0Flow = token0Flow.add(formattedFlowRate);
+                if (flowRate0 != '') {
+                    const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
+                    token0Flow = token0Flow.add(formattedFlowRate0);
+                }
+                if (flowRate1 != '') {
+                    const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
+                    token1Flow = token1Flow.add(formattedFlowRate1);
                 }
 
                 // calculate price multiple
@@ -113,35 +126,48 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     setToken1Price(
                         token1Flow.mul(100000).div(token0Flow).toNumber() / 100000
                     )
-                    setPriceMultiple(
-                        token1Flow.mul(BigNumber.from(2).pow(128)).div(token0Flow)
-                    )
                 } else {
                     setToken1Price(0);
-                    setPriceMultiple(BigNumber.from(0));
                 }
 
                 await new Promise(res => setTimeout(res, 900));
                 setRefreshingPrice(false);
-            } catch {
+            } catch(err) {
+                console.log(err)
                 setRefreshingPrice(false);
                 setPoolExists(false);
             }
         }
 
         refreshPrice();
-    }, [swapFlowRate, store.inboundToken, store.outboundToken])
+    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken])
 
     return (
         <section className="flex flex-col items-center w-full">
-            <WidgetContainer title="Swap">
-                <TokenSelectField />
-                <NumberEntryField
-                    title="FlowRate ( ether / sec )"
-                    number={swapFlowRate}
-                    setNumber={setSwapFlowRate}
-                />
-                <PricingField refreshingPrice={refreshingPrice} token1Price={token1Price} priceMultiple={priceMultiple} swapFlowRate={swapFlowRate} poolExists={poolExists} />
+            <WidgetContainer title="Provide Liquidity">
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.outboundToken}
+                        setToken={store.setOutboundToken}
+                    />
+                    <NumberEntryField
+                        title="FlowRate ( ether / sec )"
+                        number={flowRate0}
+                        setNumber={setFlowRate0}
+                    />
+                </div>
+                <div className="space-y-3">
+                    <TokenDropdown
+                        selectTokenOption={store.inboundToken}
+                        setToken={store.setInboundToken}
+                    />
+                    <NumberEntryField
+                        title="FlowRate ( ether / sec )"
+                        number={flowRate1}
+                        setNumber={setFlowRate1}
+                    />
+                </div>
+                <PricingField refreshingPrice={refreshingPrice} token1Price={token1Price} poolExists={poolExists} />
 
                 {loading ? (
                     <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
@@ -152,13 +178,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                         className="h-14 bg-aqueductBlue/90 text-white font-bold rounded-2xl hover:outline outline-2"
                         onClick={() => swap()}
                     >
-                        Swap
+                        Provide Liquidity
                     </button>
                 )}
             </WidgetContainer>
         </section>
     );
 };
-//opacity={refreshingPrice ? 0 : 0.5}
 
-export default CreateStreamWidget;
+export default ProvideLiquidityWidget;
