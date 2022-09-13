@@ -1,19 +1,14 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
+import { useNetwork, useProvider, useSigner } from "wagmi";
 
-import TokenSelectField from "../TokenSelectField";
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
-import { useNetwork, useProvider, useSigner } from 'wagmi';
-import Token from "../../types/Token";
-import { ETHxp, fDAIxp, fUSDCxp } from "./../../utils/constants";
-import tokens from "../../utils/tokens";
-import { AiOutlineInfoCircle } from "react-icons/ai"
 import TokenDropdown from "../TokenDropdown";
 import PricingField from "../PricingField";
 
@@ -23,17 +18,14 @@ interface ProvideLiquidityWidgetProps {
 
 const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const store = useStore();
-
-    const [pool, setPool] = useState("");
-    const [flowRate0, setFlowRate0] = useState("");
-    const [flowRate1, setFlowRate1] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const provider = useProvider();
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
     const { chain } = useNetwork();
 
+    const [flowRate0, setFlowRate0] = useState("");
+    const [flowRate1, setFlowRate1] = useState("");
+    const [loading, setLoading] = useState(false);
     const [token1Price, setToken1Price] = useState(0);
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
@@ -42,10 +34,20 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
         try {
             setLoading(true);
 
-            const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
-            const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
+            const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(
+                flowRate0,
+                "ether"
+            );
+            const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(
+                flowRate1,
+                "ether"
+            );
 
-            if (signer == null || signer == undefined) { showToast(ToastType.ConnectWallet); setLoading(false); return }
+            if (signer == null || signer == undefined) {
+                showToast(ToastType.ConnectWallet);
+                setLoading(false);
+                return;
+            }
 
             const chainId = chain?.id;
             const superfluid = await Framework.create({
@@ -72,7 +74,10 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                     flowRate: formattedFlowRate1.toString(),
                     superToken: token1,
                 });
-                const batchCall = superfluid.batchCall([createFlowOperation0, createFlowOperation1]);
+                const batchCall = superfluid.batchCall([
+                    createFlowOperation0,
+                    createFlowOperation1,
+                ]);
                 const result = await batchCall.exec(signer);
                 await result.wait();
 
@@ -105,42 +110,53 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                     store.outboundToken.value
                 );
                 setPoolExists(true);
-                const poolContract = new ethers.Contract(poolAddress, poolABI, provider);
+                const poolContract = new ethers.Contract(
+                    poolAddress,
+                    poolABI,
+                    provider
+                );
 
                 // get flows
-                var token0Flow: BigNumber = await poolContract.getFlowIn(token0Address);
-                var token1Flow: BigNumber = await poolContract.getFlowIn(token1Address);
+                var token0Flow: BigNumber = await poolContract.getFlowIn(
+                    token0Address
+                );
+                var token1Flow: BigNumber = await poolContract.getFlowIn(
+                    token1Address
+                );
 
                 // calculate new flows
-                if (flowRate0 != '') {
-                    const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(flowRate0, "ether");
+                if (flowRate0 != "") {
+                    const formattedFlowRate0: BigNumber =
+                        ethers.utils.parseUnits(flowRate0, "ether");
                     token0Flow = token0Flow.add(formattedFlowRate0);
                 }
-                if (flowRate1 != '') {
-                    const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(flowRate1, "ether");
+                if (flowRate1 != "") {
+                    const formattedFlowRate1: BigNumber =
+                        ethers.utils.parseUnits(flowRate1, "ether");
                     token1Flow = token1Flow.add(formattedFlowRate1);
                 }
 
                 // calculate price multiple
                 if (token0Flow.gt(0)) {
                     setToken1Price(
-                        token1Flow.mul(100000).div(token0Flow).toNumber() / 100000
-                    )
+                        token1Flow.mul(100000).div(token0Flow).toNumber() /
+                            100000
+                    );
                 } else {
                     setToken1Price(0);
                 }
 
-                await new Promise(res => setTimeout(res, 900));
+                await new Promise((res) => setTimeout(res, 900));
                 setRefreshingPrice(false);
-            } catch(err) {
-                console.log(err)
+            } catch (err) {
+                console.log(err);
                 setRefreshingPrice(false);
                 setPoolExists(false);
             }
-        }
+        };
 
         refreshPrice();
-    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken])
+    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken]);
 
     return (
         <section className="flex flex-col items-center w-full">
@@ -167,7 +183,11 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setNumber={setFlowRate1}
                     />
                 </div>
-                <PricingField refreshingPrice={refreshingPrice} token1Price={token1Price} poolExists={poolExists} />
+                <PricingField
+                    refreshingPrice={refreshingPrice}
+                    token1Price={token1Price}
+                    poolExists={poolExists}
+                />
 
                 {loading ? (
                     <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">

@@ -1,5 +1,9 @@
 import Token from "../types/Token";
-import { ETHxpfDAIxpPool, fDAIxpETHxpPool, fDAIxpfUSDCxpPool } from "./../utils/constants";
+import {
+    ETHxpfDAIxpPool,
+    fDAIxpETHxpPool,
+    fDAIxpfUSDCxpPool,
+} from "./../utils/constants";
 
 const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
     let pool: string;

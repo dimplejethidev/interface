@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BigNumber, ethers } from "ethers";
+import { useSigner } from "wagmi";
 
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
@@ -7,11 +8,6 @@ import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
-import { useSigner } from "wagmi";
-import { fDAI, fDAIxp, fUSDC, fUSDCxp } from "./../../utils/constants";
-import Dropdown from "../Dropdown";
-import Token from "./../../types/Token";
-import tokens from "../../utils/tokens";
 import { useStore } from "../../store";
 import TokenDropdown from "../TokenDropdown";
 
@@ -23,24 +19,22 @@ interface UpgradeWidgetProps {
 }
 
 const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
-    const [amount, setAmount] = useState("");
-    const [loading, setLoading] = useState(false);
-
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
     const store = useStore();
+
+    const [amount, setAmount] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const upgrade = async (amount: string) => {
         try {
             setLoading(true);
 
-            // format ether
             const formattedAmount: BigNumber = ethers.utils.parseUnits(
                 amount,
                 "ether"
             );
 
-            // check that wallet is connected by checking for signer
             if (signer == null || signer == undefined) {
                 showToast(ToastType.ConnectWallet);
                 setLoading(false);
@@ -48,8 +42,9 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             }
 
             // TODO: Could we use the Superfluid SDK here to get the underlying token?
-            const underlyingTokenAddress = store.upgradeDowngradeToken.underlyingToken;
-            console.log(underlyingTokenAddress)
+            const underlyingTokenAddress =
+                store.upgradeDowngradeToken.underlyingToken;
+            console.log(underlyingTokenAddress);
             const underlyingTokenContract = new ethers.Contract(
                 underlyingTokenAddress || "",
                 DAI_ABI,
@@ -57,7 +52,7 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             );
 
             const upgradeTokenAddress = store.upgradeDowngradeToken.address;
-            console.log(upgradeTokenAddress)
+            console.log(upgradeTokenAddress);
             const wrappedTokenContract = new ethers.Contract(
                 upgradeTokenAddress,
                 AQUEDUCT_TOKEN_ABI,
@@ -72,7 +67,9 @@ const UpgradeWidget = ({ showToast }: UpgradeWidgetProps) => {
             console.log("spend approved: ", approvedTransaction);
 
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
-            const upgradedTransaction = await wrappedTokenContract.upgrade(formattedAmount);
+            const upgradedTransaction = await wrappedTokenContract.upgrade(
+                formattedAmount
+            );
             await upgradedTransaction.wait();
             console.log("Upgraded tokens: ", upgradedTransaction);
             showToast(ToastType.Success);

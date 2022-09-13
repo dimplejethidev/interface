@@ -6,11 +6,11 @@ const TokenSelectField = () => {
 
     return (
         <div>
-            <TokenDropdown 
+            <TokenDropdown
                 selectTokenOption={store.outboundToken}
                 setToken={store.setOutboundToken}
             />
-            <TokenDropdown 
+            <TokenDropdown
                 selectTokenOption={store.inboundToken}
                 setToken={store.setInboundToken}
             />

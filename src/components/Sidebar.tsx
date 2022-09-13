@@ -1,14 +1,12 @@
-import { FC, ReactElement, useEffect, useMemo, useState } from "react";
-import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus, TbCircleMinus } from "react-icons/tb"
-import { MdAttachMoney } from "react-icons/md"
-import { AiOutlineLineChart } from "react-icons/ai"
+import { FC, ReactElement } from "react";
+import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus } from "react-icons/tb";
+import { MdAttachMoney } from "react-icons/md";
+import { AiOutlineLineChart } from "react-icons/ai";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
 import { useStore } from "../store";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 
 interface SideBarTabProps {
@@ -17,43 +15,69 @@ interface SideBarTabProps {
     page: string;
 }
 
-const navItems: { icon: any, label: string; page: string }[] = [
-    { icon: <AiOutlineLineChart size={18} />, label: "My Streams", page: "/my-streams" },
+const navItems: { icon: any; label: string; page: string }[] = [
+    {
+        icon: <AiOutlineLineChart size={18} />,
+        label: "My Streams",
+        page: "/my-streams",
+    },
     { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
-    { icon: <TbArrowsRight size={18} />, label: "Provide Liquidity", page: "/provide-liquidity" },
+    {
+        icon: <TbArrowsRight size={18} />,
+        label: "Provide Liquidity",
+        page: "/provide-liquidity",
+    },
     { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
-    { icon: <MdAttachMoney size={18} />, label: "My Rewards", page: "/my-rewards" },
+    {
+        icon: <MdAttachMoney size={18} />,
+        label: "My Rewards",
+        page: "/my-rewards",
+    },
 ];
 
 const SideBarTab: FC<SideBarTabProps> = ({
     icon,
     label,
-    page
+    page,
 }): ReactElement => {
     const router = useRouter();
 
     return (
-        <button 
+        <button
             className={`flex w-full items-center space-x-3 pl-2 pr-6 py-2 rounded-xl transition-all ease-in-out duration-300
-                        ${router.asPath === page ? "bg-aqueductBlue/5 hover:bg-aqueductBlue/10" : "hover:bg-gray-100"} `}
+                        ${
+                            router.asPath === page
+                                ? "bg-aqueductBlue/5 hover:bg-aqueductBlue/10"
+                                : "hover:bg-gray-100"
+                        } `}
             onClick={() => {
-                router.push(page)
+                router.push(page);
             }}
         >
-            <div className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page ? "bg-aqueductBlue/10 text-aqueductBlue" : "text-gray-400"}`}>
+            <div
+                className={`bg-gray-100 p-2 rounded-lg ${
+                    router.asPath === page
+                        ? "bg-aqueductBlue/10 text-aqueductBlue"
+                        : "text-gray-400"
+                }`}
+            >
                 {icon}
             </div>
-            <p className={`text-sm font-medium ${router.asPath === page ? "bg-transparent text-aqueductBlue" : "text-gray-600"}`}>
+            <p
+                className={`text-sm font-medium ${
+                    router.asPath === page
+                        ? "bg-transparent text-aqueductBlue"
+                        : "text-gray-600"
+                }`}
+            >
                 {label}
             </p>
         </button>
-    )
-}
+    );
+};
 
 const Sidebar = () => {
-    const router = useRouter();
     const store = useStore();
-    const account = store.account;
 
     return (
         <header className="flex flex-col p-4 w-64 h-screen space-y-8 border-2 flex-shrink-0">
@@ -74,16 +98,23 @@ const Sidebar = () => {
                     height="45px"
                     className="rounded-xl"
                 />
-                <h1 className="text-2xl font-semibold pr-3 poppins-font">aqueduct</h1>
+                <h1 className="text-2xl font-semibold pr-3 poppins-font">
+                    aqueduct
+                </h1>
             </div>
             <CustomWalletConnectButton />
             <ul className="space-y-3">
                 {navItems.map(({ icon, label, page }) => (
-                    <SideBarTab icon={icon} label={label} page={page} key={label} />
+                    <SideBarTab
+                        icon={icon}
+                        label={label}
+                        page={page}
+                        key={label}
+                    />
                 ))}
             </ul>
         </header>
-    )
-}
+    );
+};
 
 export default Sidebar;

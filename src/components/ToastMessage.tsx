@@ -3,15 +3,10 @@ import IToast from "./../types/Toast";
 
 interface ToastMessageProps {
     toastList: IToast[];
-    position: string;
     setToastList: (toast: IToast[]) => void;
 }
 
-const ToastMessage = ({
-    toastList,
-    position,
-    setToastList,
-}: ToastMessageProps) => {
+const ToastMessage = ({ toastList, setToastList }: ToastMessageProps) => {
     const deleteToast = useCallback(
         (id: number) => {
             const toastListItems = toastList.filter((e) => e.id !== id);

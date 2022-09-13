@@ -3,7 +3,6 @@ import "tailwindcss/tailwind.css";
 
 import Sidebar from "../components/Sidebar";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
-import AccountBalance from "../components/AccountBalance";
 import ToastType from "../types/ToastType";
 
 interface SwapProps {
