@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useAccount, useProvider } from "wagmi";
 
@@ -9,7 +9,7 @@ const ANIMATION_MINIMUM_STEP_TIME = 100;
 const REFRESH_STEP_TIME = 5000;
 const REFRESH_INTERVAL = 300; // 300 * 100 = 30000 ms = 30 s
 
-const RealTimeFlowingBalance = (): ReactElement => {
+const RealTimeFlowingBalance = () => {
     const [currentBalance0, setCurrentBalance0] = useState<BigNumber>(
         ethers.BigNumber.from(0)
     );

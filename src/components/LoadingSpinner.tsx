@@ -1,6 +1,10 @@
 import { AiOutlineLoading } from "react-icons/ai";
 
-const LoadingSpinner = ({ size }: { size: number }) => (
+interface LoadingSpinnerProps {
+    size: number;
+}
+
+const LoadingSpinner = ({ size }: LoadingSpinnerProps) => (
     <AiOutlineLoading size={size} className="animate-spin" />
 );
 

@@ -87,13 +87,12 @@ function AnimatedDigit({
     );
 }
 
-function AnimatedBalance({
-    value,
-    isIncreasing,
-}: {
+interface AnimatedBalanceProps {
     value: string;
     isIncreasing: boolean;
-}) {
+}
+
+const AnimatedBalance = ({ value, isIncreasing }: AnimatedBalanceProps) => {
     return (
         <div className="flex space-x-2 text-6xl h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
             {value.split("").map((digit) => {
@@ -110,6 +109,6 @@ function AnimatedBalance({
             })}
         </div>
     );
-}
+};
 
 export default AnimatedBalance;

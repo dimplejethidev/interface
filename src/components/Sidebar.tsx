@@ -1,4 +1,3 @@
-import { FC, ReactElement } from "react";
 import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus } from "react-icons/tb";
 import { MdAttachMoney } from "react-icons/md";
 import { AiOutlineLineChart } from "react-icons/ai";
@@ -35,11 +34,7 @@ const navItems: { icon: any; label: string; page: string }[] = [
     },
 ];
 
-const SideBarTab: FC<SideBarTabProps> = ({
-    icon,
-    label,
-    page,
-}): ReactElement => {
+const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {
     const router = useRouter();
 
     return (
