@@ -112,7 +112,7 @@ const RealTimeFlowingRewards = () => {
 
     return (
         <div className="flex items-center justify-center">
-            <div className="flex flex-col p-8 rounded-3xl space-y-4 centered-shadow items-center justify-center">
+            <div className="flex flex-col p-8 rounded-3xl space-y-4 lg:centered-shadow items-center justify-center">
                 <div className="flex w-full pb-4 space-x-2">
                     <div className="flex font-semibold px-4 py-2 rounded-xl text-lg whitespace-nowrap text-aqueductBlue bg-aqueductBlue/10 w-min mr-2">
                         Pool:
@@ -126,26 +126,26 @@ const RealTimeFlowingRewards = () => {
                         <img src="usdc-logo.png" className="w-4 h-4" />
                     </div>
                 </div>
-                <div className="flex items-center justify-center p-4 border-[1px] centered-shadow-sm rounded-2xl text-daiYellow">
-                    <div className="flex items-center justify-center px-12 py-8 space-x-8 rounded-xl bg-daiYellow/10">
+                <div className="flex items-center justify-center p-1 md:p-4 border-[1px] centered-shadow-sm rounded-2xl text-daiYellow">
+                    <div className="flex items-center justify-center px-6 md:px-12 py-8 space-x-4 md:space-x-8 rounded-xl bg-daiYellow/10">
                         <AnimatedBalance
                             value={parseFloat(
                                 ethers.utils.formatEther(currentBalance0)
                             ).toFixed(6)}
                             isIncreasing={flowRate0.gte(0)}
                         />
-                        <img src="dai-logo.png" className="w-12 h-12" />
+                        <img src="dai-logo.png" className="w-6 h-6 md:w-12 md:h-12" />
                     </div>
                 </div>
-                <div className="flex items-center justify-center p-4 border-[1px] centered-shadow-sm rounded-2xl text-usdcBlue">
-                    <div className="flex items-center justify-center px-12 py-8 space-x-8 rounded-xl bg-usdcBlue/10">
+                <div className="flex items-center justify-center p-1 md:p-4 border-[1px] centered-shadow-sm rounded-2xl text-usdcBlue">
+                    <div className="flex items-center justify-center px-6 md:px-12 py-8 space-x-4 md:space-x-8 rounded-xl bg-usdcBlue/10">
                         <AnimatedBalance
                             value={parseFloat(
                                 ethers.utils.formatEther(currentBalance1)
                             ).toFixed(6)}
                             isIncreasing={flowRate1.gte(0)}
                         />
-                        <img src="usdc-logo.png" className="w-12 h-12" />
+                        <img src="usdc-logo.png" className="w-6 h-6 md:w-12 md:h-12" />
                     </div>
                 </div>
             </div>

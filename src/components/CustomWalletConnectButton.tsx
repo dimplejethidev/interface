@@ -41,7 +41,7 @@ const CustomWalletConnectButton = () => {
                                     <button
                                         onClick={openConnectModal}
                                         type="button"
-                                        className="flex justify-start items-center space-x-2 w-full rounded-xl bg-aqueductBlue p-2 text-white "
+                                        className="flex justify-start items-center space-x-2 w-full rounded-xl bg-aqueductBlue p-4 md:p-2 text-white "
                                     >
                                         <div className="p-2 rounded-lg bg-white/10">
                                             <IoMdWallet size={20} />
@@ -67,7 +67,7 @@ const CustomWalletConnectButton = () => {
                             return (
                                 <button
                                     onClick={openAccountModal}
-                                    className="flex w-full items-center space-x-3 pl-2 pr-6 py-2 rounded-xl bg-aqueductBlue/5 hover:bg-aqueductBlue/10 transition-all ease-in-out duration-300"
+                                    className="flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl bg-aqueductBlue/5 hover:bg-aqueductBlue/10 transition-all ease-in-out duration-300"
                                 >
                                     <img
                                         src={makeBlockie(account.address)}

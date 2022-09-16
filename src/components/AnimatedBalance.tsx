@@ -94,7 +94,7 @@ interface AnimatedBalanceProps {
 
 const AnimatedBalance = ({ value, isIncreasing }: AnimatedBalanceProps) => {
     return (
-        <div className="flex space-x-2 text-6xl h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
+        <div className="flex space-x-2 text-4xl h-10 lg:text-5xl lg:h-12 xl:text-6xl xl:h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
             {value.split("").map((digit) => {
                 if (digit == ".") {
                     return <p>{digit}</p>;

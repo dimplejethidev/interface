@@ -7,6 +7,8 @@ import Image from "next/image";
 import logo from "./../../public/aqueduct-logo.png";
 import { useStore } from "../store";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
+import { IoClose, IoMenu } from 'react-icons/io5';
+import { Dispatch, SetStateAction, useState } from "react";
 
 interface SideBarTabProps {
     icon: any;
@@ -39,31 +41,28 @@ const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {
 
     return (
         <button
-            className={`flex w-full items-center space-x-3 pl-2 pr-6 py-2 rounded-xl transition-all ease-in-out duration-300
-                        ${
-                            router.asPath === page
-                                ? "bg-aqueductBlue/5 hover:bg-aqueductBlue/10"
-                                : "hover:bg-gray-100"
-                        } `}
+            className={`flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl transition-all ease-in-out duration-300
+                        ${router.asPath === page
+                    ? "bg-aqueductBlue/5 hover:bg-aqueductBlue/10"
+                    : "hover:bg-gray-100"
+                } `}
             onClick={() => {
                 router.push(page);
             }}
         >
             <div
-                className={`bg-gray-100 p-2 rounded-lg ${
-                    router.asPath === page
-                        ? "bg-aqueductBlue/10 text-aqueductBlue"
-                        : "text-gray-400"
-                }`}
+                className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page
+                    ? "bg-aqueductBlue/10 text-aqueductBlue"
+                    : "text-gray-400"
+                    }`}
             >
                 {icon}
             </div>
             <p
-                className={`text-sm font-medium ${
-                    router.asPath === page
-                        ? "bg-transparent text-aqueductBlue"
-                        : "text-gray-600"
-                }`}
+                className={`text-sm font-medium ${router.asPath === page
+                    ? "bg-transparent text-aqueductBlue"
+                    : "text-gray-600"
+                    }`}
             >
                 {label}
             </p>
@@ -71,11 +70,15 @@ const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {
     );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispatch<SetStateAction<boolean>> }) => {
     const store = useStore();
 
     return (
-        <header className="flex flex-col p-4 w-64 h-screen space-y-8 border-2 flex-shrink-0">
+        <header
+            className={
+                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 flex-shrink-0 md:overflow-y-auto"
+            }
+        >
             <Head>
                 <title>Aqueduct</title>
                 <meta
@@ -96,20 +99,48 @@ const Sidebar = () => {
                 <h1 className="text-2xl font-semibold pr-3 poppins-font">
                     aqueduct
                 </h1>
+                <div className="flex grow" />
+                <button
+                    className="md:hidden"
+                    onClick={() => {
+                        setIsShown(!isShown);
+                    }}
+                >
+                    {
+                        isShown
+                            ?
+                            <IoClose size={28} />
+                            :
+                            <IoMenu size={28} />
+                    }
+                </button>
             </div>
-            <CustomWalletConnectButton />
-            <ul className="space-y-3">
-                {navItems.map(({ icon, label, page }) => (
-                    <SideBarTab
-                        icon={icon}
-                        label={label}
-                        page={page}
-                        key={label}
-                    />
-                ))}
-            </ul>
+            <div
+                className={
+                    'space-y-8 transition-all duration-500 '
+                    + (
+                        isShown
+                            ?
+                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50 bg-white'
+                            :
+                            'hidden md:flex md:flex-col'
+                    )
+                }
+            >
+                <CustomWalletConnectButton />
+                <ul className="space-y-3 pb-8">
+                    {navItems.map(({ icon, label, page }) => (
+                        <SideBarTab
+                            icon={icon}
+                            label={label}
+                            page={page}
+                            key={label}
+                        />
+                    ))}
+                </ul>
+            </div>
         </header>
     );
-};
+};//hidden md:flex
 
 export default Sidebar;

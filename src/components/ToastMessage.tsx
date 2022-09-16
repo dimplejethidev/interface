@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import { IoClose } from 'react-icons/io5';
 import IToast from "./../types/Toast";
 
 interface ToastMessageProps {
@@ -40,7 +41,7 @@ const ToastMessage = ({ toastList, setToastList }: ToastMessageProps) => {
                         className="float-right bg-none border-none text-white opacity-80 cursor-pointer"
                         onClick={() => deleteToast(toast.id)}
                     >
-                        X
+                        <IoClose size={18} />
                     </button>
                     <div>
                         <p className="font-bold text-left mt-0 mb-2 w-72 h-4">
