@@ -11,6 +11,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import PricingField from "../PricingField";
+import flowrates from "../../utils/flowrates";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -146,14 +147,21 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         refreshPrice();
     }, [swapFlowRate, store.inboundToken, store.outboundToken]);
 
+    useEffect(() => {
+        console.log(store.flowrateUnit);
+    }, [store.flowrateUnit])
+
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
                 <TokenSelectField />
                 <NumberEntryField
-                    title="FlowRate ( ether / sec )"
+                    title="FlowRate"
                     number={swapFlowRate}
                     setNumber={setSwapFlowRate}
+                    dropdownItems={flowrates}
+                    dropdownValue={store.flowrateUnit}
+                    setDropdownValue={store.setFlowrateUnit}
                 />
                 <PricingField
                     refreshingPrice={refreshingPrice}

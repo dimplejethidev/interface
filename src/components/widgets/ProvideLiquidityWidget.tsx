@@ -11,6 +11,7 @@ import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import TokenDropdown from "../TokenDropdown";
 import PricingField from "../PricingField";
+import flowrates from "../../utils/flowrates";
 
 interface ProvideLiquidityWidgetProps {
     showToast: (type: ToastType) => {};
@@ -167,9 +168,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setToken={store.setOutboundToken}
                     />
                     <NumberEntryField
-                        title="FlowRate ( ether / sec )"
+                        title="FlowRate"
                         number={flowRate0}
                         setNumber={setFlowRate0}
+                        dropdownItems={flowrates}
+                        dropdownValue={store.flowrateUnit}
+                        setDropdownValue={store.setFlowrateUnit}
                     />
                 </div>
                 <div className="space-y-3">
@@ -178,9 +182,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setToken={store.setInboundToken}
                     />
                     <NumberEntryField
-                        title="FlowRate ( ether / sec )"
+                        title="FlowRate"
                         number={flowRate1}
                         setNumber={setFlowRate1}
+                        dropdownItems={flowrates}
+                        dropdownValue={store.flowrateUnit}
+                        setDropdownValue={store.setFlowrateUnit}
                     />
                 </div>
                 <PricingField

@@ -21,8 +21,16 @@ module.exports = {
             },
             colors: {
                 "aqueductBlue": "#0460CE",
+                "darkBlue": "#0e2138",
+                "blueBlack": "#0b1521",
+                "blueBlack2": "#060d14",
                 "daiYellow": "#F5AC37",
-                "usdcBlue": '#2775CA'
+                "usdcBlue": '#2775CA',
+                "ethBlue": '#00ABEE',
+                "ethPink": '#E7018A'
+            },
+            screens: {
+                '3xl': '2000px',
             }
         },
     },

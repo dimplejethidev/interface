@@ -33,8 +33,8 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         display: "flex",
         alignItems: "center",
     }),
-    control: (provided) => ({
-        ...provided,
+    control: (base, state) => ({
+        ...base,
         padding: 20,
         borderRadius: 16,
         fontSize: "1.5rem",
@@ -42,6 +42,10 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         marginTop: 10,
         borderWidth: 1,
         borderColor: "rgb(229 231 235)",
+        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
+        '&:hover': {
+            border: '1px solid #0460CE',
+        },
     }),
 };
 
@@ -90,7 +94,6 @@ const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
             logo={selectTokenOption.logo}
             placeholder={selectTokenOption.label}
             isSearchable
-            isClearable
             isMulti={false}
             instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
             className="centered-shadow-sm rounded-2xl"

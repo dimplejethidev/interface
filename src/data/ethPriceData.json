@@ -1,0 +1,467 @@
+[
+    {
+      "Date(UTC)": "3/13/20",
+      "UnixTimeStamp": 1584057600,
+      "Value": 135.44
+    },
+    {
+      "Date(UTC)": "3/23/20",
+      "UnixTimeStamp": 1584921600,
+      "Value": 136.74
+    },
+    {
+      "Date(UTC)": "4/2/20",
+      "UnixTimeStamp": 1585785600,
+      "Value": 141.59
+    },
+    {
+      "Date(UTC)": "4/12/20",
+      "UnixTimeStamp": 1586649600,
+      "Value": 158.75
+    },
+    {
+      "Date(UTC)": "4/22/20",
+      "UnixTimeStamp": 1587513600,
+      "Value": 183.04
+    },
+    {
+      "Date(UTC)": "5/2/20",
+      "UnixTimeStamp": 1588377600,
+      "Value": 214.15
+    },
+    {
+      "Date(UTC)": "5/12/20",
+      "UnixTimeStamp": 1589241600,
+      "Value": 189.9
+    },
+    {
+      "Date(UTC)": "5/22/20",
+      "UnixTimeStamp": 1590105600,
+      "Value": 207.28
+    },
+    {
+      "Date(UTC)": "6/1/20",
+      "UnixTimeStamp": 1590969600,
+      "Value": 248.21
+    },
+    {
+      "Date(UTC)": "6/11/20",
+      "UnixTimeStamp": 1591833600,
+      "Value": 230.21
+    },
+    {
+      "Date(UTC)": "6/21/20",
+      "UnixTimeStamp": 1592697600,
+      "Value": 227.83
+    },
+    {
+      "Date(UTC)": "7/1/20",
+      "UnixTimeStamp": 1593561600,
+      "Value": 231.05
+    },
+    {
+      "Date(UTC)": "7/11/20",
+      "UnixTimeStamp": 1594425600,
+      "Value": 239.25
+    },
+    {
+      "Date(UTC)": "7/21/20",
+      "UnixTimeStamp": 1595289600,
+      "Value": 245.87
+    },
+    {
+      "Date(UTC)": "7/31/20",
+      "UnixTimeStamp": 1596153600,
+      "Value": 346.81
+    },
+    {
+      "Date(UTC)": "8/10/20",
+      "UnixTimeStamp": 1597017600,
+      "Value": 395.84
+    },
+    {
+      "Date(UTC)": "8/20/20",
+      "UnixTimeStamp": 1597881600,
+      "Value": 416.04
+    },
+    {
+      "Date(UTC)": "8/30/20",
+      "UnixTimeStamp": 1598745600,
+      "Value": 429.04
+    },
+    {
+      "Date(UTC)": "9/9/20",
+      "UnixTimeStamp": 1599609600,
+      "Value": 351.15
+    },
+    {
+      "Date(UTC)": "9/19/20",
+      "UnixTimeStamp": 1600473600,
+      "Value": 385.36
+    },
+    {
+      "Date(UTC)": "9/29/20",
+      "UnixTimeStamp": 1601337600,
+      "Value": 359.92
+    },
+    {
+      "Date(UTC)": "10/9/20",
+      "UnixTimeStamp": 1602201600,
+      "Value": 365.41
+    },
+    {
+      "Date(UTC)": "10/19/20",
+      "UnixTimeStamp": 1603065600,
+      "Value": 379.41
+    },
+    {
+      "Date(UTC)": "10/29/20",
+      "UnixTimeStamp": 1603929600,
+      "Value": 387.54
+    },
+    {
+      "Date(UTC)": "11/8/20",
+      "UnixTimeStamp": 1604793600,
+      "Value": 454.74
+    },
+    {
+      "Date(UTC)": "11/18/20",
+      "UnixTimeStamp": 1605657600,
+      "Value": 478.76
+    },
+    {
+      "Date(UTC)": "11/28/20",
+      "UnixTimeStamp": 1606521600,
+      "Value": 537.99
+    },
+    {
+      "Date(UTC)": "12/8/20",
+      "UnixTimeStamp": 1607385600,
+      "Value": 554.82
+    },
+    {
+      "Date(UTC)": "12/18/20",
+      "UnixTimeStamp": 1608249600,
+      "Value": 654.55
+    },
+    {
+      "Date(UTC)": "12/28/20",
+      "UnixTimeStamp": 1609113600,
+      "Value": 729.59
+    },
+    {
+      "Date(UTC)": "1/7/21",
+      "UnixTimeStamp": 1609977600,
+      "Value": 1225.5
+    },
+    {
+      "Date(UTC)": "1/17/21",
+      "UnixTimeStamp": 1610841600,
+      "Value": 1233.73
+    },
+    {
+      "Date(UTC)": "1/27/21",
+      "UnixTimeStamp": 1611705600,
+      "Value": 1241.51
+    },
+    {
+      "Date(UTC)": "2/6/21",
+      "UnixTimeStamp": 1612569600,
+      "Value": 1679.14
+    },
+    {
+      "Date(UTC)": "2/16/21",
+      "UnixTimeStamp": 1613433600,
+      "Value": 1782.83
+    },
+    {
+      "Date(UTC)": "2/26/21",
+      "UnixTimeStamp": 1614297600,
+      "Value": 1446.1
+    },
+    {
+      "Date(UTC)": "3/8/21",
+      "UnixTimeStamp": 1615161600,
+      "Value": 1834.48
+    },
+    {
+      "Date(UTC)": "3/18/21",
+      "UnixTimeStamp": 1616025600,
+      "Value": 1776.16
+    },
+    {
+      "Date(UTC)": "3/28/21",
+      "UnixTimeStamp": 1616889600,
+      "Value": 1686.74
+    },
+    {
+      "Date(UTC)": "4/7/21",
+      "UnixTimeStamp": 1617753600,
+      "Value": 1964.18
+    },
+    {
+      "Date(UTC)": "4/17/21",
+      "UnixTimeStamp": 1618617600,
+      "Value": 2318.01
+    },
+    {
+      "Date(UTC)": "4/27/21",
+      "UnixTimeStamp": 1619481600,
+      "Value": 2667.93
+    },
+    {
+      "Date(UTC)": "5/7/21",
+      "UnixTimeStamp": 1620345600,
+      "Value": 3483.96
+    },
+    {
+      "Date(UTC)": "5/17/21",
+      "UnixTimeStamp": 1621209600,
+      "Value": 3280.73
+    },
+    {
+      "Date(UTC)": "5/27/21",
+      "UnixTimeStamp": 1622073600,
+      "Value": 2742.48
+    },
+    {
+      "Date(UTC)": "6/6/21",
+      "UnixTimeStamp": 1622937600,
+      "Value": 2710.99
+    },
+    {
+      "Date(UTC)": "6/16/21",
+      "UnixTimeStamp": 1623801600,
+      "Value": 2367.7
+    },
+    {
+      "Date(UTC)": "6/26/21",
+      "UnixTimeStamp": 1624665600,
+      "Value": 1830.94
+    },
+    {
+      "Date(UTC)": "7/6/21",
+      "UnixTimeStamp": 1625529600,
+      "Value": 2322.63
+    },
+    {
+      "Date(UTC)": "7/16/21",
+      "UnixTimeStamp": 1626393600,
+      "Value": 1877.05
+    },
+    {
+      "Date(UTC)": "7/26/21",
+      "UnixTimeStamp": 1627257600,
+      "Value": 2228.67
+    },
+    {
+      "Date(UTC)": "8/5/21",
+      "UnixTimeStamp": 1628121600,
+      "Value": 2829.23
+    },
+    {
+      "Date(UTC)": "8/15/21",
+      "UnixTimeStamp": 1628985600,
+      "Value": 3311.12
+    },
+    {
+      "Date(UTC)": "8/25/21",
+      "UnixTimeStamp": 1629849600,
+      "Value": 3228.86
+    },
+    {
+      "Date(UTC)": "9/4/21",
+      "UnixTimeStamp": 1630713600,
+      "Value": 3887.01
+    },
+    {
+      "Date(UTC)": "9/14/21",
+      "UnixTimeStamp": 1631577600,
+      "Value": 3436.05
+    },
+    {
+      "Date(UTC)": "9/24/21",
+      "UnixTimeStamp": 1632441600,
+      "Value": 2930.86
+    },
+    {
+      "Date(UTC)": "10/4/21",
+      "UnixTimeStamp": 1633305600,
+      "Value": 3384.5
+    },
+    {
+      "Date(UTC)": "10/14/21",
+      "UnixTimeStamp": 1634169600,
+      "Value": 3791.23
+    },
+    {
+      "Date(UTC)": "10/24/21",
+      "UnixTimeStamp": 1635033600,
+      "Value": 4082.08
+    },
+    {
+      "Date(UTC)": "11/3/21",
+      "UnixTimeStamp": 1635897600,
+      "Value": 4604.4
+    },
+    {
+      "Date(UTC)": "11/13/21",
+      "UnixTimeStamp": 1636761600,
+      "Value": 4645.64
+    },
+    {
+      "Date(UTC)": "11/23/21",
+      "UnixTimeStamp": 1637625600,
+      "Value": 4341.17
+    },
+    {
+      "Date(UTC)": "12/3/21",
+      "UnixTimeStamp": 1638489600,
+      "Value": 4219.32
+    },
+    {
+      "Date(UTC)": "12/13/21",
+      "UnixTimeStamp": 1639353600,
+      "Value": 3785.08
+    },
+    {
+      "Date(UTC)": "12/23/21",
+      "UnixTimeStamp": 1640217600,
+      "Value": 4112.35
+    },
+    {
+      "Date(UTC)": "1/2/22",
+      "UnixTimeStamp": 1641081600,
+      "Value": 3830.92
+    },
+    {
+      "Date(UTC)": "1/12/22",
+      "UnixTimeStamp": 1641945600,
+      "Value": 3373.03
+    },
+    {
+      "Date(UTC)": "1/22/22",
+      "UnixTimeStamp": 1642809600,
+      "Value": 2412.23
+    },
+    {
+      "Date(UTC)": "2/1/22",
+      "UnixTimeStamp": 1643673600,
+      "Value": 2790.15
+    },
+    {
+      "Date(UTC)": "2/11/22",
+      "UnixTimeStamp": 1644537600,
+      "Value": 2928.93
+    },
+    {
+      "Date(UTC)": "2/21/22",
+      "UnixTimeStamp": 1645401600,
+      "Value": 2570.15
+    },
+    {
+      "Date(UTC)": "3/3/22",
+      "UnixTimeStamp": 1646265600,
+      "Value": 2833.71
+    },
+    {
+      "Date(UTC)": "3/13/22",
+      "UnixTimeStamp": 1647129600,
+      "Value": 2516.83
+    },
+    {
+      "Date(UTC)": "3/23/22",
+      "UnixTimeStamp": 1647993600,
+      "Value": 3032.98
+    },
+    {
+      "Date(UTC)": "4/2/22",
+      "UnixTimeStamp": 1648857600,
+      "Value": 3444.68
+    },
+    {
+      "Date(UTC)": "4/12/22",
+      "UnixTimeStamp": 1649721600,
+      "Value": 3028.77
+    },
+    {
+      "Date(UTC)": "4/22/22",
+      "UnixTimeStamp": 1650585600,
+      "Value": 2963.17
+    },
+    {
+      "Date(UTC)": "5/2/22",
+      "UnixTimeStamp": 1651449600,
+      "Value": 2856.12
+    },
+    {
+      "Date(UTC)": "5/12/22",
+      "UnixTimeStamp": 1652313600,
+      "Value": 1952.81
+    },
+    {
+      "Date(UTC)": "5/22/22",
+      "UnixTimeStamp": 1653177600,
+      "Value": 2041.08
+    },
+    {
+      "Date(UTC)": "6/1/22",
+      "UnixTimeStamp": 1654041600,
+      "Value": 1817.42
+    },
+    {
+      "Date(UTC)": "6/11/22",
+      "UnixTimeStamp": 1654905600,
+      "Value": 1530.28
+    },
+    {
+      "Date(UTC)": "6/21/22",
+      "UnixTimeStamp": 1655769600,
+      "Value": 1124.71
+    },
+    {
+      "Date(UTC)": "7/1/22",
+      "UnixTimeStamp": 1656633600,
+      "Value": 1058.01
+    },
+    {
+      "Date(UTC)": "7/11/22",
+      "UnixTimeStamp": 1657497600,
+      "Value": 1095.67
+    },
+    {
+      "Date(UTC)": "7/21/22",
+      "UnixTimeStamp": 1658361600,
+      "Value": 1575.68
+    },
+    {
+      "Date(UTC)": "7/31/22",
+      "UnixTimeStamp": 1659225600,
+      "Value": 1679.55
+    },
+    {
+      "Date(UTC)": "8/10/22",
+      "UnixTimeStamp": 1660089600,
+      "Value": 1854.05
+    },
+    {
+      "Date(UTC)": "8/20/22",
+      "UnixTimeStamp": 1660953600,
+      "Value": 1575.73
+    },
+    {
+      "Date(UTC)": "8/30/22",
+      "UnixTimeStamp": 1661817600,
+      "Value": 1524.62
+    },
+    {
+      "Date(UTC)": "9/9/22",
+      "UnixTimeStamp": 1662681600,
+      "Value": 1719.35
+    },
+    {
+      "Date(UTC)": "9/19/22",
+      "UnixTimeStamp": 1663545600,
+      "Value": 1376.21
+    }
+   ]
