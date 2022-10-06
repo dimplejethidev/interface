@@ -35,15 +35,6 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
         try {
             setLoading(true);
 
-            const formattedFlowRate0: BigNumber = ethers.utils.parseUnits(
-                flowRate0,
-                "ether"
-            );
-            const formattedFlowRate1: BigNumber = ethers.utils.parseUnits(
-                flowRate1,
-                "ether"
-            );
-
             if (signer == null || signer == undefined) {
                 showToast(ToastType.ConnectWallet);
                 setLoading(false);
@@ -67,12 +58,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
             if (token0 && token1 && pool) {
                 const createFlowOperation0 = superfluid.cfaV1.createFlow({
                     receiver: pool,
-                    flowRate: formattedFlowRate0.toString(),
+                    flowRate: flowRate0,
                     superToken: token0,
                 });
                 const createFlowOperation1 = superfluid.cfaV1.createFlow({
                     receiver: pool,
-                    flowRate: formattedFlowRate1.toString(),
+                    flowRate: flowRate1,
                     superToken: token1,
                 });
                 const batchCall = superfluid.batchCall([
@@ -127,14 +118,10 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
 
                 // calculate new flows
                 if (flowRate0 != "") {
-                    const formattedFlowRate0: BigNumber =
-                        ethers.utils.parseUnits(flowRate0, "ether");
-                    token0Flow = token0Flow.add(formattedFlowRate0);
+                    token0Flow = token0Flow.add(flowRate0);
                 }
                 if (flowRate1 != "") {
-                    const formattedFlowRate1: BigNumber =
-                        ethers.utils.parseUnits(flowRate1, "ether");
-                    token1Flow = token1Flow.add(formattedFlowRate1);
+                    token1Flow = token1Flow.add(flowRate1);
                 }
 
                 // calculate price multiple
@@ -174,6 +161,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         dropdownItems={flowrates}
                         dropdownValue={store.flowrateUnit}
                         setDropdownValue={store.setFlowrateUnit}
+                        isEther={true}
                     />
                 </div>
                 <div className="space-y-3">
@@ -187,7 +175,8 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setNumber={setFlowRate1}
                         dropdownItems={flowrates}
                         dropdownValue={store.flowrateUnit}
-                        setDropdownValue={store.setFlowrateUnit}
+                        setDropdownValue={store.setFlowrateUnit} 
+                        isEther={true}
                     />
                 </div>
                 <PricingField

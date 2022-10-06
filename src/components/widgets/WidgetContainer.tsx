@@ -12,7 +12,7 @@ interface WidgetContainerProps {
 
 const WidgetContainer = ({ title, buttons, children }: WidgetContainerProps) => {
     return (
-        <div className="flex flex-col w-full max-w-lg md:p-8 space-y-6 rounded-3xl bg-white md:centered-shadow">
+        <div className="flex flex-col w-full max-w-lg md:p-8 space-y-6 rounded-3xl bg-white md:centered-shadow transition">
             <div className="flex font-semibold space-x-4 text-lg whitespace-nowrap">
                 {
                     title

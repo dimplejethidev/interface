@@ -37,11 +37,6 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         try {
             setLoading(true);
 
-            const formattedFlowRate: BigNumber = ethers.utils.parseUnits(
-                swapFlowRate,
-                "ether"
-            );
-
             if (signer == null || signer == undefined) {
                 showToast(ToastType.ConnectWallet);
                 setLoading(false);
@@ -64,7 +59,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             if (token) {
                 const createFlowOperation = superfluid.cfaV1.createFlow({
                     receiver: pool,
-                    flowRate: formattedFlowRate.toString(),
+                    flowRate: swapFlowRate,
                     superToken: token,
                 });
                 const result = await createFlowOperation.exec(signer);
@@ -115,9 +110,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
                 // calculate new flows
                 if (swapFlowRate != "") {
-                    const formattedFlowRate: BigNumber =
-                        ethers.utils.parseUnits(swapFlowRate, "ether");
-                    token0Flow = token0Flow.add(formattedFlowRate);
+                    token0Flow = token0Flow.add(swapFlowRate);
                 }
 
                 // calculate price multiple
@@ -162,6 +155,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     dropdownItems={flowrates}
                     dropdownValue={store.flowrateUnit}
                     setDropdownValue={store.setFlowrateUnit}
+                    isEther={true}
                 />
                 <PricingField
                     refreshingPrice={refreshingPrice}

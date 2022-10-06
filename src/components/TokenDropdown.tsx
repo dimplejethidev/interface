@@ -47,6 +47,10 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
             border: '1px solid #0460CE',
         },
     }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: "rgb(100 116 139)"
+    })
 };
 
 const Control = ({ children, ...props }: ControlProps<TokenOption, false>) => {

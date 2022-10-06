@@ -51,16 +51,16 @@ const PricingField = ({
                             initial outgoing flowrate:{" "}
                             {swapFlowRate != ""
                                 ? (
-                                    ethers.utils
-                                        .parseUnits(swapFlowRate, "ether")
+                                    BigNumber.from(swapFlowRate)
                                         .mul(priceMultiple)
+                                        .mul(store.flowrateUnit.value)
                                         .div(BigNumber.from(2).pow(96))
                                         .div(BigNumber.from(10).pow(18))
                                         .toNumber() /
                                     2 ** 32
                                 ).toFixed(8)
                                 : "_"}
-                            {" " + store.inboundToken.label} / s
+                            {" " + store.inboundToken.label + " " + store.flowrateUnit.label}
                         </p>
                     )}
                 </div>

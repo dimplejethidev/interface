@@ -1,3 +1,6 @@
+import { BigNumber, ethers } from "ethers";
+import { useEffect, useState } from "react";
+import { useStore } from "../store";
 import { GenericDropdownOption } from "../types/GenericDropdownOption";
 import GenericDropdown from "./GenericDropdown";
 
@@ -8,6 +11,7 @@ interface NumberEntryFieldProps {
     dropdownItems?: GenericDropdownOption[];
     dropdownValue?: GenericDropdownOption;
     setDropdownValue?: (value: GenericDropdownOption) => void;
+    isEther: boolean;
 }
 
 const NumberEntryField = ({
@@ -16,8 +20,31 @@ const NumberEntryField = ({
     setNumber,
     dropdownItems,
     dropdownValue,
-    setDropdownValue
+    setDropdownValue,
+    isEther
 }: NumberEntryFieldProps) => {
+
+    const store = useStore();
+    const [value, setValue] = useState<string>('');
+
+    function setFormattedNumber(newValue: string) {
+        if (newValue == '') { setNumber(''); return; }
+
+        if (newValue.match("^[0-9]*[.]?[0-9]*$") != null) {
+            var formattedValue = isEther ? ethers.utils.parseUnits(newValue, "ether") : BigNumber.from(newValue);
+            console.log(formattedValue.toString())
+            if (dropdownItems && dropdownValue && setDropdownValue) {
+                formattedValue = formattedValue.div(store.flowrateUnit.value)
+            }
+            console.log(formattedValue.toString())
+            setNumber(formattedValue.toString());
+        }
+    }
+
+    useEffect(() => {
+        setFormattedNumber(value);
+    }, [store.flowrateUnit])
+
     return (
         <div>
             <div className="absolute pl-6 pt-4 text-xs font-semibold">
@@ -30,16 +57,20 @@ const NumberEntryField = ({
                     type="text"
                     pattern="^[0-9]*[.,]?[0-9]*$"
                     placeholder="0"
-                    value={number}
+                    value={value}
                     onChange={(e) => {
+                        // set displayed value
                         if (e.target.value.match("^[0-9]*[.]?[0-9]*$") != null) {
-                            setNumber(e.target.value);
+                            setValue(e.target.value);
                         }
+
+                        // set formatted number
+                        setFormattedNumber(e.target.value);
                     }}
                 />
                 {
                     dropdownItems && dropdownValue && setDropdownValue &&
-                    <GenericDropdown options={dropdownItems} dropdownValue={dropdownValue} setDropdownValue={setDropdownValue}/>
+                    <GenericDropdown options={dropdownItems} dropdownValue={dropdownValue} setDropdownValue={setDropdownValue} />
                 }
             </div>
         </div>
