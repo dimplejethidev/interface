@@ -12,6 +12,7 @@ import { useStore } from "../../store";
 import TokenDropdown from "../TokenDropdown";
 import PricingField from "../PricingField";
 import flowrates from "../../utils/flowrates";
+import TransactionButton from "../TransactionButton";
 
 interface ProvideLiquidityWidgetProps {
     showToast: (type: ToastType) => {};
@@ -31,7 +32,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
 
-    const swap = async () => {
+    const provideLiquidity = async () => {
         try {
             setLoading(true);
 
@@ -128,7 +129,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                 if (token0Flow.gt(0)) {
                     setToken1Price(
                         token1Flow.mul(100000).div(token0Flow).toNumber() /
-                            100000
+                        100000
                     );
                 } else {
                     setToken1Price(0);
@@ -175,7 +176,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setNumber={setFlowRate1}
                         dropdownItems={flowrates}
                         dropdownValue={store.flowrateUnit}
-                        setDropdownValue={store.setFlowrateUnit} 
+                        setDropdownValue={store.setFlowrateUnit}
                         isEther={true}
                     />
                 </div>
@@ -184,19 +185,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                     token1Price={token1Price}
                     poolExists={poolExists}
                 />
-
-                {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
-                        <LoadingSpinner size={30} />
-                    </div>
-                ) : (
-                    <button
-                        className="h-14 bg-aqueductBlue/90 text-white font-bold rounded-2xl hover:outline outline-2"
-                        onClick={() => swap()}
-                    >
-                        Provide Liquidity
-                    </button>
-                )}
+                <TransactionButton
+                    title="Provide Liquidity"
+                    loading={loading}
+                    onClickFunction={provideLiquidity}
+                    errorMessage={!flowRate0 || BigNumber.from(flowRate0).lte(0) || !flowRate1 || BigNumber.from(flowRate1).lte(0) ? 'Enter FlowRates' : undefined}
+                />
             </WidgetContainer>
         </section>
     );

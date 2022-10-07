@@ -10,6 +10,7 @@ import ToastType from "../../types/ToastType";
 import LoadingSpinner from "../LoadingSpinner";
 import { useStore } from "../../store";
 import TokenDropdown from "../TokenDropdown";
+import TransactionButton from "../TransactionButton";
 
 const DAI_ABI = DAIABI.abi;
 const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
@@ -28,14 +29,9 @@ const UpgradeDowngradeWidget = ({ showToast }: UpgradeDowngradeWidgetProps) => {
 
     const [isWrapping, setIsWrapping] = useState(true);
 
-    const upgrade = async (amount: string) => {
+    const upgrade = async () => {
         try {
             setLoading(true);
-
-            const formattedAmount: BigNumber = ethers.utils.parseUnits(
-                amount,
-                "ether"
-            );
 
             if (signer == null || signer == undefined) {
                 showToast(ToastType.ConnectWallet);
@@ -63,14 +59,14 @@ const UpgradeDowngradeWidget = ({ showToast }: UpgradeDowngradeWidgetProps) => {
 
             const approvedTransaction = await underlyingTokenContract.approve(
                 upgradeTokenAddress,
-                formattedAmount
+                amount
             );
             await approvedTransaction.wait();
             console.log("spend approved: ", approvedTransaction);
 
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
             const upgradedTransaction = await wrappedTokenContract.upgrade(
-                formattedAmount
+                amount
             );
             await upgradedTransaction.wait();
             console.log("Upgraded tokens: ", upgradedTransaction);
@@ -83,7 +79,7 @@ const UpgradeDowngradeWidget = ({ showToast }: UpgradeDowngradeWidgetProps) => {
         }
     };
 
-    const downgrade = async (amount: string) => {
+    const downgrade = async () => {
         try {
             setLoading(true);
 
@@ -134,26 +130,15 @@ const UpgradeDowngradeWidget = ({ showToast }: UpgradeDowngradeWidgetProps) => {
                         title={`Enter amount to ${isWrapping ? 'upgrade' : 'downgrade'} here`}
                         number={amount}
                         setNumber={setAmount} 
+                        isEther={true}                    
                     />
                 </div>
-                {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
-                        <LoadingSpinner size={30} />
-                    </div>
-                ) : (
-                    <button
-                        className="h-14 bg-aqueductBlue/90 font-bold rounded-2xl text-white hover:outline outline-2"
-                        onClick={() => {
-                            if (isWrapping) {
-                                upgrade(amount);
-                            } else {
-                                downgrade(amount);
-                            }
-                        }}
-                    >
-                        {isWrapping ? 'Wrap' : 'Unwrap'}
-                    </button>
-                )}
+                <TransactionButton 
+                    title={isWrapping ? 'Wrap' : 'Unwrap'}
+                    loading={loading}
+                    onClickFunction={isWrapping ? upgrade : downgrade}
+                    errorMessage={!amount || BigNumber.from(amount).lte(0) ? 'Enter Amount' : undefined}
+                />
             </WidgetContainer>
         </section>
     );

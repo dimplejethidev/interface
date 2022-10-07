@@ -12,6 +12,7 @@ import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import PricingField from "../PricingField";
 import flowrates from "../../utils/flowrates";
+import TransactionButton from "../TransactionButton";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -164,19 +165,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     swapFlowRate={swapFlowRate}
                     poolExists={poolExists}
                 />
-
-                {loading ? (
-                    <div className="flex justify-center items-center h-14 bg-aqueductBlue/90 text-white rounded-2xl outline-2">
-                        <LoadingSpinner size={30} />
-                    </div>
-                ) : (
-                    <button
-                        className="h-14 bg-aqueductBlue/90 text-white font-bold rounded-2xl hover:outline outline-2"
-                        onClick={() => swap()}
-                    >
-                        Swap
-                    </button>
-                )}
+                <TransactionButton 
+                    title="Swap"
+                    loading={loading}
+                    onClickFunction={swap}
+                    errorMessage={!swapFlowRate || BigNumber.from(swapFlowRate).lte(0) ? 'Enter FlowRate' : undefined}
+                />
             </WidgetContainer>
         </section>
     );
