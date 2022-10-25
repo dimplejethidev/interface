@@ -17,6 +17,7 @@ import getTweetTemplate from "../../../../../utils/getTweetTemplate"
 import getSharedLink from "../../../../../utils/getSharedLink";
 import ToastType from "../../../../../types/toastType";
 import { useStore } from "../../../../../store";
+import ButtonWithInfoPopup from "../../../../../components/ButtonInfoPopup";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -423,55 +424,65 @@ const PoolInteractionVisualization: NextPage = () => {
                             <div className="flex grow" />
                             {
                                 userAddress && address && userAddress == address &&
-                                <Link
-                                    href={isTwap0 && isTwap1 ? '/provide-liquidity' : '/'}
-                                >
-                                    <a
-                                        onClick={() => {
-                                            if (token0 && token1) {
-                                                // set swap tokens to this pool's tokens
-                                                if (isTwap1) {
-                                                    store.setOutboundToken(token0);
-                                                    store.setInboundToken(token1);
-                                                } else {
-                                                    store.setOutboundToken(token1);
-                                                    store.setInboundToken(token0);
-                                                }
-                                            }
-                                        }}
-                                        className="bg-aqueductBlue/5 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 transition-all duration-300"
-                                    >
-                                        <RiPencilFill size={25} />
-                                    </a>
-                                </Link>
+                                <ButtonWithInfoPopup
+                                    message='Edit stream'
+                                    button={
+                                        <Link
+                                            href={isTwap0 && isTwap1 ? '/provide-liquidity' : '/'}
+                                        >
+                                            <a
+                                                onClick={() => {
+                                                    if (token0 && token1) {
+                                                        // set swap tokens to this pool's tokens
+                                                        if (isTwap1) {
+                                                            store.setOutboundToken(token0);
+                                                            store.setInboundToken(token1);
+                                                        } else {
+                                                            store.setOutboundToken(token1);
+                                                            store.setInboundToken(token0);
+                                                        }
+                                                    }
+                                                }}
+                                                className="bg-aqueductBlue/5 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 transition-all duration-300"
+                                            >
+                                                <RiPencilFill size={25} />
+                                            </a>
+                                        </Link>
+                                    }
+                                />
                             }
                             {
                                 userAddress && address && userAddress == address &&
-                                <button
-                                    onClick={async () => {
-                                        if (token0 && token1 && address && userAddress && address == userAddress) {
-                                            const chainId = chain?.id;
-                                            const superfluid = await Framework.create({
-                                                chainId: Number(chainId),
-                                                provider: provider,
-                                            });
-                                            const createFlowOperation = superfluid.cfaV1.deleteFlow({
-                                                sender: address,
-                                                receiver: getPoolAddress(token0.value, token1.value),
-                                                superToken: token0.address,
-                                            });
-                                            const result = await createFlowOperation.exec(signer);
-                                            await result.wait();
+                                <ButtonWithInfoPopup
+                                    message="Cancel stream"
+                                    button={
+                                        <button
+                                            onClick={async () => {
+                                                if (token0 && token1 && address && userAddress && address == userAddress) {
+                                                    const chainId = chain?.id;
+                                                    const superfluid = await Framework.create({
+                                                        chainId: Number(chainId),
+                                                        provider: provider,
+                                                    });
+                                                    const createFlowOperation = superfluid.cfaV1.deleteFlow({
+                                                        sender: address,
+                                                        receiver: getPoolAddress(token0.value, token1.value),
+                                                        superToken: token0.address,
+                                                    });
+                                                    const result = await createFlowOperation.exec(signer);
+                                                    await result.wait();
 
-                                            console.log("Stream deleted: ", result);
-                                            //showToast(ToastType.Success);
-                                        }
-                                    }}
-                                    className="bg-red-100/50 text-red-600 p-2 rounded-xl hover:bg-red-200/50 transition-all duration-300"
-                                    disabled={isLoading}
-                                >
-                                    <RiCloseCircleFill size={25} />
-                                </button>
+                                                    console.log("Stream deleted: ", result);
+                                                    //showToast(ToastType.Success);
+                                                }
+                                            }}
+                                            className="bg-red-100/50 text-red-600 p-2 rounded-xl hover:bg-red-200/50 transition-all duration-300"
+                                            disabled={isLoading}
+                                        >
+                                            <RiCloseCircleFill size={25} />
+                                        </button>
+                                    }
+                                />
                             }
                         </div>
                         {
@@ -529,7 +540,6 @@ const PoolInteractionVisualization: NextPage = () => {
                                         </div>
                                     </WidgetContainer>
                                 }
-
                                 {
                                     isTwap0 && isTwap1
                                         ?
@@ -560,25 +570,35 @@ const PoolInteractionVisualization: NextPage = () => {
                                 </WidgetContainer>
                                 <div className="flex items-center space-x-2 md:px-8 md:pt-8">
                                     <p className="pr-2">Share:</p>
-                                    <button
-                                        className="p-2 bg-aqueductBlue rounded-2xl text-white"
-                                        onClick={() => {
-                                            if (address) {
-                                                navigator.clipboard.writeText(
-                                                    getSharedLink('goerli', address, token0.address, token1.address)
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        <BiLink size={22} />
-                                    </button>
-                                    <a
-                                        className="p-2 bg-[#1DA1F2] rounded-2xl text-white"
-                                        href={address ? getTweetTemplate(getSharedLink('goerli', address, token0.address, token1.address)) : ''}
-                                        target="_blank"
-                                    >
-                                        <IoLogoTwitter size={22} />
-                                    </a>
+                                    <ButtonWithInfoPopup
+                                        message="Copy link"
+                                        button={
+                                            <button
+                                                className="p-2 bg-aqueductBlue rounded-2xl text-white"
+                                                onClick={() => {
+                                                    if (address) {
+                                                        navigator.clipboard.writeText(
+                                                            getSharedLink('goerli', address, token0.address, token1.address)
+                                                        );
+                                                    }
+                                                }}
+                                            >
+                                                <BiLink size={22} />
+                                            </button>
+                                        }
+                                    />
+                                    <ButtonWithInfoPopup
+                                        message="Share on Twitter"
+                                        button={
+                                            <a
+                                                className="p-2 bg-[#1DA1F2] rounded-2xl text-white"
+                                                href={address ? getTweetTemplate(getSharedLink('goerli', address, token0.address, token1.address)) : ''}
+                                                target="_blank"
+                                            >
+                                                <IoLogoTwitter size={22} />
+                                            </a>
+                                        }
+                                    />
                                 </div>
                             </div>
                         }
