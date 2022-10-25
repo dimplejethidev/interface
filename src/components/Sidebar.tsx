@@ -22,18 +22,20 @@ const navItems: { icon: any; label: string; page: string }[] = [
         label: "My Streams",
         page: "/my-streams",
     },
-    { icon: <TbArrowsRightLeft size={18} />, label: "Swap", page: "/" },
+    { 
+        icon: <TbArrowsRightLeft size={18} />, 
+        label: "Swap", 
+        page: "/" },
     {
         icon: <TbArrowsRight size={18} />,
         label: "Provide Liquidity",
         page: "/provide-liquidity",
     },
-    { icon: <TbCirclePlus size={18} />, label: "Wrap / Unwrap", page: "/wrap" },
-    {
-        icon: <MdAttachMoney size={18} />,
-        label: "My Rewards",
-        page: "/my-rewards",
-    },
+    { 
+        icon: <TbCirclePlus size={18} />, 
+        label: "Wrap / Unwrap", 
+        page: "/wrap" 
+    }
 ];
 
 const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {

@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Sidebar from "../components/Sidebar";
-import RealTimeFlowingBalance from "../components/RealTimeFlowingBalance";
 import { useState } from "react";
 import StreamsTable from "../components/widgets/StreamsTable";
 
