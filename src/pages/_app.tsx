@@ -14,11 +14,16 @@ import CustomAvatar from "../components/CustomAvatar";
 import ToastType from "../types/ToastType";
 import ToastMessage from "../components/ToastMessage";
 import IToast from "../types/Toast";
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import Sidebar from "../components/Sidebar";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
-    [publicProvider()]
+    [alchemyProvider({ apiKey: 'y-XrzXcnrI5-InGayOmqKAfZOADFvF8s' })]
 );
+//[jsonRpcProvider({ rpc: () => { return {http: 'https://goerli.infura.io/v3/'} } })]
+//publicProvider()
 
 const { connectors } = getDefaultWallets({
     appName: "My RainbowKit App",
@@ -89,6 +94,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         setToastList([...toastList, toast]);
     };
 
+    const [isShown, setIsShown] = useState(false);
+
     return (
         <WagmiConfig client={wagmiClient}>
             <RainbowKitProvider
@@ -97,7 +104,35 @@ function MyApp({ Component, pageProps }: AppProps) {
                 avatar={CustomAvatar}
             >
                 <div className="w-full h-screen text-slate-500 poppins-font">
-                    <Component {...pageProps} showToast={showToast} />
+                    <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                        <Sidebar isShown={isShown} setIsShown={setIsShown} />
+                        {
+                            true &&
+                            <main
+                                className={
+                                    "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll "
+                                    + (isShown && "hidden md:flex")
+                                }
+                            >
+                                <div className="md:h-[50%]" />
+                                <Component {...pageProps} showToast={showToast} />
+                                <div className="md:h-full" />
+                            </main>
+                        }
+                        {
+                            false &&
+                            <main
+                                className={
+                                    "flex flex-col items-center justify-center w-full "
+                                    + (isShown && "hidden md:flex")
+                                }
+                            >
+                                <div className="overflow-y-scroll flex2 items-center2 w-full h-full2 py-4 md:py-16 px-4 bg-blue-200">
+                                    <Component {...pageProps} showToast={showToast} />
+                                </div>
+                            </main>
+                        }
+                    </div>
                     <ToastMessage
                         toastList={toastList}
                         setToastList={setToastList}

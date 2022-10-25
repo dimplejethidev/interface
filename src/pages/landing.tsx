@@ -7,7 +7,7 @@ import { useSpring, animated } from 'react-spring';
 import calculatePathSmooth, { mapDataToSvgCoordinates } from "../utils/smooth-path";
 import ethPriceData from '../data/ethPriceData.json'
 
-const ANIMATION_MINIMUM_STEP_TIME = 100;
+const ANIMATION_MINIMUM_STEP_TIME = 10;
 
 const NavLink = ({ icon, title, link }: { icon: ReactNode, title: string, link: string }) => {
     return (
@@ -90,8 +90,8 @@ function BalancesDisplay() {
             setTime(time + 1);
 
             // animate frame
-            setOutgoingBalance((b) => b - 0.1231);
-            setIncomingBalance((b) => b + 0.0123);
+            setOutgoingBalance((b) => b - (0.1231 * 0.05));
+            setIncomingBalance((b) => b + (0.0123 * 0.05));
         }, ANIMATION_MINIMUM_STEP_TIME);
         return () => {
             clearTimeout(timer);
@@ -102,17 +102,23 @@ function BalancesDisplay() {
         <div className="flex flex-col-reverse w-full md:w-2/3 md:flex-row p-4 md:p-0 justify-center" style={{ perspective: '80rem' }}>
             <div className="flex flex-col justify-center space-y-4 lg:space-y-8 lg:rotate-y-md">
                 <div className="flex items-center justify-center space-x-8 text-daiYellow bg-daiYellow/10 py-8 px-12 rounded-3xl glow-yellow-xs">
-                    <AnimatedBalance
+                    {/*<AnimatedBalance
                         value={outgoingBalance.toFixed(4)}
                         isIncreasing={false}
-                    />
+                    />*/}
+                    <p className="monospace-font text-6xl tracking-widest font-bold">
+                        {outgoingBalance.toFixed(4)}
+                    </p>
                     <img src='dai-logo.png' className="w-12 h-12" />
                 </div>
                 <div className="flex items-center justify-center space-x-8 text-ethPink bg-ethPink/10 py-8 px-12 rounded-3xl glow-pink-xs">
-                    <AnimatedBalance
+                    {/*<AnimatedBalance
                         value={incomingBalance.toFixed(4)}
                         isIncreasing={true}
-                    />
+                    />*/}
+                    <p className="monospace-font text-6xl tracking-widest font-bold">
+                        {incomingBalance.toFixed(4)}
+                    </p>
                     <img src='eth-logo-color.png' className="w-12 h-12 bg-ethPink rounded-full" />
                 </div>
             </div>

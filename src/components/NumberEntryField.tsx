@@ -30,13 +30,11 @@ const NumberEntryField = ({
     function setFormattedNumber(newValue: string) {
         if (newValue == '') { setNumber(''); return; }
 
-        if (newValue.match("^[0-9]*[.]?[0-9]*$") != null) {
+        if (newValue.match("^[0-9]*[.]?[0-9]*$") != null && newValue != '.') {
             var formattedValue = isEther ? ethers.utils.parseUnits(newValue, "ether") : BigNumber.from(newValue);
-            console.log(formattedValue.toString())
             if (dropdownItems && dropdownValue && setDropdownValue) {
                 formattedValue = formattedValue.div(store.flowrateUnit.value)
             }
-            console.log(formattedValue.toString())
             setNumber(formattedValue.toString());
         }
     }
@@ -52,8 +50,11 @@ const NumberEntryField = ({
             </div>
             <div className="flex h-[5.5rem] grow bg-white2 border-[1px] border-gray-200 centered-shadow-sm rounded-2xl ">
                 <input
-                    className="px-6 pt-7 mr-[0.1rem] text-2xl font-semibold monospace-font tracking-widest rounded-l-2xl rounded-r-none flex w-full 
-                                 outline-none focus:textbox-outline hover:border-[1px] hover:border-aqueductBlue hover:pl-[23px]"
+                    className={
+                        "px-6 pt-7 mr-[0.1rem] text-2xl font-semibold monospace-font tracking-widest rounded-l-2xl rounded-r-none flex w-full " 
+                        + "outline-none focus:textbox-outline hover:border-[1px] hover:border-aqueductBlue hover:pl-[23px]"
+                        + (!dropdownItems && ' rounded-r-2xl ')
+                    }
                     type="text"
                     pattern="^[0-9]*[.,]?[0-9]*$"
                     placeholder="0"
@@ -78,5 +79,3 @@ const NumberEntryField = ({
 };
 
 export default NumberEntryField;
-
-//hover:border-[1px] hover:border-aqueductBlue focus:hover:border-2 focus:border-[1px] focus:border-aqueductBlue hover:
