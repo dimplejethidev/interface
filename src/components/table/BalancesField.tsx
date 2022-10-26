@@ -128,7 +128,7 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
                 {
                     parseFloat(
                         ethers.utils.formatEther(currentBalance0)
-                    ).toFixed(6)
+                    ).toLocaleString(undefined, {minimumFractionDigits: 6})
                 }
             </p>
             <img src={token0.logo} className='h-5 pr-4' />
@@ -136,7 +136,7 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
                 {
                     parseFloat(
                         ethers.utils.formatEther(currentBalance1)
-                    ).toFixed(6)
+                    ).toLocaleString(undefined, {minimumFractionDigits: 6})
                 }
             </p>
             <img src={token1.logo} className='h-5' />

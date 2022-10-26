@@ -68,7 +68,7 @@ const BalanceField = ({ currentBalance, isTwap, token, numDecimals, isLoading }:
                     (isTwap ? '+' : '-') +
                     parseFloat(
                         ethers.utils.formatEther(currentBalance)
-                    ).toFixed(numDecimals)
+                    ).toLocaleString(undefined, {minimumFractionDigits: numDecimals})
                 }
             </p>
             <div className="flex space-x-1 md:space-x-2">

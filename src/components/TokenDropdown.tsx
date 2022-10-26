@@ -39,7 +39,6 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         borderRadius: 16,
         fontSize: "1.5rem",
         fontWeight: 600,
-        marginTop: 10,
         borderWidth: 1,
         borderColor: "rgb(229 231 235)",
         boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
