@@ -20,16 +20,18 @@ export const customStyles: StylesConfig<GenericDropdownOption, IsMulti> = {
         paddingRight: 8,
         paddingBottom: 0,
     }),
-    option: (provided) => ({
-        ...provided,
-        padding: 20,
+    option: (base, state) => ({
+        ...base,
+        padding: 15,
         borderRadius: 10,
         fontSize: "0.85rem",
         fontWeight: 600,
         marginTop: 8,
         marginBottom: 8,
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
+        color: '#00000099'
     }),
     control: (base, state) => ({
         ...base,
@@ -105,7 +107,7 @@ const TokenDropdown = ({ options, dropdownValue, setDropdownValue }: GenericDrop
             isMulti={false}
             isSearchable={false}
             instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
-            className="flex border-gray-200 border-l-[1px] outline-red-500 text-slate-500 poppins-font"
+            className="flex border-gray-200 border-l-[1px] text-slate-500 poppins-font"
         />
     );
 };

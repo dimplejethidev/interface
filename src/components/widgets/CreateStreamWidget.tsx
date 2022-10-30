@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
-import { useNetwork, useProvider, useSigner } from "wagmi";
+import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import TokenSelectField from "../TokenSelectField";
 import NumberEntryField from "../NumberEntryField";
@@ -24,6 +24,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
     const { chain } = useNetwork();
+    const { address } = useAccount();
 
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
@@ -33,6 +34,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     );
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
+
+    // stream vars
+    const token0Flow = useRef(BigNumber.from(0));
+    const token1Flow = useRef(BigNumber.from(0));
+    const userToken0Flow = useRef(BigNumber.from(0));
 
     const swap = async () => {
         try {
@@ -58,15 +64,30 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             const token = store.outboundToken.address;
 
             if (token) {
-                const createFlowOperation = superfluid.cfaV1.createFlow({
-                    receiver: pool,
-                    flowRate: swapFlowRate,
-                    superToken: token,
-                });
-                const result = await createFlowOperation.exec(signer);
-                await result.wait();
-
-                console.log("Stream created: ", result);
+                if (userToken0Flow.current.gt(0)) {
+                    // update stream
+                    const createFlowOperation = superfluid.cfaV1.updateFlow({
+                        receiver: pool,
+                        flowRate: swapFlowRate,
+                        superToken: token,
+                    });
+                    const result = await createFlowOperation.exec(signer);
+                    await result.wait();
+    
+                    console.log("Stream created: ", result);
+                } else {
+                    // create stream
+                    const createFlowOperation = superfluid.cfaV1.createFlow({
+                        receiver: pool,
+                        flowRate: swapFlowRate,
+                        superToken: token,
+                    });
+                    const result = await createFlowOperation.exec(signer);
+                    await result.wait();
+    
+                    console.log("Stream created: ", result);
+                }
+                
                 showToast(ToastType.Success);
                 setLoading(false);
             }
@@ -77,9 +98,38 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         }
     };
 
-    // refresh spot pricing upon user input
+    const refreshPrice = async () => {
+        setRefreshingPrice(true);
+
+        // calculate new flows
+        var calculatedToken0Flow = BigNumber.from(token0Flow.current);
+        if (swapFlowRate != "") {
+            calculatedToken0Flow = token0Flow.current.add(swapFlowRate).sub(userToken0Flow.current);
+        }
+
+        // calculate price multiple
+        if (calculatedToken0Flow.gt(0)) {
+            setToken1Price(
+                token1Flow.current.mul(100000).div(calculatedToken0Flow).toNumber() /
+                100000
+            );
+            setPriceMultiple(
+                token1Flow.current
+                    .mul(BigNumber.from(2).pow(128))
+                    .div(calculatedToken0Flow)
+            );
+        } else {
+            setToken1Price(0);
+            setPriceMultiple(BigNumber.from(0));
+        }
+
+        await new Promise((res) => setTimeout(res, 900));
+        setRefreshingPrice(false);
+    };
+
+    // update vars when tokens change
     useEffect(() => {
-        const refreshPrice = async () => {
+        const refresh = async () => {
             setRefreshingPrice(true);
 
             const token0Address = store.outboundToken.address;
@@ -102,55 +152,55 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 );
 
                 // get flows
-                var token0Flow: BigNumber = await poolContract.getFlowIn(
-                    token0Address
-                );
-                var token1Flow: BigNumber = await poolContract.getFlowIn(
-                    token1Address
-                );
+                token0Flow.current = await poolContract.getFlowIn(token0Address);
+                token1Flow.current = await poolContract.getFlowIn(token1Address);
 
-                // calculate new flows
-                if (swapFlowRate != "") {
-                    token0Flow = token0Flow.add(swapFlowRate);
+                // get existing user flows
+                if (address) {
+                    const chainId = chain?.id;
+                    const sf = await Framework.create({
+                        chainId: Number(chainId),
+                        provider: provider,
+                    });
+
+                    userToken0Flow.current = BigNumber.from(
+                        (await sf.cfaV1.getFlow({
+                            superToken: token0Address,
+                            sender: address,
+                            receiver: poolAddress,
+                            providerOrSigner: provider
+                        })).flowRate
+                    )
                 }
 
-                // calculate price multiple
-                if (token0Flow.gt(0)) {
-                    setToken1Price(
-                        token1Flow.mul(100000).div(token0Flow).toNumber() /
-                            100000
-                    );
-                    setPriceMultiple(
-                        token1Flow
-                            .mul(BigNumber.from(2).pow(128))
-                            .div(token0Flow)
-                    );
-                } else {
-                    setToken1Price(0);
-                    setPriceMultiple(BigNumber.from(0));
-                }
-
-                await new Promise((res) => setTimeout(res, 900));
+                await refreshPrice();
                 setRefreshingPrice(false);
             } catch {
                 setRefreshingPrice(false);
                 setPoolExists(false);
             }
+        }
+
+        refresh();
+    }, [store.inboundToken, store.outboundToken]);
+
+    // refresh spot pricing upon user input
+    useEffect(() => {
+        const refresh = async () => {
+            setRefreshingPrice(true);
+            await refreshPrice();
+            setRefreshingPrice(false);
         };
 
-        refreshPrice();
-    }, [swapFlowRate, store.inboundToken, store.outboundToken]);
-
-    useEffect(() => {
-        console.log(store.flowrateUnit);
-    }, [store.flowrateUnit])
-
+        refresh();
+    }, [swapFlowRate]);
+ 
     return (
         <section className="flex flex-col items-center w-full">
             <WidgetContainer title="Swap">
                 <TokenSelectField />
                 <NumberEntryField
-                    title="FlowRate"
+                    title="Flow Rate"
                     number={swapFlowRate}
                     setNumber={setSwapFlowRate}
                     dropdownItems={flowrates}
@@ -165,11 +215,11 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     swapFlowRate={swapFlowRate}
                     poolExists={poolExists}
                 />
-                <TransactionButton 
-                    title="Swap"
+                <TransactionButton
+                    title={userToken0Flow.current.gt(0) ? 'Update Swap' : 'Swap'}
                     loading={loading}
                     onClickFunction={swap}
-                    errorMessage={!swapFlowRate || BigNumber.from(swapFlowRate).lte(0) ? 'Enter FlowRate' : undefined}
+                    errorMessage={!poolExists ? 'Select valid token pair' : (!swapFlowRate || BigNumber.from(swapFlowRate).lte(0) ? 'Enter flow rate' : undefined)}
                 />
             </WidgetContainer>
         </section>

@@ -110,7 +110,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                             true &&
                             <main
                                 className={
-                                    "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll "
+                                    "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll"
                                     + (isShown && "hidden md:flex")
                                 }
                             >

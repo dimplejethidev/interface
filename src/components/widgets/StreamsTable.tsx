@@ -7,6 +7,7 @@ import { useAccount, useNetwork, useProvider } from "wagmi";
 import getPoolAddress from "../../helpers/getPool";
 import { TokenOption } from "../../types/TokenOption";
 import tokens from "../../utils/tokens";
+import getToken from "../../utils/getToken";
 
 const TextField = ({ title }: { title: string }) => {
     return (
@@ -68,10 +69,9 @@ const StreamsTable = () => {
                     providerOrSigner: provider
                 });
 
-                const token0 = tokens.find((t) => t.address == p.token0)
-                const token1 = tokens.find((t) => t.address == p.token1)
+                const token0 = await getToken({ tokenAddress: p.token0, provider: provider, chainId: chainId });
+                const token1 = await getToken({ tokenAddress: p.token1, provider: provider, chainId: chainId });
 
-                const t2 = tokens.find((t) => t.address == ETHxp)
                 if (s.flowRate != '0' && token0 && token1) {
                     const date = new Date(s.timestamp);
                     newData.push([

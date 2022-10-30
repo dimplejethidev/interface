@@ -15,15 +15,15 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         paddingLeft: 8,
         paddingRight: 8,
         borderRadius: 16,
-        marginTop: 10,
+        marginTop: 10
     }),
     menuList: (provided) => ({
         ...provided,
         paddingTop: 0,
         paddingBottom: 0,
     }),
-    option: (provided) => ({
-        ...provided,
+    option: (base, state) => ({
+        ...base,
         padding: 20,
         borderRadius: 10,
         fontSize: "1.5rem",
@@ -32,6 +32,8 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         marginBottom: 8,
         display: "flex",
         alignItems: "center",
+        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
+        color: '#00000099'
     }),
     control: (base, state) => ({
         ...base,

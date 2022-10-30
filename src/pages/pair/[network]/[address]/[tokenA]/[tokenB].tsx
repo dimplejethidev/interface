@@ -18,6 +18,7 @@ import getSharedLink from "../../../../../utils/getSharedLink";
 import ToastType from "../../../../../types/toastType";
 import { useStore } from "../../../../../store";
 import ButtonWithInfoPopup from "../../../../../components/ButtonInfoPopup";
+import getToken from "../../../../../utils/getToken";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -68,7 +69,7 @@ const BalanceField = ({ currentBalance, isTwap, token, numDecimals, isLoading }:
                     (isTwap ? '+' : '-') +
                     parseFloat(
                         ethers.utils.formatEther(currentBalance)
-                    ).toLocaleString(undefined, {minimumFractionDigits: numDecimals})
+                    ).toLocaleString(undefined, { minimumFractionDigits: numDecimals })
                 }
             </p>
             <div className="flex space-x-1 md:space-x-2">
@@ -200,14 +201,25 @@ const PoolInteractionVisualization: NextPage = () => {
     const [token0, setToken0] = useState<TokenOption>();
     const [token1, setToken1] = useState<TokenOption>();
     useEffect(() => {
-        if (typeof router.query.address == 'string') {
-            setUserAddress(router.query.address)
+        if (typeof router.query.address != 'string' || typeof router.query.tokenA != 'string' || typeof router.query.tokenB != 'string') { 
+            setPositionFound(false);
+            setIsLoading(false);
+            return; 
+        }
+        
+        // get user wallet address
+        setUserAddress(router.query.address)
+
+        async function getTokens() {
+            const tokenA = await getToken({ tokenAddress: router.query.tokenA, provider: provider, chainId: Number(chain?.id) })
+            const tokenB = await getToken({ tokenAddress: router.query.tokenB, provider: provider, chainId: Number(chain?.id) })
+
+            if ( !tokenA || !tokenB ) { setPositionFound(false); setIsLoading(false); return; }
+            setToken0(tokenA);
+            setToken1(tokenB);
         }
 
-        const tokenA = tokens.find((t) => t.address == router.query.tokenA);
-        const tokenB = tokens.find((t) => t.address == router.query.tokenB);
-        if (tokenA) { setToken0(tokenA) }
-        if (tokenB) { setToken1(tokenB) }
+        getTokens();
     }, [router.query])
 
     // Refresh function called on interval
@@ -574,7 +586,7 @@ const PoolInteractionVisualization: NextPage = () => {
                                         message="Copy link"
                                         button={
                                             <button
-                                                className="p-2 bg-aqueductBlue rounded-2xl text-white"
+                                                className="p-2 bg-aqueductBlue rounded-xl text-white"
                                                 onClick={() => {
                                                     if (address) {
                                                         navigator.clipboard.writeText(
@@ -591,7 +603,7 @@ const PoolInteractionVisualization: NextPage = () => {
                                         message="Share on Twitter"
                                         button={
                                             <a
-                                                className="p-2 bg-[#1DA1F2] rounded-2xl text-white"
+                                                className="p-2 bg-[#1DA1F2] rounded-xl text-white"
                                                 href={address ? getTweetTemplate(getSharedLink('goerli', address, token0.address, token1.address)) : ''}
                                                 target="_blank"
                                             >

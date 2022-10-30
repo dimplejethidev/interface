@@ -156,7 +156,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setToken={store.setOutboundToken}
                     />
                     <NumberEntryField
-                        title="FlowRate"
+                        title="Flow Rate"
                         number={flowRate0}
                         setNumber={setFlowRate0}
                         dropdownItems={flowrates}
@@ -171,7 +171,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         setToken={store.setInboundToken}
                     />
                     <NumberEntryField
-                        title="FlowRate"
+                        title="Flow Rate"
                         number={flowRate1}
                         setNumber={setFlowRate1}
                         dropdownItems={flowrates}
@@ -189,7 +189,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                     title="Provide Liquidity"
                     loading={loading}
                     onClickFunction={provideLiquidity}
-                    errorMessage={!flowRate0 || BigNumber.from(flowRate0).lte(0) || !flowRate1 || BigNumber.from(flowRate1).lte(0) ? 'Enter FlowRates' : undefined}
+                    errorMessage={!flowRate0 || BigNumber.from(flowRate0).lte(0) || !flowRate1 || BigNumber.from(flowRate1).lte(0) ? 'Enter flow rates' : undefined}
                 />
             </WidgetContainer>
         </section>
