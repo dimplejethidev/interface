@@ -15,7 +15,7 @@ import WidgetContainer from "../../../../../components/widgets/WidgetContainer";
 import PageNotFound from "../../../../../components/PageNotFound";
 import getTweetTemplate from "../../../../../utils/getTweetTemplate"
 import getSharedLink from "../../../../../utils/getSharedLink";
-import ToastType from "../../../../../types/toastType";
+import ToastType from "../../../../../types/ToastType";
 import { useStore } from "../../../../../store";
 import ButtonWithInfoPopup from "../../../../../components/ButtonInfoPopup";
 import getToken from "../../../../../utils/getToken";
@@ -201,22 +201,24 @@ const PoolInteractionVisualization: NextPage = () => {
     const [token0, setToken0] = useState<TokenOption>();
     const [token1, setToken1] = useState<TokenOption>();
     useEffect(() => {
-        if (typeof router.query.address != 'string' || typeof router.query.tokenA != 'string' || typeof router.query.tokenB != 'string') { 
+        if (typeof router.query.address != 'string' || typeof router.query.tokenA != 'string' || typeof router.query.tokenB != 'string') {
             setPositionFound(false);
             setIsLoading(false);
-            return; 
+            return;
         }
-        
+
         // get user wallet address
         setUserAddress(router.query.address)
 
         async function getTokens() {
-            const tokenA = await getToken({ tokenAddress: router.query.tokenA, provider: provider, chainId: Number(chain?.id) })
-            const tokenB = await getToken({ tokenAddress: router.query.tokenB, provider: provider, chainId: Number(chain?.id) })
+            if (typeof router.query.tokenA == 'string' && typeof router.query.tokenB == 'string') {
+                const tokenA = await getToken({ tokenAddress: router.query.tokenA, provider: provider, chainId: Number(chain?.id) })
+                const tokenB = await getToken({ tokenAddress: router.query.tokenB, provider: provider, chainId: Number(chain?.id) })
 
-            if ( !tokenA || !tokenB ) { setPositionFound(false); setIsLoading(false); return; }
-            setToken0(tokenA);
-            setToken1(tokenB);
+                if (!tokenA || !tokenB) { setPositionFound(false); setIsLoading(false); return; }
+                setToken0(tokenA);
+                setToken1(tokenB);
+            }
         }
 
         getTokens();
@@ -606,6 +608,7 @@ const PoolInteractionVisualization: NextPage = () => {
                                                 className="p-2 bg-[#1DA1F2] rounded-xl text-white"
                                                 href={address ? getTweetTemplate(getSharedLink('goerli', address, token0.address, token1.address)) : ''}
                                                 target="_blank"
+                                                rel="noreferrer"
                                             >
                                                 <IoLogoTwitter size={22} />
                                             </a>

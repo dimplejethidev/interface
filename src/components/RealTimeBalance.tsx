@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { useAccount, useProvider } from "wagmi"
-import { TokenOption } from "../../types/TokenOption";
+import { TokenOption } from "../types/TokenOption";
 
 const ANIMATION_MINIMUM_STEP_TIME = 100;
 const REFRESH_INTERVAL = 300; // 300 * 100 = 30000 ms = 30 s

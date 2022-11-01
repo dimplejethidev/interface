@@ -41,6 +41,7 @@ const WidgetContainer = ({ title, smallTitle, buttons, children, isUnbounded }: 
                                                 'px-4 py-2 rounded-xl w-min transition-all '
                                                 + (b.isSelected ? 'bg-aqueductBlue/10 text-aqueductBlue' : 'bg-gray-500/10 text-gray-500/60 opacity-50 hover:opacity-100')
                                             }
+                                            key={b.title}
                                         >
                                             {b.title}
                                         </button>

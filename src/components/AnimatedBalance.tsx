@@ -81,7 +81,7 @@ function AnimatedDigit({
             }
         >
             {(isIncreasing ? increasingNumbers : decreasingNumbers).map((d) => {
-                return <div>{d}</div>;
+                return <div key={d} >{d}</div>;
             })}
         </div>
     );
