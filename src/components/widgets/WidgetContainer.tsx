@@ -16,7 +16,7 @@ const WidgetContainer = ({ title, smallTitle, buttons, children, isUnbounded }: 
     return (
         <div
             className={
-                "flex flex-col w-full md:p-8 space-y-6 rounded-3xl bg-white md:centered-shadow transition "
+                "flex flex-col w-full md:p-8 space-y-6 rounded-3xl bg-white dark:bg-transparent dark:md:bg-zinc-800/80 md:centered-shadow dark:centered-shadow-dark transition "
                 + (!isUnbounded && '  max-w-lg ')
             }
         >

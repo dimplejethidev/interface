@@ -144,7 +144,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         }
 
         // reset deposit agreement
-        //setAcceptedBuffer(false);
+        setAcceptedBuffer(false);
 
         await new Promise((res) => setTimeout(res, 900));
         setRefreshingPrice(false);

@@ -53,6 +53,51 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         color: "rgb(100 116 139)"
     })
 };
+const customStylesDark: StylesConfig<TokenOption, IsMulti> = {
+    menu: (provided) => ({
+        ...provided,
+        paddingLeft: 8,
+        paddingRight: 8,
+        borderRadius: 16,
+        marginTop: 10
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        paddingTop: 0,
+        paddingBottom: 0,
+    }),
+    option: (base, state) => ({
+        ...base,
+        padding: 20,
+        borderRadius: 10,
+        fontSize: "1.5rem",
+        fontWeight: 600,
+        marginTop: 8,
+        marginBottom: 8,
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
+        color: '#00000099'
+    }),
+    control: (base, state) => ({
+        ...base,
+        padding: 20,
+        borderRadius: 16,
+        fontSize: "1.5rem",
+        fontWeight: 600,
+        borderWidth: 1,
+        borderColor: "rgb(82 82 91)",
+        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
+        '&:hover': {
+            border: '1px solid #0460CE',
+        },
+        backgroundColor: 'rgb(24 24 27)'
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: "rgb(100 116 139)"
+    })
+};
 
 const Control = ({ children, ...props }: ControlProps<TokenOption, false>) => {
     // @ts-ignore - react-select docs suggested ts-ignore here
@@ -90,19 +135,38 @@ const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
     };
 
     return (
-        <Select
-            components={{ Control, Option }}
-            onChange={onChange}
-            options={tokens}
-            styles={customStyles}
-            // @ts-ignore - react-select docs suggested ts-ignore here
-            logo={selectTokenOption.logo}
-            placeholder={selectTokenOption.label}
-            isSearchable
-            isMulti={false}
-            instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
-            className="centered-shadow-sm rounded-2xl"
-        />
+        <div>
+            <div className="flex dark:hidden">
+                <Select
+                    components={{ Control, Option }}
+                    onChange={onChange}
+                    options={tokens}
+                    styles={customStyles}
+                    // @ts-ignore - react-select docs suggested ts-ignore here
+                    logo={selectTokenOption.logo}
+                    placeholder={selectTokenOption.label}
+                    isSearchable
+                    isMulti={false}
+                    instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
+                    className="centered-shadow-sm dark:centered-shadow-sm-dark rounded-2xl w-full"
+                />
+            </div>
+            <div className="hidden dark:flex">
+                <Select
+                    components={{ Control, Option }}
+                    onChange={onChange}
+                    options={tokens}
+                    styles={customStylesDark}
+                    // @ts-ignore - react-select docs suggested ts-ignore here
+                    logo={selectTokenOption.logo}
+                    placeholder={selectTokenOption.label}
+                    isSearchable
+                    isMulti={false}
+                    instanceId="react-select" // Added this property to resolve this warning: https://stackoverflow.com/questions/61290173/react-select-how-do-i-resolve-warning-prop-id-did-not-match
+                    className="centered-shadow-sm dark:centered-shadow-sm-dark rounded-2xl w-full"
+                />
+            </div>
+        </div>
     );
 };
 

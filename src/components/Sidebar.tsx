@@ -4,16 +4,19 @@ import { AiOutlineLineChart } from "react-icons/ai";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import logo from "./../../public/aqueduct-logo.png";
+import logo from "./../../public/aqueduct-logo-transparent.png";
 import { useStore } from "../store";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { IoClose, IoMenu } from 'react-icons/io5';
-import { Dispatch, SetStateAction, useState } from "react";
+import { FiMoon } from 'react-icons/fi'
+import { MdLightbulbOutline } from 'react-icons/md'
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface SideBarTabProps {
     icon: any;
     label: string;
-    page: string;
+    page?: string;
+    onClick?: () => void;
 }
 
 const navItems: { icon: any; label: string; page: string }[] = [
@@ -22,23 +25,24 @@ const navItems: { icon: any; label: string; page: string }[] = [
         label: "My Streams",
         page: "/my-streams",
     },
-    { 
-        icon: <TbArrowsRightLeft size={18} />, 
-        label: "Swap", 
-        page: "/" },
+    {
+        icon: <TbArrowsRightLeft size={18} />,
+        label: "Swap",
+        page: "/"
+    },
     {
         icon: <TbArrowsRight size={18} />,
         label: "Provide Liquidity",
         page: "/provide-liquidity",
     },
-    { 
-        icon: <TbCirclePlus size={18} />, 
-        label: "Wrap / Unwrap", 
-        page: "/wrap" 
+    {
+        icon: <TbCirclePlus size={18} />,
+        label: "Wrap / Unwrap",
+        page: "/wrap"
     }
 ];
 
-const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {
+const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
     const router = useRouter();
 
     return (
@@ -49,7 +53,11 @@ const SideBarTab = ({ icon, label, page }: SideBarTabProps) => {
                     : "hover:bg-gray-100"
                 } `}
             onClick={() => {
-                router.push(page);
+                if (page) {
+                    router.push(page);
+                } else if (onClick) {
+                    onClick();
+                }
             }}
         >
             <div
@@ -119,11 +127,11 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
             </div>
             <div
                 className={
-                    'space-y-8 transition-all duration-500 '
+                    'grow space-y-8 transition-all duration-500 '
                     + (
                         isShown
                             ?
-                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50 bg-white'
+                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50 bg-white dark:bg-black'
                             :
                             'hidden md:flex md:flex-col'
                     )
@@ -140,6 +148,31 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                         />
                     ))}
                 </ul>
+                {
+                    /*
+                    <div className='flex grow' />
+                    <div className="flex dark:hidden">
+                        <SideBarTab
+                            icon={<FiMoon size={18} />}
+                            label={'Dark mode'}
+                            key={'Dark mode'}
+                            onClick={() => {
+                                document.documentElement.classList.add('dark');
+                            }}
+                        />
+                    </div>
+                    <div className="hidden dark:flex">
+                        <SideBarTab
+                            icon={<MdLightbulbOutline size={18} />}
+                            label={'Light mode'}
+                            key={'Light mode'}
+                            onClick={() => {
+                                document.documentElement.classList.remove('dark');
+                            }}
+                        />
+                    </div>
+                    */
+                }
             </div>
         </header>
     );

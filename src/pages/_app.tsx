@@ -103,7 +103,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 theme={lightTheme({ accentColor: "#2662CB" })}
                 avatar={CustomAvatar}
             >
-                <div className="w-full h-screen text-slate-500 poppins-font">
+                <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-black">
                     <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
                         <Sidebar isShown={isShown} setIsShown={setIsShown} />
                         {

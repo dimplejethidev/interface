@@ -10,8 +10,16 @@
         box-shadow: 0px 0px 15px rgba(225, 225, 225);
     }
 
+    .centered-shadow-dark {
+        box-shadow: 0px 0px 1000px #0460CE00;
+    }
+
     .centered-shadow-sm {
-        box-shadow: 0px 0px 8px rgba(235, 235, 235);
+        box-shadow: 0px 0px 8px rgba(225, 225, 225);
+    }
+
+    .centered-shadow-sm-dark {
+        box-shadow: 0px 0px 25px rgba(225, 225, 225, 0.05);
     }
 
     .centered-shadow-lg {
