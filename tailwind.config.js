@@ -22,6 +22,7 @@ module.exports = {
             },
             colors: {
                 "aqueductBlue": "#0460CE",
+                "warningYellow": "#FDB833",
                 "darkBlue": "#0e2138",
                 "blueBlack": "#0b1521",
                 "blueBlack2": "#060d14",

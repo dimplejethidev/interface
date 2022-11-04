@@ -15,7 +15,6 @@ import WidgetContainer from "../../../../../components/widgets/WidgetContainer";
 import PageNotFound from "../../../../../components/PageNotFound";
 import getTweetTemplate from "../../../../../utils/getTweetTemplate"
 import getSharedLink from "../../../../../utils/getSharedLink";
-import ToastType from "../../../../../types/ToastType";
 import { useStore } from "../../../../../store";
 import ButtonWithInfoPopup from "../../../../../components/ButtonInfoPopup";
 import getToken from "../../../../../utils/getToken";

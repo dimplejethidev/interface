@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
-import { useNetwork, useProvider, useSigner } from "wagmi";
+import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 
 import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
@@ -23,6 +23,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const provider = useProvider();
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
+    const { address } = useAccount();
     const { chain } = useNetwork();
 
     const [flowRate0, setFlowRate0] = useState("");
@@ -145,7 +146,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
         };
 
         refreshPrice();
-    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken]);
+    }, [flowRate0, flowRate1, store.inboundToken, store.outboundToken, address, chain]);
 
     return (
         <section className="flex flex-col items-center w-full">

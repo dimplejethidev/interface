@@ -105,7 +105,7 @@ const StreamsTable = () => {
         }
 
         updateData();
-    }, [address])
+    }, [address, chain])
 
     return (
         <section className="flex flex-col items-center w-full">

@@ -205,7 +205,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         }
 
         refresh();
-    }, [store.inboundToken, store.outboundToken, address]);
+    }, [store.inboundToken, store.outboundToken, address, chain]);
 
     // refresh spot pricing upon user input
     useEffect(() => {

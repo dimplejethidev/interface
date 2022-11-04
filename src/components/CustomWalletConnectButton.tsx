@@ -1,5 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { IoMdWallet } from "react-icons/io";
+import { TbRefresh } from "react-icons/tb";
 import makeBlockie from "ethereum-blockies-base64";
 
 const CustomWalletConnectButton = () => {
@@ -58,8 +59,14 @@ const CustomWalletConnectButton = () => {
                                     <button
                                         onClick={openChainModal}
                                         type="button"
+                                        className="flex justify-start items-center space-x-2 w-full rounded-xl bg-warningYellow p-4 md:p-2 text-white "
                                     >
-                                        Wrong network
+                                        <div className="p-2 rounded-lg bg-white/10">
+                                            <TbRefresh size={20} />
+                                        </div>
+                                        <p className="text-sm">
+                                            Switch to Görli
+                                        </p>
                                     </button>
                                 );
                             }
