@@ -106,7 +106,7 @@ function BalancesDisplay() {
                         value={outgoingBalance.toFixed(4)}
                         isIncreasing={false}
                     />*/}
-                    <p className="monospace-font text-6xl tracking-widest font-bold">
+                    <p className="monospace-font text-4xl md:text-6xl tracking-widest font-bold">
                         {outgoingBalance.toFixed(4)}
                     </p>
                     <img src='dai-logo.png' className="w-12 h-12" />
@@ -116,7 +116,7 @@ function BalancesDisplay() {
                         value={incomingBalance.toFixed(4)}
                         isIncreasing={true}
                     />*/}
-                    <p className="monospace-font text-6xl tracking-widest font-bold">
+                    <p className="monospace-font text-4xl md:text-6xl tracking-widest font-bold">
                         {incomingBalance.toFixed(4)}
                     </p>
                     <img src='eth-logo-color.png' className="w-12 h-12 bg-ethPink rounded-full" />
@@ -196,7 +196,7 @@ function DcaDisplay() {
 const Landing: NextPage = () => {
 
     return (
-        <div className="flex flex-col w-full items-center space-y-0">
+        <div className="flex flex-col w-full items-center space-y-0 text-slate-500 poppins-font">
             <NavBar />
             <div
                 className={
