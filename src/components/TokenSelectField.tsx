@@ -2,6 +2,7 @@ import { useStore } from "../store";
 import TokenDropdown from "./TokenDropdown";
 import { IoArrowDown } from "react-icons/io5"
 import { TokenOption } from "../types/TokenOption";
+import TokenFlowField from "./TokenFlowField";
 
 const TokenSelectField = () => {
     const store = useStore();
@@ -20,7 +21,7 @@ const TokenSelectField = () => {
                     setToken={store.setInboundToken}
                 />
             </div>
-            <button 
+            <button
                 className="absolute flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm"
                 onClick={() => {
                     const oldOutbound: TokenOption = store.outboundToken;

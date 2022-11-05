@@ -15,6 +15,9 @@ import flowrates from "../../utils/flowrates";
 import TransactionButton from "../TransactionButton";
 import { BsCheckLg } from 'react-icons/bs'
 import RealTimeBalance from "../RealTimeBalance";
+import { IoArrowDown } from "react-icons/io5";
+import { TokenOption } from "../../types/TokenOption";
+import TokenFlowField from "../TokenFlowField";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -28,19 +31,24 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const { chain } = useNetwork();
     const { address } = useAccount();
 
+    // user input
+    const [displayedSwapFlowRate, setDisplayedSwapFlowRate] = useState<string>('');
+    const [displayedExpectedFlowRate, setDisplayedExpectedFlowRate] = useState<string>('');
     const [swapFlowRate, setSwapFlowRate] = useState("");
+    const [expectedFlowRate, setExpectedFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
     const [token1Price, setToken1Price] = useState(0);
-    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(
-        BigNumber.from(0)
-    );
+    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(BigNumber.from(0));
+    const [reversePriceMultiple, setReversePriceMultiple] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
+    const isReversePricing = useRef(false);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
     const token1Flow = useRef(BigNumber.from(0));
     const userToken0Flow = useRef(BigNumber.from(0));
+    const userToken1Flow = useRef(BigNumber.from(0));
     const [minBalance, setMinBalance] = useState(BigNumber.from(0));
     const [deposit, setDeposit] = useState(BigNumber.from(0));
 
@@ -49,6 +57,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
     // user vars
     const [outboundTokenBalance, setOutboundTokenBalance] = useState(BigNumber.from(0));
+    const [inboundTokenBalance, setInboundTokenBalance] = useState(BigNumber.from(0));
 
     const swap = async () => {
         try {
@@ -150,6 +159,36 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         setRefreshingPrice(false);
     };
 
+    // if price multiple changes, calculate new expected outgoing flowrate
+    useEffect(() => {
+        //console.log(isReversePricing.current)
+        if (isReversePricing.current == false) {
+            // calculate expected outgoing flowrate
+            if (swapFlowRate != '') {
+                setDisplayedExpectedFlowRate(
+                    (
+                        BigNumber.from(swapFlowRate)
+                            .mul(priceMultiple)
+                            .mul(store.flowrateUnit.value)
+                            .div(BigNumber.from(2).pow(96))
+                            .div(BigNumber.from(10).pow(18))
+                            .toNumber() /
+                        2 ** 32
+                    ).toFixed(8)
+                )
+            } else {
+                setDisplayedExpectedFlowRate('');
+            }
+        } else {
+            // calculate needed swap flowrate
+            if (swapFlowRate != '') {
+                setDisplayedSwapFlowRate(
+                    ethers.utils.formatEther(BigNumber.from(swapFlowRate).mul(store.flowrateUnit.value))
+                )
+            }
+        }
+    }, [priceMultiple])
+
     // update vars when tokens change
     useEffect(() => {
         const refresh = async () => {
@@ -194,6 +233,14 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             providerOrSigner: provider
                         })).flowRate
                     )
+                    userToken1Flow.current = BigNumber.from(
+                        (await sf.cfaV1.getFlow({
+                            superToken: token1Address,
+                            sender: address,
+                            receiver: poolAddress,
+                            providerOrSigner: provider
+                        })).flowRate
+                    )
                 }
 
                 await refreshPrice();
@@ -212,26 +259,90 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         const refresh = async () => {
             setRefreshingPrice(true);
             await refreshPrice();
+
+            if (isReversePricing.current == true) {
+                isReversePricing.current = false;
+            }
             setRefreshingPrice(false);
         };
 
         refresh();
     }, [swapFlowRate]);
 
+    // calculate reverse pricing if user edits expected outgoing flow
+    useEffect(() => {
+        console.log(expectedFlowRate.toString())
+        const refresh = async () => {
+            isReversePricing.current = true;
+
+            // calculate swap flow rate
+            if (expectedFlowRate != '' && BigNumber.from(expectedFlowRate).gt(0)) {
+                setSwapFlowRate(
+                    token0Flow.current
+                        .sub(userToken0Flow.current)
+                        .mul(BigNumber.from(10).pow(18))
+                        .div(
+                            token1Flow.current.mul(BigNumber.from(10).pow(18))
+                                .div(expectedFlowRate)
+                                .sub(BigNumber.from(10).pow(18))
+                        )
+                        .toString()
+                )
+            } else {
+                setSwapFlowRate('')
+                setDisplayedSwapFlowRate('');
+            }
+        };
+
+        refresh();
+    }, [expectedFlowRate]);
+
     return (
         <section className="flex flex-col items-center w-full">
             <RealTimeBalance token={store.outboundToken} setBalance={setOutboundTokenBalance} />
+            <RealTimeBalance token={store.inboundToken} setBalance={setInboundTokenBalance} />
             <WidgetContainer title="Swap">
-                <TokenSelectField />
-                <NumberEntryField
-                    title="Flow Rate"
-                    number={swapFlowRate}
-                    setNumber={setSwapFlowRate}
-                    dropdownItems={flowrates}
-                    dropdownValue={store.flowrateUnit}
-                    setDropdownValue={store.setFlowrateUnit}
-                    isEther={true}
-                />
+                <div className="flex flex-col items-center justify-center">
+                    <div className="w-full py-1">
+                        <TokenFlowField
+                            title="Flow Rate"
+                            displayedValue={displayedSwapFlowRate}
+                            setDisplayedValue={setDisplayedSwapFlowRate}
+                            formattedValue={swapFlowRate}
+                            setFormattedValue={setSwapFlowRate}
+                            dropdownItems={flowrates}
+                            dropdownValue={store.flowrateUnit}
+                            setDropdownValue={store.setFlowrateUnit}
+                            isEther={true}
+                            isOutboundToken={true}   
+                            shouldReformat={true}     
+                            currentBalance={outboundTokenBalance}             
+                        />
+                    </div>
+                    <div className="w-full py-1">
+                        <TokenFlowField
+                            title="Flow Rate"
+                            displayedValue={displayedExpectedFlowRate}
+                            setDisplayedValue={setDisplayedExpectedFlowRate}
+                            formattedValue={expectedFlowRate}
+                            setFormattedValue={setExpectedFlowRate}
+                            isEther={true}
+                            isOutboundToken={false}
+                            shouldReformat={false}
+                            currentBalance={inboundTokenBalance}
+                        />
+                    </div>
+                    <button
+                        className="absolute flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm"
+                        onClick={() => {
+                            const oldOutbound: TokenOption = store.outboundToken;
+                            store.setOutboundToken(store.inboundToken);
+                            store.setInboundToken(oldOutbound);
+                        }}
+                    >
+                        <IoArrowDown size={20} />
+                    </button>
+                </div>
                 <PricingField
                     refreshingPrice={refreshingPrice}
                     token1Price={token1Price}
