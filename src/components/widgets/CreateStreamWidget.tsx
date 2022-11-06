@@ -1,23 +1,19 @@
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
-
-import TokenSelectField from "../TokenSelectField";
-import NumberEntryField from "../NumberEntryField";
 import WidgetContainer from "./WidgetContainer";
 import ToastType from "../../types/ToastType";
-import LoadingSpinner from "../LoadingSpinner";
 import getPoolAddress from "../../helpers/getPool";
 import { useStore } from "../../store";
 import PricingField from "../PricingField";
 import flowrates from "../../utils/flowrates";
 import TransactionButton from "../TransactionButton";
-import { BsCheckLg } from 'react-icons/bs'
 import RealTimeBalance from "../RealTimeBalance";
 import { IoArrowDown } from "react-icons/io5";
 import { TokenOption } from "../../types/TokenOption";
 import TokenFlowField from "../TokenFlowField";
+import BufferWarning from "../BufferWarning";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -161,7 +157,6 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
     // if price multiple changes, calculate new expected outgoing flowrate
     useEffect(() => {
-        //console.log(isReversePricing.current)
         if (isReversePricing.current == false) {
             // calculate expected outgoing flowrate
             if (swapFlowRate != '') {
@@ -310,9 +305,9 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             dropdownValue={store.flowrateUnit}
                             setDropdownValue={store.setFlowrateUnit}
                             isEther={true}
-                            isOutboundToken={true}   
-                            shouldReformat={true}     
-                            currentBalance={outboundTokenBalance}             
+                            isOutboundToken={true}
+                            shouldReformat={true}
+                            currentBalance={outboundTokenBalance}
                         />
                     </div>
                     <div className="w-full py-1">
@@ -348,54 +343,14 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 />
                 {
                     poolExists && swapFlowRate &&
-                    <div>
-                        {
-                            minBalance.lt(outboundTokenBalance)
-                                ?
-                                <div
-                                    className={
-                                        "text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 "
-                                        + (acceptedBuffer ? 'bg-gray-100 text-gray-900/90' : 'bg-red-100 text-red-900/90')
-                                    }
-                                >
-                                    <p>
-                                        {'If you do not cancel this stream before your balance reaches zero, you will lose your ' + ethers.utils.formatEther(deposit) + ' ' + store.outboundToken.label + ' buffer.'}
-                                    </p>
-                                    <div className="flex space-x-2 pb-1 items-center">
-                                        <button
-                                            className={
-                                                "flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 "
-                                                + (acceptedBuffer ? 'border-aqueductBlue bg-aqueductBlue' : 'border-red-900/90')
-                                            }
-                                            onClick={() => { setAcceptedBuffer(!acceptedBuffer); }}
-                                        >
-                                            {acceptedBuffer && <BsCheckLg size={8} />}
-                                        </button>
-                                        <p className="text-xs">
-                                            Yes, I understand the risk
-                                        </p>
-                                    </div>
-                                </div>
-                                :
-                                <div
-                                    className={
-                                        "text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 bg-red-100 text-red-900/90 "
-                                    }
-                                >
-                                    {
-                                        deposit.gt(outboundTokenBalance)
-                                            ?
-                                            <p>
-                                                {'You do not have enough balance to cover the ' + ethers.utils.formatEther(deposit) + ' ' + store.outboundToken.label + ' buffer.'}
-                                            </p>
-                                            :
-                                            <p>
-                                                {'You need to leave enough balance to stream for 2 hours.'}
-                                            </p>
-                                    }
-                                </div>
-                        }
-                    </div>
+                    <BufferWarning 
+                        minBalance={minBalance} 
+                        outboundTokenBalance={outboundTokenBalance} 
+                        outboundToken={store.outboundToken}
+                        buffer={deposit} 
+                        acceptedBuffer={acceptedBuffer} 
+                        setAcceptedBuffer={setAcceptedBuffer}
+                    />
                 }
                 <TransactionButton
                     title={userToken0Flow.current.gt(0) ? 'Update Swap' : 'Swap'}

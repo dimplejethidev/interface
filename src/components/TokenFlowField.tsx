@@ -64,7 +64,7 @@ const TokenFlowField = ({
                 <div className={"flex items-end space-x-2"}>
                     <input
                         className={
-                            "bg-blue-100/502 px-2 pb-2 text-3xl font-semibold monospace-font tracking-widest flex w-full h-min outline-none "
+                            "px-2 pb-2 text-3xl font-semibold monospace-font tracking-widest flex w-full h-min outline-none "
                         }
                         type="text"
                         pattern="^[0-9]*[.,]?[0-9]*$"
