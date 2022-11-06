@@ -23,7 +23,6 @@ const getToken = async ({ tokenAddress, provider, chainId }: { tokenAddress: str
             value: Token.unlisted,
             logo: "",
             address: tokenAddress,
-            underlyingToken: "",
             colorHex: ""
         }
     } catch {
