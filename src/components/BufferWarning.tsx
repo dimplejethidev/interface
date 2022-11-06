@@ -11,10 +11,10 @@ interface BufferWarningProps {
     buffer: BigNumber;
     acceptedBuffer: boolean;
     setAcceptedBuffer?: Dispatch<SetStateAction<boolean>>;
-    shouldShowAcceptButton?: boolean;
+    shouldHideAcceptButton?: boolean;
 }
 
-const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer, acceptedBuffer, setAcceptedBuffer, shouldShowAcceptButton }: BufferWarningProps) => {
+const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer, acceptedBuffer, setAcceptedBuffer, shouldHideAcceptButton }: BufferWarningProps) => {
     const store = useStore();
 
     return (
@@ -32,7 +32,7 @@ const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer
                             {'If you do not cancel the ' + outboundToken.label + ' stream before your balance reaches zero, you will lose your ' + ethers.utils.formatEther(buffer) + ' ' + outboundToken.label + ' buffer.'}
                         </p>
                         {
-                            setAcceptedBuffer && shouldShowAcceptButton &&
+                            setAcceptedBuffer && !shouldHideAcceptButton &&
                             <div className="flex space-x-2 pb-1 items-center">
                                 <button
                                     className={

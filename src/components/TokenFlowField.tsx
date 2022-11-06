@@ -2,6 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect } from "react";
 import { useStore } from "../store";
 import { GenericDropdownOption } from "../types/GenericDropdownOption";
+import { TokenOption } from "../types/TokenOption";
 import tokens from "../utils/tokens";
 import Select from "./Select";
 
@@ -15,9 +16,11 @@ interface TokenFlowFieldProps {
     dropdownValue?: GenericDropdownOption;
     setDropdownValue?: (value: GenericDropdownOption) => void;
     isEther: boolean;
-    isOutboundToken: boolean;
     shouldReformat: boolean;
     currentBalance: BigNumber;
+    token: TokenOption;
+    setToken: (token: TokenOption) => void;
+    isNonSuperToken?: boolean;
 }
 
 const TokenFlowField = ({
@@ -30,9 +33,11 @@ const TokenFlowField = ({
     dropdownValue,
     setDropdownValue,
     isEther,
-    isOutboundToken,
     shouldReformat,
-    currentBalance
+    currentBalance,
+    token,
+    setToken,
+    isNonSuperToken
 }: TokenFlowFieldProps) => {
 
     const store = useStore();
@@ -86,8 +91,9 @@ const TokenFlowField = ({
                     }
                     <Select
                         options={tokens}
-                        dropdownValue={isOutboundToken ? store.outboundToken : store.inboundToken}
-                        setDropdownValue={isOutboundToken ? store.setOutboundToken : store.setInboundToken}
+                        dropdownValue={token}
+                        setDropdownValue={setToken}
+                        isNonSuperToken={isNonSuperToken}
                     />
                 </div>
                 <div className="flex justify-end2 pt-3 pb-2 px-2 text-xs space-x-2">

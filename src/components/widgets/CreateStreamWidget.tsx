@@ -305,9 +305,10 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             dropdownValue={store.flowrateUnit}
                             setDropdownValue={store.setFlowrateUnit}
                             isEther={true}
-                            isOutboundToken={true}
                             shouldReformat={true}
                             currentBalance={outboundTokenBalance}
+                            token={store.outboundToken}
+                            setToken={store.setOutboundToken}
                         />
                     </div>
                     <div className="w-full py-1">
@@ -318,9 +319,10 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             formattedValue={expectedFlowRate}
                             setFormattedValue={setExpectedFlowRate}
                             isEther={true}
-                            isOutboundToken={false}
                             shouldReformat={false}
                             currentBalance={inboundTokenBalance}
+                            token={store.inboundToken}
+                            setToken={store.setInboundToken}
                         />
                     </div>
                     <button
@@ -343,12 +345,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 />
                 {
                     poolExists && swapFlowRate &&
-                    <BufferWarning 
-                        minBalance={minBalance} 
-                        outboundTokenBalance={outboundTokenBalance} 
+                    <BufferWarning
+                        minBalance={minBalance}
+                        outboundTokenBalance={outboundTokenBalance}
                         outboundToken={store.outboundToken}
-                        buffer={deposit} 
-                        acceptedBuffer={acceptedBuffer} 
+                        buffer={deposit}
+                        acceptedBuffer={acceptedBuffer}
                         setAcceptedBuffer={setAcceptedBuffer}
                     />
                 }

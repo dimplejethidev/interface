@@ -329,9 +329,10 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         dropdownValue={store.flowrateUnit}
                         setDropdownValue={store.setFlowrateUnit}
                         isEther={true}
-                        isOutboundToken={true}
                         shouldReformat={true}
                         currentBalance={outboundTokenBalance}
+                        token={store.outboundToken}
+                        setToken={store.setOutboundToken}
                     />
                     <div className="w-full">
                         <ReadOnlyFlowOutput
@@ -351,9 +352,10 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         formattedValue={swapFlowRate1}
                         setFormattedValue={setSwapFlowRate1}
                         isEther={true}
-                        isOutboundToken={false}
                         shouldReformat={true}
                         currentBalance={inboundTokenBalance}
+                        token={store.inboundToken}
+                        setToken={store.setInboundToken}
                     />
                     <div className="w-full">
                         <ReadOnlyFlowOutput
@@ -386,7 +388,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                             buffer={deposit1}
                             acceptedBuffer={acceptedBuffer}
                             setAcceptedBuffer={setAcceptedBuffer}
-                            shouldShowAcceptButton={minBalance0.lt(outboundTokenBalance)}
+                            shouldHideAcceptButton={minBalance0.gte(outboundTokenBalance)}
                         />
                     </div>
                 }

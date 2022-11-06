@@ -12,7 +12,13 @@ const tokens: TokenOption[] = [
         value: Token.ETHxp,
         logo: ethLogo.src,
         address: ETHxp,
-        underlyingToken: '0x0',
+        underlyingToken: {
+            label: "ETH",
+            value: Token.ETH,
+            logo: ethLogo.src,
+            address: '0x0',
+            colorHex: '#00ABEE'
+        },
         colorHex: '#00ABEE'
     },
     {
@@ -20,7 +26,13 @@ const tokens: TokenOption[] = [
         value: Token.fDAIxp,
         logo: daiLogo.src,
         address: fDAIxp,
-        underlyingToken: fDAI,
+        underlyingToken: {
+            label: "fDAI",
+            value: Token.fDAI,
+            logo: daiLogo.src,
+            address: fDAI,
+            colorHex: '#F5AC37'
+        },
         colorHex: '#F5AC37'
     },
     {
@@ -28,7 +40,13 @@ const tokens: TokenOption[] = [
         value: Token.fUSDCxp,
         logo: usdcLogo.src,
         address: fUSDCxp,
-        underlyingToken: fUSDC,
+        underlyingToken: {
+            label: "fUSDC",
+            value: Token.fUSDC,
+            logo: usdcLogo.src,
+            address: fUSDC,
+            colorHex: '#2775CA'
+        },
         colorHex: '#2775CA'
     },
 ];

@@ -5,6 +5,6 @@ export type TokenOption = {
     value: Token;
     logo: string;
     address: string;
-    underlyingToken: string;
+    underlyingToken?: TokenOption;
     colorHex: string;
 };

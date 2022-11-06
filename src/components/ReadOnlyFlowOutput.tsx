@@ -24,7 +24,7 @@ const ReadOnlyFlowOutput = ({
                 <div className={"flex items-center space-x-2"}>
                     <input
                         className={
-                            "bg-white px-2 text-2xl font-semibold monospace-font tracking-widest flex w-full h-min outline-none "
+                            "bg-white px-2 text-2xl opacity-75 font-semibold monospace-font tracking-widest flex w-full h-min outline-none "
                         }
                         type="text"
                         pattern="^[0-9]*[.,]?[0-9]*$"

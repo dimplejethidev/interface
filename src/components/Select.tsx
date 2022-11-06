@@ -8,13 +8,15 @@ interface SelectProps {
     options: GenericDropdownOption[] | TokenOption[];
     dropdownValue: GenericDropdownOption | TokenOption;
     setDropdownValue: ((value: GenericDropdownOption) => void) | ((token: TokenOption) => void);
+    isNonSuperToken?: boolean;
 }
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-const Select = ({ options, dropdownValue, setDropdownValue }: SelectProps) => {
+const Select = ({ options, dropdownValue, setDropdownValue, isNonSuperToken }: SelectProps) => {
+
     return (
         <Listbox value={dropdownValue} onChange={setDropdownValue}>
             {({ open }) => (
@@ -23,7 +25,9 @@ const Select = ({ options, dropdownValue, setDropdownValue }: SelectProps) => {
                         <Listbox.Button className="flex relative w-full shadow-sm rounded-lg border border-gray-200 bg-white py-4 pl-4 pr-2 space-x-2 hover:border-aqueductBlue focus:border-aqueductBlue2 focus:outline-none focus:ring-1 focus:ring-aqueductBlue text-sm">
                             {dropdownValue.logo && <img src={dropdownValue.logo} className='w-5 h-5' />}
                             <span className="flex items-center ">
-                                <span className="block truncate">{dropdownValue.label}</span>
+                                <span className="block truncate">
+                                    {dropdownValue.label}
+                                </span>
                             </span>
                             <HiChevronDown className="h-5 w-5 text-gray-400 flex flex-shrink-0" aria-hidden="true" />
                         </Listbox.Button>
@@ -56,7 +60,7 @@ const Select = ({ options, dropdownValue, setDropdownValue }: SelectProps) => {
                                                     <span
                                                         className={classNames(selected ? 'font-semibold' : 'font-normal')}
                                                     >
-                                                        {option.label}
+                                                        {isNonSuperToken && 'underlyingToken' in option && option.underlyingToken ? option.underlyingToken.label : option.label}
                                                     </span>
                                                 </div>
                                             </>
