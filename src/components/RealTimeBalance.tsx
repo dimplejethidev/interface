@@ -77,7 +77,7 @@ const RealTimeBalance = ({ token, setBalance }: RealTimeBalanceProps) => {
 
     useEffect(() => {
         refresh();
-    }, [address]);
+    }, [address, token]);
 
     return (<div/>)
 }

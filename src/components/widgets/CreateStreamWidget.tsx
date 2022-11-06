@@ -166,15 +166,12 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             // calculate expected outgoing flowrate
             if (swapFlowRate != '') {
                 setDisplayedExpectedFlowRate(
-                    (
+                    ethers.utils.formatEther(
                         BigNumber.from(swapFlowRate)
                             .mul(priceMultiple)
                             .mul(store.flowrateUnit.value)
-                            .div(BigNumber.from(2).pow(96))
-                            .div(BigNumber.from(10).pow(18))
-                            .toNumber() /
-                        2 ** 32
-                    ).toFixed(8)
+                            .div(BigNumber.from(2).pow(128))
+                    )
                 )
             } else {
                 setDisplayedExpectedFlowRate('');
@@ -271,7 +268,6 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
     // calculate reverse pricing if user edits expected outgoing flow
     useEffect(() => {
-        console.log(expectedFlowRate.toString())
         const refresh = async () => {
             isReversePricing.current = true;
 
