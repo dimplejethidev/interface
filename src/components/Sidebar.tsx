@@ -4,7 +4,7 @@ import { AiOutlineLineChart } from "react-icons/ai";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import logo from "./../../public/aqueduct-logo-transparent.png";
+import logo from "./../../public/aq-logo-11-22.png";
 import { useStore } from "../store";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { IoClose, IoMenu } from 'react-icons/io5';
@@ -104,7 +104,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                     layout="fixed"
                     width="45px"
                     height="45px"
-                    className="rounded-xl"
+                    className="rounded-xl opacity-95"
                 />
                 <h1 className="text-2xl font-semibold pr-3 poppins-font">
                     aqueduct
