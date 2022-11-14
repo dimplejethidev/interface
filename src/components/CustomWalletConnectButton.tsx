@@ -65,7 +65,7 @@ const CustomWalletConnectButton = () => {
                                             <TbRefresh size={20} />
                                         </div>
                                         <p className="text-sm">
-                                            Switch to Görli
+                                            Switch to Goerli
                                         </p>
                                     </button>
                                 );
