@@ -5,7 +5,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 interface PricingFieldProps {
     refreshingPrice: boolean;
-    token1Price: number;
+    token0Price: number;
     priceMultiple?: BigNumber;
     swapFlowRate?: string;
     poolExists: boolean;
@@ -13,7 +13,7 @@ interface PricingFieldProps {
 
 const PricingField = ({
     refreshingPrice,
-    token1Price,
+    token0Price,
     priceMultiple,
     swapFlowRate,
     poolExists,
@@ -42,9 +42,9 @@ const PricingField = ({
             {poolExists ? (
                 <div className="space-y-1">
                     <p>
-                        1 {store.outboundToken.label} ={" "}
-                        {token1Price != 0 ? token1Price : "<0.00001"}{" "}
-                        {store.inboundToken.label}
+                        1 {store.inboundToken.label} ={" "}
+                        {token0Price != 0 ? token0Price : "<0.00001"}{" "}
+                        {store.outboundToken.label}
                     </p>
                 </div>
             ) : (

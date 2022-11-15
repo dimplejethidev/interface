@@ -368,8 +368,8 @@ const PoolInteractionVisualization: NextPage = () => {
         setIsTwap1(twapFlowRate.gt(0));
 
         // compute average price from total amounts streamed
-        if (twapFlowRate.gt(0) && initialBalance0.gt(0)) {
-            setAveragePrice(initialTwapBalance.mul(1000).div(initialBalance0).toNumber() / 1000);
+        if (twapFlowRate.gt(0) && initialTwapBalance.gt(0)) {
+            setAveragePrice(initialBalance0.mul(1000).div(initialTwapBalance).toNumber() / 1000);
         } else if (initialTwapBalance0.gt(0)) {
             setAveragePrice(initialBalance.mul(1000).div(initialTwapBalance0).toNumber() / 1000);
         }
@@ -378,9 +378,11 @@ const PoolInteractionVisualization: NextPage = () => {
         var token0Flow: BigNumber = await poolContract.getFlowIn(token0.address);
         var token1Flow: BigNumber = await poolContract.getFlowIn(token1.address);
         if (twapFlowRate.gt(0)) {
-            setCurrentPrice(token1Flow.mul(1000).div(token0Flow).toNumber() / 1000);
-        } else {
+            //setCurrentPrice(token1Flow.mul(1000).div(token0Flow).toNumber() / 1000);
             setCurrentPrice(token0Flow.mul(1000).div(token1Flow).toNumber() / 1000);
+        } else {
+            //setCurrentPrice(token0Flow.mul(1000).div(token1Flow).toNumber() / 1000);
+            setCurrentPrice(token1Flow.mul(1000).div(token0Flow).toNumber() / 1000);
         }
 
         // set start date to most recent one
@@ -570,8 +572,8 @@ const PoolInteractionVisualization: NextPage = () => {
                                         </div>
                                         :
                                         <div className="flex flex-col lg:flex-row space-y-12 md:space-y-4 lg:space-x-4 lg:space-y-0">
-                                            <PriceWidget isLoading={isLoading} title='Current Price' token0={token0} token1={token1} price={currentPrice} />
-                                            <PriceWidget isLoading={isLoading} title='Average Price' token0={token0} token1={token1} price={averagePrice} />
+                                            <PriceWidget isLoading={isLoading} title='Current Price' token0={isTwap1 ? token1 : token0} token1={isTwap1 ? token0 : token1} price={currentPrice} />
+                                            <PriceWidget isLoading={isLoading} title='Average Price' token0={isTwap1 ? token1 : token0} token1={isTwap1 ? token0 : token1} price={averagePrice} />
                                         </div>
                                 }
                                 <WidgetContainer isUnbounded={true}>

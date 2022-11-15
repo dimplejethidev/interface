@@ -37,7 +37,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
     const [swapFlowRate1, setSwapFlowRate1] = useState("");
 
     const [loading, setLoading] = useState(false);
-    const [token1Price, setToken1Price] = useState(0);
+    const [token0Price, setToken0Price] = useState(0);
     const [priceMultiple0, setPriceMultiple0] = useState<BigNumber>(BigNumber.from(0));
     const [priceMultiple1, setPriceMultiple1] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
@@ -174,12 +174,12 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
         }
 
         if (calculatedToken0Flow.gt(0) && calculatedToken1Flow.gt(0)) {
-            setToken1Price(
-                calculatedToken1Flow.mul(100000).div(calculatedToken0Flow).toNumber() /
+            setToken0Price(
+                calculatedToken0Flow.mul(100000).div(calculatedToken1Flow).toNumber() /
                 100000
             );
         } else {
-            setToken1Price(0);
+            setToken0Price(0);
         }
 
         // calculate deposits
@@ -366,7 +366,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                 </div>
                 <PricingField
                     refreshingPrice={refreshingPrice}
-                    token1Price={token1Price}
+                    token0Price={token0Price}
                     priceMultiple={priceMultiple0}
                     swapFlowRate={swapFlowRate0}
                     poolExists={poolExists}

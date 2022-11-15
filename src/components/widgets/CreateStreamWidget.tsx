@@ -33,7 +33,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [expectedFlowRate, setExpectedFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
-    const [token1Price, setToken1Price] = useState(0);
+    const [token0Price, setToken0Price] = useState(0);
     const [priceMultiple, setPriceMultiple] = useState<BigNumber>(BigNumber.from(0));
     const [reversePriceMultiple, setReversePriceMultiple] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
@@ -122,19 +122,24 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             calculatedToken0Flow = token0Flow.current.add(swapFlowRate).sub(userToken0Flow.current);
         }
 
-        // calculate price multiple
-        if (calculatedToken0Flow.gt(0)) {
-            setToken1Price(
-                token1Flow.current.mul(100000).div(calculatedToken0Flow).toNumber() /
+        // calculate token 0 price
+        if (token1Flow.current.gt(0)) {
+            setToken0Price(
+                calculatedToken0Flow.mul(100000).div(token1Flow.current).toNumber() /
                 100000
             );
+        } else {
+            setToken0Price(0);
+        }
+
+        // calculate price multiple
+        if (calculatedToken0Flow.gt(0)) {
             setPriceMultiple(
                 token1Flow.current
                     .mul(BigNumber.from(2).pow(128))
                     .div(calculatedToken0Flow)
             );
         } else {
-            setToken1Price(0);
             setPriceMultiple(BigNumber.from(0));
         }
 
@@ -338,7 +343,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                 </div>
                 <PricingField
                     refreshingPrice={refreshingPrice}
-                    token1Price={token1Price}
+                    token0Price={token0Price}
                     priceMultiple={priceMultiple}
                     swapFlowRate={swapFlowRate}
                     poolExists={poolExists}
