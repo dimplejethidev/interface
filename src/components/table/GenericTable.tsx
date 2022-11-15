@@ -17,7 +17,7 @@ const TableRow = ({ columnProps, columnComponents, link, data }: TableRowProps) 
                         return (
                             <div 
                                 className={columnProps[i]} 
-                                key={d}
+                                key={'row-' + i}
                             >
                                 {columnComponents[i](d)}
                             </div>
@@ -68,7 +68,7 @@ const GenericTable = ({ title, labels, columnProps, columnComponents, rowLinks, 
                                 return (
                                     <div 
                                         className='w-full p-4 text-transparent bg-gray-200 rounded-2xl animate-pulse'
-                                        key={i}
+                                        key={'loading-' + i}
                                     >
                                         {'-'}
                                     </div>
@@ -86,7 +86,7 @@ const GenericTable = ({ title, labels, columnProps, columnComponents, rowLinks, 
                                         columnComponents={columnComponents}
                                         link={rowLinks ? rowLinks[i] : ''}
                                         data={d}
-                                        key={i}
+                                        key={'column-' + i}
                                     />
                                 )
                             })
