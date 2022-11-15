@@ -18,6 +18,9 @@ import getSharedLink from "../../../../../utils/getSharedLink";
 import { useStore } from "../../../../../store";
 import ButtonWithInfoPopup from "../../../../../components/ButtonInfoPopup";
 import getToken from "../../../../../utils/getToken";
+import Operation from "@superfluid-finance/sdk-core/dist/module/Operation";
+import ToastType from "../../../../../types/ToastType";
+import LoadingSpinner from "../../../../../components/LoadingSpinner";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -153,7 +156,11 @@ const RewardWidget = ({ isLoading, title, token0, token1, reward0, reward1, numD
     )
 }
 
-const PoolInteractionVisualization: NextPage = () => {
+interface PoolInteractionVisualizationProps {
+    showToast: (type: ToastType) => {};
+}
+
+const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> = ({ showToast }) => {
 
     // zustand
     const store = useStore();
@@ -164,6 +171,8 @@ const PoolInteractionVisualization: NextPage = () => {
     const { address } = useAccount();
     const { data: rainbowSigner } = useSigner();
     const signer = rainbowSigner as ethers.Signer;
+
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // component state
     const [isLoading, setIsLoading] = useState(true);
@@ -473,28 +482,61 @@ const PoolInteractionVisualization: NextPage = () => {
                                     button={
                                         <button
                                             onClick={async () => {
-                                                if (token0 && token1 && address && userAddress && address == userAddress) {
-                                                    const chainId = chain?.id;
-                                                    const superfluid = await Framework.create({
-                                                        chainId: Number(chainId),
-                                                        provider: provider,
-                                                    });
-                                                    const createFlowOperation = superfluid.cfaV1.deleteFlow({
-                                                        sender: address,
-                                                        receiver: getPoolAddress(token0.value, token1.value),
-                                                        superToken: token0.address,
-                                                    });
-                                                    const result = await createFlowOperation.exec(signer);
-                                                    await result.wait();
+                                                try {
+                                                    if (token0 && token1 && address && userAddress && address == userAddress) {
+                                                        const chainId = chain?.id;
+                                                        const superfluid = await Framework.create({
+                                                            chainId: Number(chainId),
+                                                            provider: provider,
+                                                        });
 
-                                                    console.log("Stream deleted: ", result);
-                                                    //showToast(ToastType.Success);
+                                                        // different operation if providing liquidity or not
+                                                        const operations: Operation[] = [];
+                                                        if (isTwap0) {
+                                                            const operation = superfluid.cfaV1.deleteFlow({
+                                                                sender: address,
+                                                                receiver: getPoolAddress(token0.value, token1.value),
+                                                                superToken: token1.address,
+                                                            });
+                                                            operations.push(operation);
+                                                        }
+                                                        if (isTwap1) {
+                                                            const operation = superfluid.cfaV1.deleteFlow({
+                                                                sender: address,
+                                                                receiver: getPoolAddress(token0.value, token1.value),
+                                                                superToken: token0.address,
+                                                            });
+                                                            operations.push(operation);
+                                                        }
+
+                                                        if (operations.length > 0) {
+                                                            const batchCall = superfluid.batchCall(operations);
+                                                            setIsDeleting(true);
+                                                            const result = await batchCall.exec(signer);
+                                                            await result.wait();
+                                                            setIsDeleting(false);
+
+                                                            console.log("Stream deleted: ", result);
+                                                            showToast(ToastType.Success);
+                                                        }
+                                                    }
+                                                } catch (error) {
+                                                    console.log("Error: ", error);
+                                                    showToast(ToastType.Error);
+                                                    setIsDeleting(false);
                                                 }
                                             }}
                                             className="bg-red-100/50 text-red-600 p-2 rounded-xl hover:bg-red-200/50 transition-all duration-300"
-                                            disabled={isLoading}
+                                            disabled={isLoading || isDeleting}
                                         >
-                                            <RiCloseCircleFill size={25} />
+                                            {
+                                                isDeleting ?
+                                                    <div className='scale-90'>
+                                                        <LoadingSpinner size={25} />
+                                                    </div>
+                                                    :
+                                                    <RiCloseCircleFill size={25} />
+                                            }
                                         </button>
                                     }
                                 />
@@ -520,7 +562,6 @@ const PoolInteractionVisualization: NextPage = () => {
                                                         isLoading={isLoading}
                                                     />
                                                 }
-                                                {isTwap0 && isTwap1 && <div className="h-4999"></div>}
                                                 {
                                                     flowRate1.gt(0) &&
                                                     <BalanceField
