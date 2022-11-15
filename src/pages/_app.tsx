@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 toast = {
                     id: toastList.length + 1,
                     title: "Success",
-                    description: "Success message",
+                    description: "Transaction Confirmed",
                     backgroundColor: "#5cb85c",
                 };
                 break;
@@ -83,6 +83,22 @@ function MyApp({ Component, pageProps }: AppProps) {
                     backgroundColor: "#FDB833",
                 };
                 break;
+            case ToastType.NotEnoughEthForGas:
+                toast = {
+                    id: toastList.length + 1,
+                    title: "Error",
+                    description: "ETH balance doesn't cover gas cost",
+                    backgroundColor: "#d9534f",
+                };
+                break;
+            case ToastType.RejectedTransaction:
+                toast = {
+                    id: toastList.length + 1,
+                    title: "Error",
+                    description: "You rejected the transaction",
+                    backgroundColor: "#d9534f",
+                };
+                break;
             default:
                 toast = {
                     id: toastList.length + 1,
@@ -102,36 +118,36 @@ function MyApp({ Component, pageProps }: AppProps) {
         <>
             {
                 router.pathname == '/landing'
-                ?
-                <Component {...pageProps} />
-                :
-                <WagmiConfig client={wagmiClient}>
-                    <RainbowKitProvider
-                        chains={chains}
-                        theme={lightTheme({ accentColor: "#2662CB" })}
-                        avatar={CustomAvatar}
-                    >
-                        <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-black">
-                            <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
-                                <Sidebar isShown={isShown} setIsShown={setIsShown} />
-                                <main
-                                    className={
-                                        "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll"
-                                        + (isShown && "hidden md:flex")
-                                    }
-                                >
-                                    <div className="md:h-[50%]" />
-                                    <Component {...pageProps} showToast={showToast} />
-                                    <div className="md:h-full" />
-                                </main>
+                    ?
+                    <Component {...pageProps} />
+                    :
+                    <WagmiConfig client={wagmiClient}>
+                        <RainbowKitProvider
+                            chains={chains}
+                            theme={lightTheme({ accentColor: "#2662CB" })}
+                            avatar={CustomAvatar}
+                        >
+                            <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-black">
+                                <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                                    <Sidebar isShown={isShown} setIsShown={setIsShown} />
+                                    <main
+                                        className={
+                                            "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll"
+                                            + (isShown && "hidden md:flex")
+                                        }
+                                    >
+                                        <div className="md:h-[50%]" />
+                                        <Component {...pageProps} showToast={showToast} />
+                                        <div className="md:h-full" />
+                                    </main>
+                                </div>
+                                <ToastMessage
+                                    toastList={toastList}
+                                    setToastList={setToastList}
+                                />
                             </div>
-                            <ToastMessage
-                                toastList={toastList}
-                                setToastList={setToastList}
-                            />
-                        </div>
-                    </RainbowKitProvider>
-                </WagmiConfig>
+                        </RainbowKitProvider>
+                    </WagmiConfig>
             }
         </>
     );

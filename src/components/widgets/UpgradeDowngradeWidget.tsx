@@ -11,6 +11,7 @@ import TokenFlowField from "../TokenFlowField";
 import DAIABI from "../../utils/DAIABI.json";
 import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ReadOnlyFlowOutput from "../ReadOnlyFlowOutput";
+import getToastErrorType from "../../utils/getToastErrorType";
 
 
 const DAI_ABI = DAIABI.abi;
@@ -82,8 +83,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             showToast(ToastType.Success);
             setLoading(false);
         } catch (error) {
-            console.log("Upgrade error: ", error);
-            showToast(ToastType.Error);
+            //console.log("Upgrade error: ", error);
+            showToast(getToastErrorType(error));
             setLoading(false);
         }
     };

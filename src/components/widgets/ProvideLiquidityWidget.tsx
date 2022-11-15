@@ -15,6 +15,7 @@ import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
 import ReadOnlyFlowOutput from "../ReadOnlyFlowOutput";
 import Operation from "@superfluid-finance/sdk-core/dist/module/Operation";
+import getToastErrorType from "../../utils/getToastErrorType";
 
 interface ProvideLiquidityWidgetProps {
     showToast: (type: ToastType) => {};
@@ -126,15 +127,15 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                     const result = await batchCall.exec(signer);
                     await result.wait();
 
-                    console.log("Streams created: ", result);
+                    //console.log("Streams created: ", result);
                     showToast(ToastType.Success);
                 }
 
                 setLoading(false);
             }
         } catch (error) {
-            console.log("Error: ", error);
-            showToast(ToastType.Error);
+            //console.log("Error: ", error);
+            showToast(getToastErrorType(error));
             setLoading(false);
         }
     };

@@ -21,6 +21,7 @@ import getToken from "../../../../../utils/getToken";
 import Operation from "@superfluid-finance/sdk-core/dist/module/Operation";
 import ToastType from "../../../../../types/ToastType";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
+import getToastErrorType from "../../../../../utils/getToastErrorType";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -516,13 +517,13 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                                                             await result.wait();
                                                             setIsDeleting(false);
 
-                                                            console.log("Stream deleted: ", result);
+                                                            //console.log("Stream deleted: ", result);
                                                             showToast(ToastType.Success);
                                                         }
                                                     }
                                                 } catch (error) {
-                                                    console.log("Error: ", error);
-                                                    showToast(ToastType.Error);
+                                                    //console.log("Error: ", error);
+                                                    showToast(getToastErrorType(error));
                                                     setIsDeleting(false);
                                                 }
                                             }}

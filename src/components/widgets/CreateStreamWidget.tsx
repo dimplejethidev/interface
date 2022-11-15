@@ -14,6 +14,7 @@ import { IoArrowDown } from "react-icons/io5";
 import { TokenOption } from "../../types/TokenOption";
 import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
+import getToastErrorType from "../../utils/getToastErrorType";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -100,15 +101,15 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
 
-                    console.log("Stream created: ", result);
+                    //console.log("Stream created: ", result);
                 }
 
                 showToast(ToastType.Success);
                 setLoading(false);
             }
         } catch (error) {
-            console.log("Error: ", error);
-            showToast(ToastType.Error);
+            //console.log("Error: ", error);
+            showToast(getToastErrorType(error));
             setLoading(false);
         }
     };
