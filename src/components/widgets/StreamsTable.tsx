@@ -120,8 +120,8 @@ const StreamsTable = () => {
                     ]}
                     columnComponents={[PoolField, TextField, BalancesField]}
                     rowLinks={links}
-                    data={data} 
-                    isLoading={isLoading}                
+                    data={data}
+                    isLoading={isLoading}
                 />
             </div>
         </section>

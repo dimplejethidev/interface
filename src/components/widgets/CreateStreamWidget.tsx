@@ -332,7 +332,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                         />
                     </div>
                     <button
-                        className="absolute flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm"
+                        className="absolute flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-aqueductBlue dark:text-white dark:border-white dark:centered-shadow-sm-none"
                         onClick={() => {
                             const oldOutbound: TokenOption = store.outboundToken;
                             store.setOutboundToken(store.inboundToken);

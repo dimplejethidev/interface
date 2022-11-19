@@ -49,8 +49,8 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
         <button
             className={`flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl transition-all ease-in-out duration-300
                         ${router.asPath === page
-                    ? "bg-aqueductBlue/5 hover:bg-aqueductBlue/10"
-                    : "hover:bg-gray-100"
+                    ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/10 hover:bg-aqueductBlue/10"
+                    : "hover:bg-gray-100 dark:hover:bg-aqueductBlue"
                 } `}
             onClick={() => {
                 if (page) {
@@ -62,8 +62,8 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
         >
             <div
                 className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page
-                    ? "bg-aqueductBlue/10 text-aqueductBlue"
-                    : "text-gray-400"
+                    ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
+                    : "text-gray-400 dark:bg-transparent dark:text-white"
                     }`}
             >
                 {icon}
@@ -71,7 +71,7 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
             <p
                 className={`text-sm font-medium ${router.asPath === page
                     ? "bg-transparent text-aqueductBlue"
-                    : "text-gray-600"
+                    : "text-gray-600 dark:text-white"
                     }`}
             >
                 {label}
@@ -83,10 +83,18 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
 const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispatch<SetStateAction<boolean>> }) => {
     const store = useStore();
 
+    useEffect(() => {
+        if (localStorage.getItem('color-theme') == 'light') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    })
+
     return (
         <header
             className={
-                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 flex-shrink-0 md:overflow-y-auto"
+                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:dark-border-color flex-shrink-0 md:overflow-y-auto"
             }
         >
             <Head>
@@ -148,30 +156,33 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                         />
                     ))}
                 </ul>
+                <div className={"flex grow"} ></div>
                 {
-                    /*
-                    <div className='flex grow' />
-                    <div className="flex dark:hidden">
-                        <SideBarTab
-                            icon={<FiMoon size={18} />}
-                            label={'Dark mode'}
-                            key={'Dark mode'}
-                            onClick={() => {
-                                document.documentElement.classList.add('dark');
-                            }}
-                        />
+                    <div>
+                        <div className='flex grow' />
+                        <div className="flex dark:hidden">
+                            <SideBarTab
+                                icon={<FiMoon size={18} />}
+                                label={'Dark mode'}
+                                key={'Dark mode'}
+                                onClick={() => {
+                                    document.documentElement.classList.add('dark');
+                                    localStorage.setItem('color-theme', 'light');
+                                }}
+                            />
+                        </div>
+                        <div className="hidden dark:flex">
+                            <SideBarTab
+                                icon={<MdLightbulbOutline size={18} />}
+                                label={'Light mode'}
+                                key={'Light mode'}
+                                onClick={() => {
+                                    document.documentElement.classList.remove('dark');
+                                    localStorage.setItem('color-theme', 'dark');
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div className="hidden dark:flex">
-                        <SideBarTab
-                            icon={<MdLightbulbOutline size={18} />}
-                            label={'Light mode'}
-                            key={'Light mode'}
-                            onClick={() => {
-                                document.documentElement.classList.remove('dark');
-                            }}
-                        />
-                    </div>
-                    */
                 }
             </div>
         </header>

@@ -15,8 +15,8 @@ const TableRow = ({ columnProps, columnComponents, link, data }: TableRowProps) 
                 {
                     data.map((d, i) => {
                         return (
-                            <div 
-                                className={columnProps[i]} 
+                            <div
+                                className={columnProps[i]}
                                 key={'row-' + i}
                             >
                                 {columnComponents[i](d)}
@@ -49,8 +49,8 @@ const GenericTable = ({ title, labels, columnProps, columnComponents, rowLinks, 
                 {
                     labels.map((label, i) => {
                         return (
-                            <div 
-                                className={columnProps[i]} 
+                            <div
+                                className={columnProps[i]}
                                 key={label}
                             >
                                 {label}
@@ -64,10 +64,10 @@ const GenericTable = ({ title, labels, columnProps, columnComponents, rowLinks, 
                     ?
                     <div className="flex flex-col space-y-4">
                         {
-                            [0,1,2].map((i) => {
+                            [0, 1, 2].map((i) => {
                                 return (
-                                    <div 
-                                        className='w-full p-4 text-transparent bg-gray-200 rounded-2xl animate-pulse'
+                                    <div
+                                        className='w-full p-4 text-transparent bg-gray-800 rounded-2xl animate-pulse'
                                         key={'loading-' + i}
                                     >
                                         {'-'}
