@@ -7,11 +7,11 @@
 
 @layer components {
     .centered-shadow {
-        box-shadow: 0px 0px 0px rgba(225, 225, 225);
+        box-shadow: 0px 0px 15px rgba(225, 225, 225);
     }
 
     .centered-shadow-dark {
-        box-shadow: 0px 0px 1000px #0460CE00;
+        box-shadow: 0px 0px 500px #0b1521;
     }
 
     .centered-shadow-sm {
@@ -23,7 +23,11 @@
     }
 
     .centered-shadow-sm-dark {
-        box-shadow: 0px 0px 25px rgba(225, 225, 225, 0.05);
+        box-shadow: 0px 0px 12px rgba(225, 225, 225, 0.1);
+    }
+
+    .centered-shadow-md-dark {
+        box-shadow: 0px 0px 12px rgba(225, 225, 225, 0.2);
     }
 
     .centered-shadow-lg {

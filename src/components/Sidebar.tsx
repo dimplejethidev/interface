@@ -11,6 +11,7 @@ import { IoClose, IoMenu } from 'react-icons/io5';
 import { FiMoon } from 'react-icons/fi'
 import { MdLightbulbOutline } from 'react-icons/md'
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useDarkMode } from "../utils/DarkModeProvider";
 
 interface SideBarTabProps {
     icon: any;
@@ -49,8 +50,8 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
         <button
             className={`flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl transition-all ease-in-out duration-300
                         ${router.asPath === page
-                    ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/10 hover:bg-aqueductBlue/10"
-                    : "hover:bg-gray-100 dark:hover:bg-aqueductBlue"
+                    ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
                 } `}
             onClick={() => {
                 if (page) {
@@ -63,7 +64,7 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
             <div
                 className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page
                     ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
-                    : "text-gray-400 dark:bg-transparent dark:text-white"
+                    : "text-gray-400 dark:bg-gray-800/60 dark:text-white"
                     }`}
             >
                 {icon}
@@ -82,6 +83,7 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
 
 const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispatch<SetStateAction<boolean>> }) => {
     const store = useStore();
+    const darkContext = useDarkMode();
 
     useEffect(() => {
         if (localStorage.getItem('color-theme') == 'light') {
@@ -114,9 +116,11 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                     height="45px"
                     className="rounded-xl opacity-95"
                 />
-                <h1 className="text-2xl font-semibold pr-3 poppins-font">
-                    aqueduct
-                </h1>
+                <div className="flex items-center h-full">
+                    <h1 className="text-2xl font-semibold pl-1 poppins-font text-transparent bg-clip-text bg-gradient-to-br from-[#2B75CE] to-[#0C4791]">
+                        aqueduct
+                    </h1>
+                </div>
                 <div className="flex grow" />
                 <button
                     className="md:hidden"
@@ -168,6 +172,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                                 onClick={() => {
                                     document.documentElement.classList.add('dark');
                                     localStorage.setItem('color-theme', 'light');
+                                    darkContext?.setIsDark(true);
                                 }}
                             />
                         </div>
@@ -179,6 +184,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                                 onClick={() => {
                                     document.documentElement.classList.remove('dark');
                                     localStorage.setItem('color-theme', 'dark');
+                                    darkContext?.setIsDark(false);
                                 }}
                             />
                         </div>

@@ -56,7 +56,7 @@ interface RewardWidgetProps {
 const BalanceField = ({ currentBalance, isTwap, token, numDecimals, isLoading }: BalanceFieldProps) => {
     if (isLoading) {
         return (
-            <div className="bg-gray-200 h-10 rounded-2xl animate-pulse" />
+            <div className="bg-gray-200 dark:bg-gray-800 h-10 rounded-2xl animate-pulse" />
         )
     }
 
@@ -64,7 +64,7 @@ const BalanceField = ({ currentBalance, isTwap, token, numDecimals, isLoading }:
         <div className={
             "flex space-x-4 items-end rounded-2xl tracking-wider monospace-font font-bold "
             //+ (isTwap ? ('bg-[' + token.colorHex + '30] text-[' + token.colorHex + ']') : 'text-gray-300 text-5xl')
-            + (isTwap ? 'text-gray-800 text-3xl md:text-4xl lg:text-5xl xl:text-7xl' : 'text-gray-300 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold')
+            + (isTwap ? 'text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl' : 'text-gray-300 dark:text-gray-600/60 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold')
         }>
             <img src={token.logo} className={isTwap ? 'h-12 mb-3 hidden' : 'h-12 hidden'} />
             <p>
@@ -92,8 +92,8 @@ const PriceWidget = ({ isLoading, title, token0, token1, price }: PriceWidgetPro
                 isLoading
                     ?
                     <div className="space-y-2">
-                        <div className="bg-gray-200 h-10 w-1/2 rounded-2xl animate-pulse" />
-                        <div className="bg-gray-200 h-10 w-4/5 rounded-2xl animate-pulse" />
+                        <div className="bg-gray-200 dark:bg-gray-800 h-10 w-1/2 rounded-2xl animate-pulse" />
+                        <div className="bg-gray-200 dark:bg-gray-800 h-10 w-4/5 rounded-2xl animate-pulse" />
                     </div>
                     :
                     <div className="px-4 space-y-2">
@@ -126,8 +126,8 @@ const RewardWidget = ({ isLoading, title, token0, token1, reward0, reward1, numD
                 isLoading
                     ?
                     <div className="space-y-2">
-                        <div className="bg-gray-200 h-10 w-1/2 rounded-2xl animate-pulse" />
-                        <div className="bg-gray-200 h-10 w-4/5 rounded-2xl animate-pulse" />
+                        <div className="bg-gray-200 dark:bg-gray-800 h-10 w-1/2 rounded-2xl animate-pulse" />
+                        <div className="bg-gray-200 dark:bg-gray-800 h-10 w-4/5 rounded-2xl animate-pulse" />
                     </div>
                     :
                     <div className="space-y-2">
@@ -442,7 +442,7 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                             <Link
                                 href='/my-streams'
                             >
-                                <div className='p-2 rounded-xl cursor-pointer hover:bg-slate-100 transition-all duration-300' >
+                                <div className='p-2 rounded-xl cursor-pointer hover:bg-slate-100 dark:hover:bg-gray-700/60 transition-all duration-300' >
                                     <IoArrowBack size={25} />
                                 </div>
                             </Link>
@@ -468,7 +468,7 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                                                         }
                                                     }
                                                 }}
-                                                className="bg-aqueductBlue/5 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 transition-all duration-300"
+                                                className="bg-aqueductBlue/5 dark:bg-aqueductBlue/20 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 dark:hover:bg-aqueductBlue/30 transition-all duration-300"
                                             >
                                                 <RiPencilFill size={25} />
                                             </a>
@@ -527,7 +527,7 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                                                     setIsDeleting(false);
                                                 }
                                             }}
-                                            className="bg-red-100/50 text-red-600 p-2 rounded-xl hover:bg-red-200/50 transition-all duration-300"
+                                            className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
                                             disabled={isLoading || isDeleting}
                                         >
                                             {
@@ -549,9 +549,6 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                                 {
                                     <WidgetContainer smallTitle="Total Amounts Streamed" isUnbounded={true}>
                                         <div className="md:space-y-3 lg:space-y-6 pb-2">
-                                            <p className="font-semibold text-gray-400 hidden">
-                                                Total Amounts Streamed
-                                            </p>
                                             <div className="space-y-4">
                                                 {
                                                     flowRate0.gt(0) &&
@@ -619,7 +616,7 @@ const PoolInteractionVisualization: NextPage<PoolInteractionVisualizationProps> 
                                         </div>
                                 }
                                 <WidgetContainer isUnbounded={true}>
-                                    <div className="flex space-x-2 text-gray-800 font-medium md:-my-2">
+                                    <div className="flex space-x-2 text-gray-800 dark:text-white font-medium md:-my-2">
                                         <p className="text-slate-500 font-normal pr-2">Start Date:</p>
                                         <p>{startDate?.toLocaleDateString()}</p>
                                         <p>{startDate?.toLocaleTimeString()}</p>

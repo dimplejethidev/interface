@@ -12,8 +12,8 @@ const TransactionButton = ({ title, loading, onClickFunction, errorMessage }: Tr
         <button
             className={
                 "flex justify-center items-center h-14 font-bold rounded-2xl outline-2 transition-all duration-500 "
-                + (errorMessage ? ' border-aqueductBlue/20 border-2 text-aqueductBlue/50 ' : ' bg-aqueductBlue/90 text-white ')
-                + (!errorMessage && !loading && ' hover:outline ')
+                + (errorMessage ? ' border-aqueductBlue/20 dark:border-aqueductBlue/50 border-2 text-aqueductBlue/50 dark:text-aqueductBlue/90 ' : ' bg-aqueductBlue/90 text-white ')
+                + (!errorMessage && !loading && ' hover:outline2 ')
             }
             onClick={onClickFunction}
             disabled={loading || errorMessage != undefined}

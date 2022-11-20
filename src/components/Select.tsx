@@ -21,8 +21,8 @@ const Select = ({ options, dropdownValue, setDropdownValue, isNonSuperToken }: S
         <Listbox value={dropdownValue} onChange={setDropdownValue}>
             {({ open }) => (
                 <>
-                    <div className="relative flex-shrink-0">
-                        <Listbox.Button className="flex relative w-full shadow-sm rounded-lg border border-gray-200 bg-white dark:bg-transparent dark:border-zinc-600 dark:text-gray-400 py-4 pl-4 pr-2 space-x-2 hover:border-aqueductBlue focus:border-aqueductBlue2 focus:outline-none focus:ring-1 focus:ring-aqueductBlue text-sm">
+                    <div className="relative flex-shrink-0 focus-within:textbox-outline rounded-lg">
+                        <Listbox.Button className="flex relative w-full shadow-sm rounded-lg border border-gray-200 bg-white dark:bg-transparent dark:border-zinc-600 dark:text-gray-400 py-4 pl-4 pr-2 space-x-2 hover:border-aqueductBlue dark:hover:border-aqueductBlue text-sm">
                             {dropdownValue.logo && <img src={dropdownValue.logo} className='w-5 h-5' />}
                             <span className="flex items-center ">
                                 <span className="block truncate">
@@ -41,7 +41,7 @@ const Select = ({ options, dropdownValue, setDropdownValue, isNonSuperToken }: S
                             leaveFrom="transform scale-100 opacity-100"
                             leaveTo="transform scale-95 opacity-0"
                         >
-                            <Listbox.Options className="absolute z-10 mt-2 flex flex-col flex-shrink-0 overflow-auto rounded-lg bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm dark:bg-slate-800 dark:border-red-500">
+                            <Listbox.Options className="absolute z-10 mt-2 flex flex-col flex-shrink-0 overflow-auto rounded-lg bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm dark:bg-white/10 dark:backdrop-blur-lg dark:border-red-500">
                                 {options.map((option) => (
                                     <Listbox.Option
                                         key={option.value}

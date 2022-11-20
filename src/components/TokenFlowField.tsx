@@ -62,14 +62,14 @@ const TokenFlowField = ({
         <div>
             <div
                 className={
-                    "hover:border-aqueductBlue focus-within:textbox-outline flex flex-col grow border-[1px] border-gray-200 dark:border-zinc-500 centered-shadow-sm dark:centered-shadow-sm-dark rounded-2xl "
+                    "hover:border-aqueductBlue focus-within:textbox-outline dark:focus-within:textbox-outline flex flex-col grow border-[1px] border-gray-200 dark:border-gray-700 dark:hover:border-aqueductBlue centered-shadow-sm dark:centered-shadow-sm-dark rounded-2xl "
                     + " px-3 py-3"
                 }
             >
                 <div className={"flex items-end space-x-2"}>
                     <input
                         className={
-                            "px-2 pb-2 text-3xl font-semibold monospace-font tracking-widest flex w-full h-min outline-none dark:bg-transparent dark:text-gray-400"
+                            "px-2 pb-2 text-3xl font-semibold monospace-font tracking-widest flex w-full h-min outline-none dark:bg-transparent dark:text-white/90"
                         }
                         type="text"
                         pattern="^[0-9]*[.,]?[0-9]*$"

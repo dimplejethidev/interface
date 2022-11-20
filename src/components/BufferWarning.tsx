@@ -25,7 +25,7 @@ const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer
                     <div
                         className={
                             "text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 "
-                            + (acceptedBuffer ? 'bg-gray-100 text-gray-900/90' : 'bg-red-100 text-red-900/90')
+                            + (acceptedBuffer ? 'bg-gray-100 dark:bg-gray-700/60 text-gray-900/90 dark:text-gray-400' : 'bg-red-100 dark:bg-red-500/20 text-red-900/90 dark:text-red-400/90')
                         }
                     >
                         <p>
@@ -37,7 +37,7 @@ const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer
                                 <button
                                     className={
                                         "flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 "
-                                        + (acceptedBuffer ? 'border-aqueductBlue bg-aqueductBlue' : 'border-red-900/90')
+                                        + (acceptedBuffer ? 'border-aqueductBlue bg-aqueductBlue' : 'border-red-900/90 dark:border-red-400/90')
                                     }
                                     onClick={() => { setAcceptedBuffer(!acceptedBuffer); }}
                                 >
@@ -52,7 +52,7 @@ const BufferWarning = ({ minBalance, outboundTokenBalance, outboundToken, buffer
                     :
                     <div
                         className={
-                            "text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 bg-red-100 text-red-900/90 "
+                            "text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 bg-red-100 dark:bg-red-500/20 text-red-900/90 dark:text-red-400/90 "
                         }
                     >
                         {

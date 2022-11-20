@@ -16,7 +16,7 @@ const WidgetContainer = ({ title, smallTitle, buttons, children, isUnbounded }: 
     return (
         <div
             className={
-                "flex flex-col w-full md:p-8 space-y-6 rounded-3xl bg-white dark:bg-transparent dark:md:bg-transparent dark:backdrop-blur-lg md:centered-shadow dark:centered-shadow-dark transition "
+                "flex flex-col w-full md:p-8 space-y-6 rounded-3xl md:bg-white dark:md:border-2 dark:md:border-gray-800/60 dark:md:bg-gray-900/60 md:centered-shadow dark:md:centered-shadow-dark transition "
                 + (!isUnbounded && '  max-w-xl ')
             }
         >
@@ -48,7 +48,7 @@ const WidgetContainer = ({ title, smallTitle, buttons, children, isUnbounded }: 
                                         )
                                     })
                                     :
-                                    <div className='px-4 py-2 rounded-xl text-sm bg-gray-100 w-min text-gray-400'>
+                                    <div className='px-4 py-2 rounded-xl text-sm bg-gray-100 dark:bg-gray-700/60 w-min text-gray-400 dark:text-white/80'>
                                         {smallTitle}
                                     </div>
                             )
