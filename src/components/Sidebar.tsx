@@ -96,7 +96,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
     return (
         <header
             className={
-                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:dark-border-color flex-shrink-0 md:overflow-y-auto"
+                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:md:border-gray-800/60 flex-shrink-0 md:overflow-y-auto"
             }
         >
             <Head>
