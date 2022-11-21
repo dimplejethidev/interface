@@ -24,7 +24,7 @@ const ReadOnlyFlowOutput = ({
                 <div className={"flex items-center space-x-2"}>
                     <input
                         className={
-                            "bg-white px-2 text-2xl opacity-75 font-semibold monospace-font tracking-widest flex w-full h-min outline-none "
+                            "bg-white px-2 text-2xl opacity-75 font-semibold monospace-font tracking-widest flex w-full h-min outline-none dark:bg-transparent dark:text-gray-300"
                         }
                         type="text"
                         pattern="^[0-9]*[.,]?[0-9]*$"
@@ -32,7 +32,7 @@ const ReadOnlyFlowOutput = ({
                         value={displayedValue}
                         disabled={true}
                     />
-                    <div className="flex relative flex-shrink-0 shadow-sm rounded-lg border border-gray-200 bg-white py-3 px-3 space-x-2 text-sm">
+                    <div className="flex relative flex-shrink-0 shadow-sm rounded-lg border border-gray-200 bg-white py-3 px-3 space-x-2 text-sm dark:bg-transparent dark:border-zinc-600 dark:text-gray-400">
                         <img src={token.logo} className='w-5 h-5' />
                         <span className="flex items-center ">
                             <span className="block truncate">{token.label}</span>

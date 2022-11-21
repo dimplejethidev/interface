@@ -1,10 +1,11 @@
 import type { AppProps } from "next/app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
     getDefaultWallets,
     RainbowKitProvider,
     lightTheme,
+    darkTheme,
 } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
@@ -18,6 +19,7 @@ import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
+import DarkModeProvider, { useDarkMode } from "../utils/DarkModeProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
@@ -27,7 +29,7 @@ const { chains, provider } = configureChains(
 //publicProvider()
 
 const { connectors } = getDefaultWallets({
-    appName: "My RainbowKit App",
+    appName: "Aqueduct",
     chains,
 });
 
@@ -114,6 +116,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     const [isShown, setIsShown] = useState(false);
     const router = useRouter();
 
+    // dark mode params
+    const [isDark, setIsDark] = useState<boolean>(false);
+    useEffect(() => {
+        setIsDark(document.documentElement.classList.contains('dark'))
+    })
+
     return (
         <>
             {
@@ -122,31 +130,33 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                     :
                     <WagmiConfig client={wagmiClient}>
-                        <RainbowKitProvider
-                            chains={chains}
-                            theme={lightTheme({ accentColor: "#2662CB" })}
-                            avatar={CustomAvatar}
-                        >
-                            <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-black">
-                                <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
-                                    <Sidebar isShown={isShown} setIsShown={setIsShown} />
-                                    <main
-                                        className={
-                                            "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll"
-                                            + (isShown && "hidden md:flex")
-                                        }
-                                    >
-                                        <div className="md:h-[50%]" />
-                                        <Component {...pageProps} showToast={showToast} />
-                                        <div className="md:h-full" />
-                                    </main>
+                        <DarkModeProvider isDark={isDark} setIsDark={setIsDark}>
+                            <RainbowKitProvider
+                                chains={chains}
+                                theme={isDark ? darkTheme({ accentColor: "#2662CB" }) : lightTheme({ accentColor: "#2662CB" })}
+                                avatar={CustomAvatar}
+                            >
+                                <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
+                                    <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                                        <Sidebar isShown={isShown} setIsShown={setIsShown} />
+                                        <main
+                                            className={
+                                                "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll"
+                                                + (isShown && "hidden md:flex")
+                                            }
+                                        >
+                                            <div className="md:h-[50%]" />
+                                            <Component {...pageProps} showToast={showToast} />
+                                            <div className="md:h-full" />
+                                        </main>
+                                    </div>
+                                    <ToastMessage
+                                        toastList={toastList}
+                                        setToastList={setToastList}
+                                    />
                                 </div>
-                                <ToastMessage
-                                    toastList={toastList}
-                                    setToastList={setToastList}
-                                />
-                            </div>
-                        </RainbowKitProvider>
+                            </RainbowKitProvider>
+                        </DarkModeProvider>
                     </WagmiConfig>
             }
         </>

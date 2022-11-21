@@ -168,7 +168,7 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                         }
                     </div>
                     <button
-                        className="flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm -my-5 z-10"
+                        className="flex items-center justify-center w-10 h-10 -my-5 z-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:centered-shadow-sm-dark"
                         onClick={() => {
                             setIsWrapping(!isWrapping)
                         }}

@@ -74,13 +74,13 @@ const CustomWalletConnectButton = () => {
                             return (
                                 <button
                                     onClick={openAccountModal}
-                                    className="flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl bg-aqueductBlue/5 hover:bg-aqueductBlue/10 transition-all ease-in-out duration-300"
+                                    className="flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl bg-aqueductBlue/5 hover:bg-aqueductBlue/10 dark:bg-gray-800/60 dark:hover:bg-gray-700/60 transition-all ease-in-out duration-300"
                                 >
                                     <img
                                         src={makeBlockie(account.address)}
                                         className="w-8 h-8 rounded-lg"
                                     />
-                                    <p className="text-aqueductBlue2 text-gray-600 font-medium monospace-font">
+                                    <p className="text-gray-600 dark:text-white font-medium monospace-font">
                                         {account.address &&
                                             account.address.slice(0, 6) +
                                                 "..." +

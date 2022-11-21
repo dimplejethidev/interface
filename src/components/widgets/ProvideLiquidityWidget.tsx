@@ -342,7 +342,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
                         />
                     </div>
                     <div className="py-2">
-                        <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px]">
+                        <div className="flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] dark:bg-gray-900 dark:text-white dark:border-gray-700">
                             <IoSwapVertical size={20} />
                         </div>
                     </div>

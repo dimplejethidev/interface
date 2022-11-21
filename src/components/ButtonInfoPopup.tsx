@@ -6,7 +6,7 @@ interface ButtonWithInfoPopupParams {
 const ButtonWithInfoPopup = ({ message, button }: ButtonWithInfoPopupParams) => {
     return (
         <div className="group flex justify-center">
-            <div className="absolute -translate-y-9 text-xs bg-white border-[1px] px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 delay-300">
+            <div className="absolute -translate-y-9 text-xs bg-white dark:bg-gray-800/60 border-[1px] dark:border-gray-800/60 px-3 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 delay-300">
                 {message}
             </div>
             {button}
