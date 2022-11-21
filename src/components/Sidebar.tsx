@@ -143,7 +143,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                     + (
                         isShown
                             ?
-                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50 bg-white dark:bg-black'
+                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50'
                             :
                             'hidden md:flex md:flex-col'
                     )
