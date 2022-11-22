@@ -1,6 +1,6 @@
 const getTweetTemplate = (link: string) => {
     return (
-        'https://twitter.com/intent/tweet?text=TODO:%20Fill%20in%20this%20template%0A%40AqueductFinance%0A%0ALink:%20&url='
+        "https://twitter.com/intent/tweet?text=I'm%20swapping%20tokens%20every%20second%20with%20%40AqueductFinance%20!%0A%0ACheck%20it%20out:%20&url="
         + link +
         '&hashtags=aqueduct%2Cmoneystreaming%2Crealtimefinance'
     )

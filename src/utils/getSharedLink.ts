@@ -1,6 +1,6 @@
 const getSharedLink = (network: string, userAddress: string, token0Address: string, token1Address: string) => {
     return (
-        'localhost:3000/pair/' + network + '/' + userAddress + '/' + token0Address + '/' + token1Address
+        'aqueductfinance.vercel.app/pair/' + network + '/' + userAddress + '/' + token0Address + '/' + token1Address
     )
 }
 
