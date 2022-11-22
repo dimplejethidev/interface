@@ -64,7 +64,7 @@ const BalanceField = ({ currentBalance, isTwap, token, numDecimals, isLoading }:
         <div className={
             "flex space-x-4 items-end rounded-2xl tracking-wider monospace-font font-bold "
             //+ (isTwap ? ('bg-[' + token.colorHex + '30] text-[' + token.colorHex + ']') : 'text-gray-300 text-5xl')
-            + (isTwap ? 'text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl' : 'text-gray-300 dark:text-gray-600/60 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold')
+            + (isTwap ? 'text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl' : 'text-gray-300 dark:text-slate-500/80 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold')
         }>
             <img src={token.logo} className={isTwap ? 'h-12 mb-3 hidden' : 'h-12 hidden'} />
             <p>
@@ -98,7 +98,7 @@ const PriceWidget = ({ isLoading, title, token0, token1, price }: PriceWidgetPro
                     :
                     <div className="px-4 space-y-2">
                         <div className="flex items-end space-x-2">
-                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800">
+                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800 dark:text-white">
                                 1
                             </p>
                             <p className="text-xl md:text-2xl font-bold">
@@ -106,7 +106,7 @@ const PriceWidget = ({ isLoading, title, token0, token1, price }: PriceWidgetPro
                             </p>
                         </div>
                         <div className="flex items-end space-x-2">
-                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800">
+                            <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800 dark:text-white">
                                 {'= ' + price}
                             </p>
                             <p className="text-xl md:text-2xl font-bold">
