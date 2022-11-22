@@ -17,6 +17,7 @@ interface SideBarTabProps {
     icon: any;
     label: string;
     page?: string;
+    setSidebarIsShown?: Dispatch<SetStateAction<boolean>>;
     onClick?: () => void;
 }
 
@@ -43,7 +44,7 @@ const navItems: { icon: any; label: string; page: string }[] = [
     }
 ];
 
-const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
+const SideBarTab = ({ icon, label, page, setSidebarIsShown, onClick }: SideBarTabProps) => {
     const router = useRouter();
 
     return (
@@ -53,11 +54,16 @@ const SideBarTab = ({ icon, label, page, onClick }: SideBarTabProps) => {
                     ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
                     : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
                 } `}
-            onClick={() => {
+            onClick={async () => {
                 if (page) {
                     router.push(page);
                 } else if (onClick) {
                     onClick();
+                }
+
+                if (setSidebarIsShown) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    setSidebarIsShown(false);
                 }
             }}
         >
@@ -156,6 +162,7 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                             icon={icon}
                             label={label}
                             page={page}
+                            setSidebarIsShown={setIsShown}
                             key={label}
                         />
                     ))}
