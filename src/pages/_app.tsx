@@ -23,7 +23,7 @@ import DarkModeProvider, { useDarkMode } from "../utils/DarkModeProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
-    [alchemyProvider({ apiKey: 'y-XrzXcnrI5-InGayOmqKAfZOADFvF8s' })]
+    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY })]
 );
 //[jsonRpcProvider({ rpc: () => { return {http: 'https://goerli.infura.io/v3/'} } })]
 //publicProvider()
