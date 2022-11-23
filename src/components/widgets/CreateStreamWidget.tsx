@@ -317,6 +317,16 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             setToken={store.setOutboundToken}
                         />
                     </div>
+                    <button
+                        className="flex items-center justify-center w-10 h-10 -my-5 z-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:centered-shadow-sm-dark"
+                        onClick={() => {
+                            const oldOutbound: TokenOption = store.outboundToken;
+                            store.setOutboundToken(store.inboundToken);
+                            store.setInboundToken(oldOutbound);
+                        }}
+                    >
+                        <IoArrowDown size={20} />
+                    </button>
                     <div className="w-full py-1">
                         <TokenFlowField
                             title="Flow Rate"
@@ -331,16 +341,6 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
                             setToken={store.setInboundToken}
                         />
                     </div>
-                    <button
-                        className="absolute flex items-center justify-center w-10 h-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:centered-shadow-sm-dark"
-                        onClick={() => {
-                            const oldOutbound: TokenOption = store.outboundToken;
-                            store.setOutboundToken(store.inboundToken);
-                            store.setInboundToken(oldOutbound);
-                        }}
-                    >
-                        <IoArrowDown size={20} />
-                    </button>
                 </div>
                 <PricingField
                     refreshingPrice={refreshingPrice}
