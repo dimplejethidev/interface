@@ -126,9 +126,8 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
         // calculate token 0 price
         if (token1Flow.current.gt(0)) {
             setToken0Price(
-                calculatedToken0Flow.mul(100000).div(token1Flow.current).toNumber() /
-                100000
-            );
+                parseFloat(calculatedToken0Flow.toString()) / parseFloat(token1Flow.current.toString())
+            )
         } else {
             setToken0Price(0);
         }
