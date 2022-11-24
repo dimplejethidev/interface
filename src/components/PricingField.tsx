@@ -2,6 +2,8 @@ import { BigNumber, ethers } from "ethers";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useStore } from "../store";
 import LoadingSpinner from "./LoadingSpinner";
+let maxDecimals = 10;
+let minValue = Math.pow(10, -10);
 
 interface PricingFieldProps {
     refreshingPrice: boolean;
@@ -43,7 +45,7 @@ const PricingField = ({
                 <div className="space-y-1">
                     <p>
                         1 {store.inboundToken.label} ={" "}
-                        {token0Price != 0 ? token0Price : "<0.00001"}{" "}
+                        {token0Price >= minValue ? token0Price.toFixed(10) : ('<'+minValue.toFixed(10))}{" "}
                         {store.outboundToken.label}
                     </p>
                 </div>

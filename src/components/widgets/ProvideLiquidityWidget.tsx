@@ -176,8 +176,7 @@ const ProvideLiquidityWidget = ({ showToast }: ProvideLiquidityWidgetProps) => {
 
         if (calculatedToken0Flow.gt(0) && calculatedToken1Flow.gt(0)) {
             setToken0Price(
-                calculatedToken0Flow.mul(100000).div(calculatedToken1Flow).toNumber() /
-                100000
+                parseFloat(calculatedToken0Flow.toString()) / parseFloat(calculatedToken1Flow.toString())
             );
         } else {
             setToken0Price(0);
