@@ -1,3 +1,5 @@
+import { IconContext } from "react-icons";
+import { CgArrowsExpandRight } from "react-icons/Cg";
 import Link from "next/link";
 import WidgetContainer from "../widgets/WidgetContainer";
 
@@ -8,26 +10,31 @@ interface TableRowProps {
     data: any[];
 }
 
-const TableRow = ({ columnProps, columnComponents, link, data }: TableRowProps) => {
+const TableRow = ({
+    columnProps,
+    columnComponents,
+    link,
+    data,
+}: TableRowProps) => {
     return (
         <Link href={link}>
-            <div className="flex p-4 rounded-xl dark:text-white border-[1px] border-gray-200 dark:border-gray-700 cursor-pointer hover:centered-shadow dark:hover:centered-shadow-md-dark transition-all duration-300">
-                {
-                    data.map((d, i) => {
-                        return (
-                            <div
-                                className={columnProps[i]}
-                                key={'row-' + i}
-                            >
-                                {columnComponents[i](d)}
-                            </div>
-                        )
-                    })
-                }
+            <div className="relative flex p-4 items-center rounded-xl dark:text-white border-[1px] border-gray-200 dark:border-gray-700 cursor-pointer hover:centered-shadow dark:hover:centered-shadow-md-dark transition-all duration-300">
+                {data.map((d, i) => {
+                    return (
+                        <div className={columnProps[i]} key={"row-" + i}>
+                            {columnComponents[i](d)}
+                        </div>
+                    );
+                })}
+                <div className="absolute right-4 hidden xs:ml-12 xs:flex">
+                    <IconContext.Provider value={{ color: "#64748b" }}>
+                        <CgArrowsExpandRight />
+                    </IconContext.Provider>
+                </div>
             </div>
         </Link>
-    )
-}
+    );
+};
 
 interface GenericTableProps {
     title: string;
@@ -39,62 +46,57 @@ interface GenericTableProps {
     isLoading: boolean;
 }
 
-const GenericTable = ({ title, labels, columnProps, columnComponents, rowLinks, data, isLoading }: GenericTableProps) => {
+const GenericTable = ({
+    title,
+    labels,
+    columnProps,
+    columnComponents,
+    rowLinks,
+    data,
+    isLoading,
+}: GenericTableProps) => {
     return (
-        <WidgetContainer
-            title={title}
-            isUnbounded={true}
-        >
+        <WidgetContainer title={title} isUnbounded={true}>
             <div className="flex px-4">
-                {
-                    labels.map((label, i) => {
+                {labels.map((label, i) => {
+                    return (
+                        <div className={columnProps[i]} key={label}>
+                            {label}
+                        </div>
+                    );
+                })}
+            </div>
+            {isLoading ? (
+                <div className="flex flex-col space-y-4">
+                    {[0, 1, 2].map((i) => {
                         return (
                             <div
-                                className={columnProps[i]}
-                                key={label}
+                                className="w-full p-4 text-transparent bg-gray-200 dark:bg-gray-800 rounded-2xl animate-pulse"
+                                key={"loading-" + i}
                             >
-                                {label}
+                                {"-"}
                             </div>
-                        )
-                    })
-                }
-            </div>
-            {
-                isLoading
-                    ?
-                    <div className="flex flex-col space-y-4">
-                        {
-                            [0, 1, 2].map((i) => {
-                                return (
-                                    <div
-                                        className='w-full p-4 text-transparent bg-gray-200 dark:bg-gray-800 rounded-2xl animate-pulse'
-                                        key={'loading-' + i}
-                                    >
-                                        {'-'}
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                    :
-                    <div className="flex flex-col space-y-4">
-                        {
-                            data && data.map((d, i) => {
-                                return (
-                                    <TableRow
-                                        columnProps={columnProps}
-                                        columnComponents={columnComponents}
-                                        link={rowLinks ? rowLinks[i] : ''}
-                                        data={d}
-                                        key={'column-' + i}
-                                    />
-                                )
-                            })
-                        }
-                    </div>
-            }
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className="flex flex-col space-y-4">
+                    {data &&
+                        data.map((d, i) => {
+                            return (
+                                <TableRow
+                                    columnProps={columnProps}
+                                    columnComponents={columnComponents}
+                                    link={rowLinks ? rowLinks[i] : ""}
+                                    data={d}
+                                    key={"column-" + i}
+                                />
+                            );
+                        })}
+                </div>
+            )}
         </WidgetContainer>
-    )
-}
+    );
+};
 
 export default GenericTable;
