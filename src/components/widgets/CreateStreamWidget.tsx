@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
@@ -18,9 +18,10 @@ import getToastErrorType from "../../utils/getToastErrorType";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
+    setKeyNum: Dispatch<SetStateAction<number>>;
 }
 
-const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) => {
     const store = useStore();
     const provider = useProvider();
     const { data: rainbowSigner } = useSigner();
@@ -106,6 +107,9 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
 
                 showToast(ToastType.Success);
                 setLoading(false);
+
+                // clear state after successful transaction
+                setKeyNum(k => k+1);
             }
         } catch (error) {
             //console.log("Error: ", error);

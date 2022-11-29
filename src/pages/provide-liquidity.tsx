@@ -9,8 +9,12 @@ interface ProvideLiquidityProps {
 }
 
 const ProvideLiquidity: NextPage<ProvideLiquidityProps> = ({ showToast }) => {
+
+    // used to easily reset component state
+    const [keyNum, setKeyNum] = useState(1);
+
     return (
-        <ProvideLiquidityWidget showToast={showToast} />
+        <ProvideLiquidityWidget showToast={showToast} key={'provideliquidity-' + keyNum} setKeyNum={setKeyNum} />
     );
 };
 

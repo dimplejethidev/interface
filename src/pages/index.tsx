@@ -11,8 +11,12 @@ interface SwapProps {
 }
 
 const Swap: NextPage<SwapProps> = ({ showToast }) => {
+
+    // used to easily reset component state
+    const [keyNum, setKeyNum] = useState(1);
+
     return (
-        <CreateStreamWidget showToast={showToast} />
+        <CreateStreamWidget showToast={showToast} key={'swap-' + keyNum} setKeyNum={setKeyNum} />
     );
 };
 

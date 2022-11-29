@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 import WidgetContainer from "./WidgetContainer";
@@ -19,9 +19,10 @@ const AQUEDUCT_TOKEN_ABI = AqueductTokenABI.abi;
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
+    setKeyNum: Dispatch<SetStateAction<number>>;
 }
 
-const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
+const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) => {
     const store = useStore();
     const provider = useProvider();
     const { data: rainbowSigner } = useSigner();
@@ -82,6 +83,9 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             console.log("Upgraded tokens: ", upgradedTransaction);
             showToast(ToastType.Success);
             setLoading(false);
+
+            // clear state after successful transaction
+            setKeyNum(k => k+1);
         } catch (error) {
             //console.log("Upgrade error: ", error);
             showToast(getToastErrorType(error));
@@ -113,6 +117,9 @@ const CreateStreamWidget = ({ showToast }: CreateStreamWidgetProps) => {
             await downgradedTransaction.wait();
             showToast(ToastType.Success);
             setLoading(false);
+
+            // clear state after successful transaction
+            setKeyNum(k => k+1);
         } catch (error) {
             console.log("Downgrade error: ", error);
             showToast(ToastType.Error);
