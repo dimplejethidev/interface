@@ -1,5 +1,5 @@
 import { IconContext } from "react-icons";
-import { CgArrowsExpandRight } from "react-icons/Cg";
+import { CgArrowsExpandRight } from "react-icons/cg";
 import Link from "next/link";
 import WidgetContainer from "../widgets/WidgetContainer";
 
