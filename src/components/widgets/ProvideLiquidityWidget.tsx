@@ -44,6 +44,7 @@ const ProvideLiquidityWidget = ({ showToast, setKeyNum }: ProvideLiquidityWidget
     const [priceMultiple1, setPriceMultiple1] = useState<BigNumber>(BigNumber.from(0));
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
+    const [priceTimeout, setPriceTimeout] = useState<NodeJS.Timeout|undefined>(undefined);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
@@ -132,7 +133,7 @@ const ProvideLiquidityWidget = ({ showToast, setKeyNum }: ProvideLiquidityWidget
                     showToast(ToastType.Success);
 
                     // clear state after successful transaction
-                    setKeyNum(k => k+1);
+                    setKeyNum(k => k + 1);
                 }
 
                 setLoading(false);
@@ -147,66 +148,77 @@ const ProvideLiquidityWidget = ({ showToast, setKeyNum }: ProvideLiquidityWidget
     const refreshPrice = async () => {
         setRefreshingPrice(true);
 
-        // calculate new flows
-        var calculatedToken0Flow = BigNumber.from(token0Flow.current);
-        if (swapFlowRate0 != "") {
-            calculatedToken0Flow = token0Flow.current.add(swapFlowRate0).sub(userToken0Flow.current);
-        }
-        var calculatedToken1Flow = BigNumber.from(token1Flow.current);
-        if (swapFlowRate1 != "") {
-            calculatedToken1Flow = token1Flow.current.add(swapFlowRate1).sub(userToken1Flow.current);
+        // clear any existing timeouts
+        if (priceTimeout) {
+            clearTimeout(priceTimeout);
+            setPriceTimeout(undefined);
         }
 
-        // calculate price multiples
-        if (calculatedToken0Flow.gt(0)) {
-            setPriceMultiple0(
-                calculatedToken1Flow
-                    .mul(BigNumber.from(2).pow(128))
-                    .div(calculatedToken0Flow)
-            );
-        } else {
-            setPriceMultiple0(BigNumber.from(0));
-        }
+        // set a timeout
+        const timeout: NodeJS.Timeout = setTimeout(async () => {
+            // calculate new flows
+            var calculatedToken0Flow = BigNumber.from(token0Flow.current);
+            if (swapFlowRate0 != "") {
+                calculatedToken0Flow = token0Flow.current.add(swapFlowRate0).sub(userToken0Flow.current);
+            }
+            var calculatedToken1Flow = BigNumber.from(token1Flow.current);
+            if (swapFlowRate1 != "") {
+                calculatedToken1Flow = token1Flow.current.add(swapFlowRate1).sub(userToken1Flow.current);
+            }
 
-        if (calculatedToken1Flow.gt(0)) {
-            setPriceMultiple1(
-                calculatedToken0Flow
-                    .mul(BigNumber.from(2).pow(128))
-                    .div(calculatedToken1Flow)
-            );
-        } else {
-            setPriceMultiple1(BigNumber.from(0));
-        }
+            // calculate price multiples
+            if (calculatedToken0Flow.gt(0)) {
+                setPriceMultiple0(
+                    calculatedToken1Flow
+                        .mul(BigNumber.from(2).pow(128))
+                        .div(calculatedToken0Flow)
+                );
+            } else {
+                setPriceMultiple0(BigNumber.from(0));
+            }
 
-        if (calculatedToken0Flow.gt(0) && calculatedToken1Flow.gt(0)) {
-            setToken0Price(
-                parseFloat(calculatedToken0Flow.toString()) / parseFloat(calculatedToken1Flow.toString())
-            );
-        } else {
-            setToken0Price(0);
-        }
+            if (calculatedToken1Flow.gt(0)) {
+                setPriceMultiple1(
+                    calculatedToken0Flow
+                        .mul(BigNumber.from(2).pow(128))
+                        .div(calculatedToken1Flow)
+                );
+            } else {
+                setPriceMultiple1(BigNumber.from(0));
+            }
 
-        // calculate deposits
-        if (swapFlowRate0 != "") {
-            // assume 1 hr length for deposit // TODO: mainnet is 4 hrs, detect network and adjust deposit period
-            const oneHourStream = BigNumber.from(swapFlowRate0).mul(3600);
-            setDeposit0(oneHourStream);
+            if (calculatedToken0Flow.gt(0) && calculatedToken1Flow.gt(0)) {
+                setToken0Price(
+                    parseFloat(calculatedToken0Flow.toString()) / parseFloat(calculatedToken1Flow.toString())
+                );
+            } else {
+                setToken0Price(0);
+            }
 
-            // had hard time determining min balance, default to 2 hours of streaming for now // TODO: detect network and adjust
-            setMinBalance0(oneHourStream.mul(2));
-        }
+            // calculate deposits
+            if (swapFlowRate0 != "") {
+                // assume 1 hr length for deposit // TODO: mainnet is 4 hrs, detect network and adjust deposit period
+                const oneHourStream = BigNumber.from(swapFlowRate0).mul(3600);
+                setDeposit0(oneHourStream);
 
-        if (swapFlowRate1 != "") {
-            const oneHourStream = BigNumber.from(swapFlowRate1).mul(3600);
-            setDeposit1(oneHourStream);
-            setMinBalance1(oneHourStream.mul(2));
-        }
+                // had hard time determining min balance, default to 2 hours of streaming for now // TODO: detect network and adjust
+                setMinBalance0(oneHourStream.mul(2));
+            }
 
-        // reset deposit agreement
-        setAcceptedBuffer(false);
+            if (swapFlowRate1 != "") {
+                const oneHourStream = BigNumber.from(swapFlowRate1).mul(3600);
+                setDeposit1(oneHourStream);
+                setMinBalance1(oneHourStream.mul(2));
+            }
 
-        await new Promise((res) => setTimeout(res, 900));
-        setRefreshingPrice(false);
+            // reset deposit agreement
+            setAcceptedBuffer(false);
+
+            await new Promise((res) => setTimeout(res, 900));
+            setRefreshingPrice(false);
+        }, 500)
+
+        setPriceTimeout(timeout);
     };
 
     // if price multiple changes, calculate new expected outgoing flowrate
@@ -371,8 +383,6 @@ const ProvideLiquidityWidget = ({ showToast, setKeyNum }: ProvideLiquidityWidget
                 <PricingField
                     refreshingPrice={refreshingPrice}
                     token0Price={token0Price}
-                    priceMultiple={priceMultiple0}
-                    swapFlowRate={swapFlowRate0}
                     poolExists={poolExists}
                 />
                 {

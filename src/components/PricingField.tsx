@@ -8,17 +8,13 @@ let minValue = Math.pow(10, -1 * maxDecimals);
 interface PricingFieldProps {
     refreshingPrice: boolean;
     token0Price: number;
-    priceMultiple?: BigNumber;
-    swapFlowRate?: string;
     poolExists: boolean;
 }
 
 const PricingField = ({
     refreshingPrice,
     token0Price,
-    priceMultiple,
-    swapFlowRate,
-    poolExists,
+    poolExists
 }: PricingFieldProps) => {
     const store = useStore();
 
@@ -42,11 +38,21 @@ const PricingField = ({
                 />
             </div>
             {poolExists ? (
-                <div className="space-y-1">
+                <div className="flex space-x-1 items-center">
                     <p>
                         1 {store.inboundToken.label} ={" "}
-                        {token0Price >= minValue ? token0Price.toFixed(maxDecimals) : ('<'+minValue.toFixed(maxDecimals))}{" "}
-                        {store.outboundToken.label}
+                    </p>
+                    {
+                        refreshingPrice
+                        ?
+                        <div className="bg-gray-200 dark:bg-gray-800 w-24 h-4 rounded-full animate-pulse" />
+                        :
+                        <p>
+                            {token0Price >= minValue ? token0Price.toFixed(maxDecimals) : ('<' + minValue.toFixed(maxDecimals))}
+                        </p>
+                    }
+                    <p>
+                        {" "}{store.outboundToken.label}
                     </p>
                 </div>
             ) : (

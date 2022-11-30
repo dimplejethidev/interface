@@ -41,6 +41,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
     const isReversePricing = useRef(false);
+    const [priceTimeout, setPriceTimeout] = useState<NodeJS.Timeout|undefined>(undefined);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
@@ -109,7 +110,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                 setLoading(false);
 
                 // clear state after successful transaction
-                setKeyNum(k => k+1);
+                setKeyNum(k => k + 1);
             }
         } catch (error) {
             //console.log("Error: ", error);
@@ -121,47 +122,59 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     const refreshPrice = async () => {
         setRefreshingPrice(true);
 
-        // calculate new flows
-        var calculatedToken0Flow = BigNumber.from(token0Flow.current);
-        if (swapFlowRate != "") {
-            calculatedToken0Flow = token0Flow.current.add(swapFlowRate).sub(userToken0Flow.current);
+        // clear any existing timeouts
+        if (priceTimeout) {
+            clearTimeout(priceTimeout);
+            setPriceTimeout(undefined);
         }
 
-        // calculate token 0 price
-        if (token1Flow.current.gt(0)) {
-            setToken0Price(
-                parseFloat(calculatedToken0Flow.toString()) / parseFloat(token1Flow.current.toString())
-            )
-        } else {
-            setToken0Price(0);
-        }
+        // set a timeout
+        const timeout: NodeJS.Timeout = setTimeout(async () => {
+            
+            // calculate new flows
+            var calculatedToken0Flow = BigNumber.from(token0Flow.current);
+            if (swapFlowRate != "") {
+                calculatedToken0Flow = token0Flow.current.add(swapFlowRate).sub(userToken0Flow.current);
+            }
 
-        // calculate price multiple
-        if (calculatedToken0Flow.gt(0)) {
-            setPriceMultiple(
-                token1Flow.current
-                    .mul(BigNumber.from(2).pow(128))
-                    .div(calculatedToken0Flow)
-            );
-        } else {
-            setPriceMultiple(BigNumber.from(0));
-        }
+            // calculate token 0 price
+            if (token1Flow.current.gt(0)) {
+                setToken0Price(
+                    parseFloat(calculatedToken0Flow.toString()) / parseFloat(token1Flow.current.toString())
+                )
+            } else {
+                setToken0Price(0);
+            }
 
-        // calculate deposit
-        if (swapFlowRate != "") {
-            // assume 1 hr length for deposit // TODO: mainnet is 4 hrs, detect network and adjust deposit period
-            const oneHourStream = BigNumber.from(swapFlowRate).mul(3600);
-            setDeposit(oneHourStream);
+            // calculate price multiple
+            if (calculatedToken0Flow.gt(0)) {
+                setPriceMultiple(
+                    token1Flow.current
+                        .mul(BigNumber.from(2).pow(128))
+                        .div(calculatedToken0Flow)
+                );
+            } else {
+                setPriceMultiple(BigNumber.from(0));
+            }
 
-            // had hard time determining min balance, default to 2 hours of streaming for now // TODO: detect network and adjust
-            setMinBalance(oneHourStream.mul(2));
-        }
+            // calculate deposit
+            if (swapFlowRate != "") {
+                // assume 1 hr length for deposit // TODO: mainnet is 4 hrs, detect network and adjust deposit period
+                const oneHourStream = BigNumber.from(swapFlowRate).mul(3600);
+                setDeposit(oneHourStream);
 
-        // reset deposit agreement
-        setAcceptedBuffer(false);
+                // had hard time determining min balance, default to 2 hours of streaming for now // TODO: detect network and adjust
+                setMinBalance(oneHourStream.mul(2));
+            }
 
-        await new Promise((res) => setTimeout(res, 900));
-        setRefreshingPrice(false);
+            // reset deposit agreement
+            setAcceptedBuffer(false);
+
+            await new Promise((res) => setTimeout(res, 900));
+            setRefreshingPrice(false);
+        }, 500)
+
+        setPriceTimeout(timeout);
     };
 
     // if price multiple changes, calculate new expected outgoing flowrate
@@ -193,8 +206,6 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     // update vars when tokens change
     useEffect(() => {
         const refresh = async () => {
-            setRefreshingPrice(true);
-
             const token0Address = store.outboundToken.address;
             const token1Address = store.inboundToken.address;
 
@@ -245,7 +256,6 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                 }
 
                 await refreshPrice();
-                setRefreshingPrice(false);
             } catch {
                 setRefreshingPrice(false);
                 setPoolExists(false);
@@ -258,13 +268,11 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     // refresh spot pricing upon user input
     useEffect(() => {
         const refresh = async () => {
-            setRefreshingPrice(true);
             await refreshPrice();
 
             if (isReversePricing.current == true) {
                 isReversePricing.current = false;
             }
-            setRefreshingPrice(false);
         };
 
         refresh();
@@ -348,8 +356,6 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                 <PricingField
                     refreshingPrice={refreshingPrice}
                     token0Price={token0Price}
-                    priceMultiple={priceMultiple}
-                    swapFlowRate={swapFlowRate}
                     poolExists={poolExists}
                 />
                 {
