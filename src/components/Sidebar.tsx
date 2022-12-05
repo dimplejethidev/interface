@@ -1,16 +1,15 @@
+/* eslint-disable react/require-default-props */
 import { TbArrowsRight, TbArrowsRightLeft, TbCirclePlus } from "react-icons/tb";
-import { MdAttachMoney } from "react-icons/md";
+import { MdLightbulbOutline } from "react-icons/md";
 import { AiOutlineLineChart } from "react-icons/ai";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import logo from "./../../public/aq-logo-11-22.png";
-import { useStore } from "../store";
+import { IoClose, IoMenu } from "react-icons/io5";
+import { FiMoon } from "react-icons/fi";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import logo from "../../public/aq-logo-11-22.png";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
-import { IoClose, IoMenu } from 'react-icons/io5';
-import { FiMoon } from 'react-icons/fi'
-import { MdLightbulbOutline } from 'react-icons/md'
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDarkMode } from "../utils/DarkModeProvider";
 
 interface SideBarTabProps {
@@ -30,7 +29,7 @@ const navItems: { icon: any; label: string; page: string }[] = [
     {
         icon: <TbArrowsRightLeft size={18} />,
         label: "Swap",
-        page: "/"
+        page: "/",
     },
     {
         icon: <TbArrowsRight size={18} />,
@@ -40,20 +39,28 @@ const navItems: { icon: any; label: string; page: string }[] = [
     {
         icon: <TbCirclePlus size={18} />,
         label: "Wrap / Unwrap",
-        page: "/wrap"
-    }
+        page: "/wrap",
+    },
 ];
 
-const SideBarTab = ({ icon, label, page, setSidebarIsShown, onClick }: SideBarTabProps) => {
+const SideBarTab = ({
+    icon,
+    label,
+    page,
+    setSidebarIsShown,
+    onClick,
+}: SideBarTabProps) => {
     const router = useRouter();
 
     return (
         <button
+            type="button"
             className={`flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl transition-all ease-in-out duration-300
-                        ${router.asPath === page
-                    ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
-                } `}
+                        ${
+                            router.asPath === page
+                                ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
+                                : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
+                        } `}
             onClick={async () => {
                 if (page) {
                     router.push(page);
@@ -62,24 +69,27 @@ const SideBarTab = ({ icon, label, page, setSidebarIsShown, onClick }: SideBarTa
                 }
 
                 if (setSidebarIsShown) {
-                    await new Promise(resolve => setTimeout(resolve, 100));
+                    // eslint-disable-next-line no-promise-executor-return
+                    await new Promise((resolve) => setTimeout(resolve, 100));
                     setSidebarIsShown(false);
                 }
             }}
         >
             <div
-                className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page
-                    ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
-                    : "text-gray-400 dark:bg-gray-800/60 dark:text-white"
-                    }`}
+                className={`bg-gray-100 p-2 rounded-lg ${
+                    router.asPath === page
+                        ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
+                        : "text-gray-400 dark:bg-gray-800/60 dark:text-white"
+                }`}
             >
                 {icon}
             </div>
             <p
-                className={`text-sm font-medium ${router.asPath === page
-                    ? "bg-transparent text-aqueductBlue"
-                    : "text-gray-600 dark:text-white"
-                    }`}
+                className={`text-sm font-medium ${
+                    router.asPath === page
+                        ? "bg-transparent text-aqueductBlue"
+                        : "text-gray-600 dark:text-white"
+                }`}
             >
                 {label}
             </p>
@@ -87,24 +97,26 @@ const SideBarTab = ({ icon, label, page, setSidebarIsShown, onClick }: SideBarTa
     );
 };
 
-const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispatch<SetStateAction<boolean>> }) => {
-    const store = useStore();
+const Sidebar = ({
+    isShown,
+    setIsShown,
+}: {
+    isShown: boolean;
+    setIsShown: Dispatch<SetStateAction<boolean>>;
+}) => {
     const darkContext = useDarkMode();
 
     useEffect(() => {
-        if (localStorage.getItem('color-theme') == 'light') {
-            document.documentElement.classList.add('dark');
+        if (localStorage.getItem("color-theme") === "light") {
+            document.documentElement.classList.add("dark");
         } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove("dark");
         }
-    })
+        // TODO: Assess missing dependency array values
+    }, []);
 
     return (
-        <header
-            className={
-                "flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto"
-            }
-        >
+        <header className="flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
             <Head>
                 <title>Aqueduct</title>
                 <meta
@@ -117,7 +129,6 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                 <Image
                     src={logo}
                     alt="Aqueduct logo"
-                    layout="fixed"
                     width="45px"
                     height="45px"
                     className="rounded-xl opacity-95"
@@ -129,31 +140,21 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                 </div>
                 <div className="flex grow" />
                 <button
+                    type="button"
                     className="md:hidden"
                     onClick={() => {
                         setIsShown(!isShown);
                     }}
                 >
-                    {
-                        isShown
-                            ?
-                            <IoClose size={28} />
-                            :
-                            <IoMenu size={28} />
-                    }
+                    {isShown ? <IoClose size={28} /> : <IoMenu size={28} />}
                 </button>
             </div>
             <div
-                className={
-                    'grow space-y-8 transition-all duration-500 '
-                    + (
-                        isShown
-                            ?
-                            'flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50'
-                            :
-                            'hidden md:flex md:flex-col'
-                    )
-                }
+                className={`grow space-y-8 transition-all duration-500 ${
+                    isShown
+                        ? "flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50"
+                        : "hidden md:flex md:flex-col"
+                }`}
             >
                 <CustomWalletConnectButton />
                 <ul className="space-y-3 pb-8">
@@ -167,39 +168,39 @@ const Sidebar = ({ isShown, setIsShown }: { isShown: boolean, setIsShown: Dispat
                         />
                     ))}
                 </ul>
-                <div className={"flex grow"} ></div>
-                {
-                    <div>
-                        <div className='flex grow' />
-                        <div className="flex dark:hidden">
-                            <SideBarTab
-                                icon={<FiMoon size={18} />}
-                                label={'Dark mode'}
-                                key={'Dark mode'}
-                                onClick={() => {
-                                    document.documentElement.classList.add('dark');
-                                    localStorage.setItem('color-theme', 'light');
-                                    darkContext?.setIsDark(true);
-                                }}
-                            />
-                        </div>
-                        <div className="hidden dark:flex">
-                            <SideBarTab
-                                icon={<MdLightbulbOutline size={18} />}
-                                label={'Light mode'}
-                                key={'Light mode'}
-                                onClick={() => {
-                                    document.documentElement.classList.remove('dark');
-                                    localStorage.setItem('color-theme', 'dark');
-                                    darkContext?.setIsDark(false);
-                                }}
-                            />
-                        </div>
+                <div className="flex grow" />
+                <div>
+                    <div className="flex grow" />
+                    <div className="flex dark:hidden">
+                        <SideBarTab
+                            icon={<FiMoon size={18} />}
+                            label="Dark mode"
+                            key="Dark mode"
+                            onClick={() => {
+                                document.documentElement.classList.add("dark");
+                                localStorage.setItem("color-theme", "light");
+                                darkContext?.setIsDark(true);
+                            }}
+                        />
                     </div>
-                }
+                    <div className="hidden dark:flex">
+                        <SideBarTab
+                            icon={<MdLightbulbOutline size={18} />}
+                            label="Light mode"
+                            key="Light mode"
+                            onClick={() => {
+                                document.documentElement.classList.remove(
+                                    "dark"
+                                );
+                                localStorage.setItem("color-theme", "dark");
+                                darkContext?.setIsDark(false);
+                            }}
+                        />
+                    </div>
+                </div>
             </div>
         </header>
     );
-};//hidden md:flex
+};
 
 export default Sidebar;

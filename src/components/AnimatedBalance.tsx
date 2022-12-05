@@ -8,13 +8,13 @@ const increasingNumbers = [
 ];
 const decreasingNumbers = increasingNumbers.slice().reverse();
 
-function AnimatedDigit({
+const AnimatedDigit = ({
     digit,
     isIncreasing,
 }: {
     digit: number;
     isIncreasing: boolean;
-}) {
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const [offset, setOffset] = useState(0);
     const [previousDigit, setPreviousDigit] = useState(digit);
@@ -26,7 +26,7 @@ function AnimatedDigit({
     useEffect(() => {
         if (ref.current) {
             // update tape position
-            var updatedTapePosition = tapePosition;
+            let updatedTapePosition = tapePosition;
             if (
                 (isIncreasing && previousDigit > digit) ||
                 (!isIncreasing && previousDigit < digit)
@@ -48,18 +48,19 @@ function AnimatedDigit({
                 setOffset(wrapperPos - digitPos);
             }
             setPreviousDigit(digit);
-            const wrapperPos2 = ref.current.getBoundingClientRect().y;
-            const digitPos2 = ref.current.children
-                .item(0)
-                ?.getBoundingClientRect().y;
+            // TODO: can these two variables be deleted?
+            // const wrapperPos2 = ref.current.getBoundingClientRect().y;
+            // const digitPos2 = ref.current.children
+            //     .item(0)
+            //     ?.getBoundingClientRect().y;
 
             if (currentTimeout) {
-                //clearTimeout(currentTimeout);
+                // TODO: is this important?
+                // clearTimeout(currentTimeout);
             }
             if (updatedTapePosition > tapeLength) {
                 setCurrentTimeout(
                     setTimeout(() => {
-                        console.log("UPDATING");
                         setPauseAnimation(true);
                         setTapePosition(0);
                         setOffset(0);
@@ -67,6 +68,8 @@ function AnimatedDigit({
                 );
             }
         }
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [digit]);
 
     return (
@@ -80,35 +83,33 @@ function AnimatedDigit({
                 !pauseAnimation ? "transition-all ease-in-out duration-300" : ""
             }
         >
-            {(isIncreasing ? increasingNumbers : decreasingNumbers).map((d) => {
-                return <div key={d} >{d}</div>;
-            })}
+            {(isIncreasing ? increasingNumbers : decreasingNumbers).map((d) => (
+                <div key={d}>{d}</div>
+            ))}
         </div>
     );
-}
+};
 
 interface AnimatedBalanceProps {
     value: string;
     isIncreasing: boolean;
 }
 
-const AnimatedBalance = ({ value, isIncreasing }: AnimatedBalanceProps) => {
-    return (
-        <div className="flex space-x-2 text-4xl h-10 lg:text-5xl lg:h-12 xl:text-6xl xl:h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
-            {value.split("").map((digit) => {
-                if (digit == ".") {
-                    return <p>{digit}</p>;
-                } else {
-                    return (
-                        <AnimatedDigit
-                            digit={parseInt(digit)}
-                            isIncreasing={isIncreasing}
-                        />
-                    );
-                }
-            })}
-        </div>
-    );
-};
+const AnimatedBalance = ({ value, isIncreasing }: AnimatedBalanceProps) => (
+    <div className="flex space-x-2 text-4xl h-10 lg:text-5xl lg:h-12 xl:text-6xl xl:h-16 overflow-hidden monospace-font text-gray-7000 font-bold">
+        {value.split("").map((digit) => {
+            if (digit === ".") {
+                return <p>{digit}</p>;
+            }
+            return (
+                <AnimatedDigit
+                    // eslint-disable-next-line radix
+                    digit={parseInt(digit)}
+                    isIncreasing={isIncreasing}
+                />
+            );
+        })}
+    </div>
+);
 
 export default AnimatedBalance;

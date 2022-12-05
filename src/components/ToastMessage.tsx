@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { IoClose } from 'react-icons/io5';
-import IToast from "./../types/Toast";
+import { IoClose } from "react-icons/io5";
+import IToast from "../types/Toast";
 
 interface ToastMessageProps {
     toastList: IToast[];
@@ -28,16 +28,16 @@ const ToastMessage = ({ toastList, setToastList }: ToastMessageProps) => {
         };
     }, [toastList, deleteToast]);
 
-    // TODO: add styles to toast message
     return (
         <div className="fixed z-10 bottom-8 right-4 animate-toast-in-right">
-            {toastList.map((toast, index) => (
+            {toastList.map((toast) => (
                 <div
-                    key={index}
+                    key={toast.id}
                     className="h-20 w-88 p-4 mb-4 rounded-2xl text-white shadow-md opacity-90 hover:shadow-none hover:opacity-100 transition ease delay-300 animate-toast-in-right"
                     style={{ backgroundColor: toast.backgroundColor }}
                 >
                     <button
+                        type="button"
                         className="float-right bg-none border-none text-white opacity-80 cursor-pointer"
                         onClick={() => deleteToast(toast.id)}
                     >

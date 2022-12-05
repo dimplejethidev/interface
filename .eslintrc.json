@@ -2,18 +2,21 @@
     "env": {
         "browser": true,
         "es2021": true
+        // "node": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
+        // "plugin:@typescript-eslint/recommended",
 
         "airbnb",
         "airbnb/hooks",
         "airbnb-typescript",
+        // "plugin:react/jsx-runtime",
         "plugin:@next/next/recommended",
         "prettier"
     ],
-    "overrides": [],
+    // "parser": "@babel/eslint-parser",
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -25,6 +28,22 @@
     },
     "plugins": ["react", "@typescript-eslint"],
     "rules": {
-        "react/react-in-jsx-scope": "off"
-    }
+        // Next.js does this for us so no need to add the import
+        "react/react-in-jsx-scope": "off",
+        // enforce consistent function defintion
+        "react/function-component-definition": [
+            "error",
+            {
+                "namedComponents": "arrow-function",
+                "unnamedComponents": "arrow-function"
+            }
+        ]
+    },
+    "overrides": [
+        {
+            // We can use "NextPage<Props>" with Next pages and this rule does not pick that up
+            "files": ["./src/pages/**"],
+            "rules": { "react/prop-types": "off" }
+        }
+    ]
 }

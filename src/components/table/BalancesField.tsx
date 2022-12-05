@@ -1,11 +1,10 @@
-import { BigNumber, ethers } from "ethers"
-import { useEffect, useState } from "react"
-import { useAccount, useProvider } from "wagmi"
+import { BigNumber, ethers } from "ethers";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useAccount, useProvider } from "wagmi";
 import { TokenOption } from "../../types/TokenOption";
-import AnimatedBalance from "../AnimatedBalance";
 
 const ANIMATION_MINIMUM_STEP_TIME = 100;
-const REFRESH_STEP_TIME = 5000;
 const REFRESH_INTERVAL = 300; // 300 * 100 = 30000 ms = 30 s
 
 interface BalancesFieldProps {
@@ -63,7 +62,7 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
                         .div(1000)
                         .add(
                             (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) /
-                            1000
+                                1000
                         )
                         .toString()
                 )
@@ -87,7 +86,7 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
                         .div(1000)
                         .add(
                             (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) /
-                            1000
+                                1000
                         )
                         .toString()
                 )
@@ -116,32 +115,32 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
         return () => {
             clearTimeout(timer);
         };
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [time]);
 
     useEffect(() => {
         refresh();
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address]);
 
     return (
         <div className="flex items-center space-x-2 monospace-font text-sm">
             <p className="tracking-widest font-semibold">
-                {
-                    parseFloat(
-                        ethers.utils.formatEther(currentBalance0)
-                    ).toLocaleString(undefined, {minimumFractionDigits: 6})
-                }
+                {parseFloat(
+                    ethers.utils.formatEther(currentBalance0)
+                ).toLocaleString(undefined, { minimumFractionDigits: 6 })}
             </p>
-            <img src={token0.logo} className='h-5 pr-4' />
+            <Image src={token0.logo} className="pr-4" width="20" height="20" />
             <p className="tracking-widest font-semibold">
-                {
-                    parseFloat(
-                        ethers.utils.formatEther(currentBalance1)
-                    ).toLocaleString(undefined, {minimumFractionDigits: 6})
-                }
+                {parseFloat(
+                    ethers.utils.formatEther(currentBalance1)
+                ).toLocaleString(undefined, { minimumFractionDigits: 6 })}
             </p>
-            <img src={token1.logo} className='h-5' />
+            <Image src={token1.logo} width="20" height="20" />
         </div>
-    )
-}
+    );
+};
 
 export default BalancesField;

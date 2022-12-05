@@ -1,9 +1,9 @@
+import Image from "next/image";
 import Select, {
     components,
     ControlProps,
     OptionProps,
     StylesConfig,
-    ActionMeta,
 } from "react-select";
 import { TokenOption } from "../types/TokenOption";
 import tokens from "../utils/tokens";
@@ -15,7 +15,7 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         paddingLeft: 8,
         paddingRight: 8,
         borderRadius: 16,
-        marginTop: 10
+        marginTop: 10,
     }),
     menuList: (provided) => ({
         ...provided,
@@ -32,8 +32,14 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         marginBottom: 8,
         display: "flex",
         alignItems: "center",
-        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
-        color: '#00000099'
+        // TODO: do not use nested ternary statements
+        // eslint-disable-next-line no-nested-ternary
+        backgroundColor: state.isSelected
+            ? "#0460CE20"
+            : state.isFocused
+            ? "#00000008"
+            : "transparent",
+        color: "#00000099",
     }),
     control: (base, state) => ({
         ...base,
@@ -43,15 +49,15 @@ const customStyles: StylesConfig<TokenOption, IsMulti> = {
         fontWeight: 600,
         borderWidth: 1,
         borderColor: "rgb(229 231 235)",
-        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
-        '&:hover': {
-            border: '1px solid #0460CE',
+        boxShadow: state.isFocused ? "0 0 0 1px #0460CE" : "none",
+        "&:hover": {
+            border: "1px solid #0460CE",
         },
     }),
     singleValue: (provided) => ({
         ...provided,
-        color: "rgb(100 116 139)"
-    })
+        color: "rgb(100 116 139)",
+    }),
 };
 const customStylesDark: StylesConfig<TokenOption, IsMulti> = {
     menu: (provided) => ({
@@ -59,7 +65,7 @@ const customStylesDark: StylesConfig<TokenOption, IsMulti> = {
         paddingLeft: 8,
         paddingRight: 8,
         borderRadius: 16,
-        marginTop: 10
+        marginTop: 10,
     }),
     menuList: (provided) => ({
         ...provided,
@@ -76,8 +82,14 @@ const customStylesDark: StylesConfig<TokenOption, IsMulti> = {
         marginBottom: 8,
         display: "flex",
         alignItems: "center",
-        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
-        color: '#00000099'
+        // TODO: do not use nested ternary statements
+        // eslint-disable-next-line no-nested-ternary
+        backgroundColor: state.isSelected
+            ? "#0460CE20"
+            : state.isFocused
+            ? "#00000008"
+            : "transparent",
+        color: "#00000099",
     }),
     control: (base, state) => ({
         ...base,
@@ -87,37 +99,37 @@ const customStylesDark: StylesConfig<TokenOption, IsMulti> = {
         fontWeight: 600,
         borderWidth: 1,
         borderColor: "rgb(82 82 91)",
-        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
-        '&:hover': {
-            border: '1px solid #0460CE',
+        boxShadow: state.isFocused ? "0 0 0 1px #0460CE" : "none",
+        "&:hover": {
+            border: "1px solid #0460CE",
         },
-        backgroundColor: 'rgb(24 24 27)'
+        backgroundColor: "rgb(24 24 27)",
     }),
     singleValue: (provided) => ({
         ...provided,
-        color: "rgb(100 116 139)"
-    })
+        color: "rgb(100 116 139)",
+    }),
 };
 
 const Control = ({ children, ...props }: ControlProps<TokenOption, false>) => {
     // @ts-ignore - react-select docs suggested ts-ignore here
     const { logo } = props.selectProps;
     return (
+        // eslint-disable-next-line react/jsx-props-no-spreading
         <components.Control {...props}>
-            <img src={logo} height="20px" width="20px" />
+            <Image src={logo} height="20px" width="20px" />
             {children}
         </components.Control>
     );
 };
 
-const Option = ({ children, ...props }: OptionProps<TokenOption, false>) => {
-    return (
-        <components.Option {...props}>
-            <img src={props.data.logo} className="w-5 h-5 mr-3" />
-            {children}
-        </components.Option>
-    );
-};
+const Option = ({ children, ...props }: OptionProps<TokenOption, false>) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <components.Option {...props}>
+        <Image src={props.data.logo} className="mr-3" width="20" height="20" />
+        {children}
+    </components.Option>
+);
 
 interface TokenDropdownProps {
     selectTokenOption: TokenOption;
@@ -125,10 +137,7 @@ interface TokenDropdownProps {
 }
 
 const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
-    const onChange = (
-        option: TokenOption | null,
-        actionMeta: ActionMeta<TokenOption>
-    ) => {
+    const onChange = (option: TokenOption | null) => {
         if (option) {
             setToken(option);
         }

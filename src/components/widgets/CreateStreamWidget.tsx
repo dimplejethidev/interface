@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
+import { IoArrowDown } from "react-icons/io5";
 import WidgetContainer from "./WidgetContainer";
 import ToastType from "../../types/ToastType";
 import getPoolAddress from "../../helpers/getPool";
@@ -10,7 +11,6 @@ import PricingField from "../PricingField";
 import flowrates from "../../utils/flowrates";
 import TransactionButton from "../TransactionButton";
 import RealTimeBalance from "../RealTimeBalance";
-import { IoArrowDown } from "react-icons/io5";
 import { TokenOption } from "../../types/TokenOption";
 import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
@@ -21,7 +21,10 @@ interface CreateStreamWidgetProps {
     setKeyNum: Dispatch<SetStateAction<number>>;
 }
 
-const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) => {
+const CreateStreamWidget = ({
+    showToast,
+    setKeyNum,
+}: CreateStreamWidgetProps) => {
     const store = useStore();
     const provider = useProvider();
     const { data: rainbowSigner } = useSigner();
@@ -30,18 +33,27 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     const { address } = useAccount();
 
     // user input
-    const [displayedSwapFlowRate, setDisplayedSwapFlowRate] = useState<string>('');
-    const [displayedExpectedFlowRate, setDisplayedExpectedFlowRate] = useState<string>('');
+    const [displayedSwapFlowRate, setDisplayedSwapFlowRate] =
+        useState<string>("");
+    const [displayedExpectedFlowRate, setDisplayedExpectedFlowRate] =
+        useState<string>("");
     const [swapFlowRate, setSwapFlowRate] = useState("");
     const [expectedFlowRate, setExpectedFlowRate] = useState("");
     const [loading, setLoading] = useState(false);
     const [token0Price, setToken0Price] = useState(0);
-    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(BigNumber.from(0));
-    const [reversePriceMultiple, setReversePriceMultiple] = useState<BigNumber>(BigNumber.from(0));
+    const [priceMultiple, setPriceMultiple] = useState<BigNumber>(
+        BigNumber.from(0)
+    );
+    // TODO: assess this variable
+    // const [reversePriceMultiple, setReversePriceMultiple] = useState<BigNumber>(
+    //     BigNumber.from(0)
+    // );
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
     const isReversePricing = useRef(false);
-    const [priceTimeout, setPriceTimeout] = useState<NodeJS.Timeout|undefined>(undefined);
+    const [priceTimeout, setPriceTimeout] = useState<
+        NodeJS.Timeout | undefined
+    >(undefined);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
@@ -55,14 +67,18 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
     const [acceptedBuffer, setAcceptedBuffer] = useState(false);
 
     // user vars
-    const [outboundTokenBalance, setOutboundTokenBalance] = useState(BigNumber.from(0));
-    const [inboundTokenBalance, setInboundTokenBalance] = useState(BigNumber.from(0));
+    const [outboundTokenBalance, setOutboundTokenBalance] = useState(
+        BigNumber.from(0)
+    );
+    const [inboundTokenBalance, setInboundTokenBalance] = useState(
+        BigNumber.from(0)
+    );
 
     const swap = async () => {
         try {
             setLoading(true);
 
-            if (signer == null || signer == undefined) {
+            if (signer === null || signer === undefined) {
                 showToast(ToastType.ConnectWallet);
                 setLoading(false);
                 return;
@@ -71,7 +87,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
             const chainId = chain?.id;
             const superfluid = await Framework.create({
                 chainId: Number(chainId),
-                provider: provider,
+                provider,
             });
 
             const pool = getPoolAddress(
@@ -80,6 +96,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
             );
 
             const token = store.outboundToken.address;
+            const sender = await signer.getAddress();
 
             if (token) {
                 if (userToken0Flow.current.gt(0)) {
@@ -88,6 +105,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                         receiver: pool,
                         flowRate: swapFlowRate,
                         superToken: token,
+                        sender,
                     });
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
@@ -99,21 +117,22 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                         receiver: pool,
                         flowRate: swapFlowRate,
                         superToken: token,
+                        sender,
                     });
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
 
-                    //console.log("Stream created: ", result);
+                    // console.log("Stream created: ", result);
                 }
 
                 showToast(ToastType.Success);
                 setLoading(false);
 
                 // clear state after successful transaction
-                setKeyNum(k => k + 1);
+                setKeyNum((k) => k + 1);
             }
         } catch (error) {
-            //console.log("Error: ", error);
+            // console.log("Error: ", error);
             showToast(getToastErrorType(error));
             setLoading(false);
         }
@@ -130,18 +149,20 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
 
         // set a timeout
         const timeout: NodeJS.Timeout = setTimeout(async () => {
-            
             // calculate new flows
-            var calculatedToken0Flow = BigNumber.from(token0Flow.current);
-            if (swapFlowRate != "") {
-                calculatedToken0Flow = token0Flow.current.add(swapFlowRate).sub(userToken0Flow.current);
+            let calculatedToken0Flow = BigNumber.from(token0Flow.current);
+            if (swapFlowRate !== "") {
+                calculatedToken0Flow = token0Flow.current
+                    .add(swapFlowRate)
+                    .sub(userToken0Flow.current);
             }
 
             // calculate token 0 price
             if (token1Flow.current.gt(0)) {
                 setToken0Price(
-                    parseFloat(calculatedToken0Flow.toString()) / parseFloat(token1Flow.current.toString())
-                )
+                    parseFloat(calculatedToken0Flow.toString()) /
+                        parseFloat(token1Flow.current.toString())
+                );
             } else {
                 setToken0Price(0);
             }
@@ -158,7 +179,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
             }
 
             // calculate deposit
-            if (swapFlowRate != "") {
+            if (swapFlowRate !== "") {
                 // assume 1 hr length for deposit // TODO: mainnet is 4 hrs, detect network and adjust deposit period
                 const oneHourStream = BigNumber.from(swapFlowRate).mul(3600);
                 setDeposit(oneHourStream);
@@ -170,18 +191,19 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
             // reset deposit agreement
             setAcceptedBuffer(false);
 
+            // eslint-disable-next-line no-promise-executor-return
             await new Promise((res) => setTimeout(res, 900));
             setRefreshingPrice(false);
-        }, 500)
+        }, 500);
 
         setPriceTimeout(timeout);
     };
 
     // if price multiple changes, calculate new expected outgoing flowrate
     useEffect(() => {
-        if (isReversePricing.current == false) {
+        if (isReversePricing.current === false) {
             // calculate expected outgoing flowrate
-            if (swapFlowRate != '') {
+            if (swapFlowRate !== "") {
                 setDisplayedExpectedFlowRate(
                     ethers.utils.formatEther(
                         BigNumber.from(swapFlowRate)
@@ -189,19 +211,27 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                             .mul(store.flowrateUnit.value)
                             .div(BigNumber.from(2).pow(128))
                     )
-                )
+                );
             } else {
-                setDisplayedExpectedFlowRate('');
+                setDisplayedExpectedFlowRate("");
             }
         } else {
             // calculate needed swap flowrate
-            if (swapFlowRate != '') {
+            // TODO: Assess if blocks
+            // eslint-disable-next-line no-lonely-if
+            if (swapFlowRate !== "") {
                 setDisplayedSwapFlowRate(
-                    ethers.utils.formatEther(BigNumber.from(swapFlowRate).mul(store.flowrateUnit.value))
-                )
+                    ethers.utils.formatEther(
+                        BigNumber.from(swapFlowRate).mul(
+                            store.flowrateUnit.value
+                        )
+                    )
+                );
             }
         }
-    }, [priceMultiple])
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [priceMultiple]);
 
     // update vars when tokens change
     useEffect(() => {
@@ -226,33 +256,41 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                 );
 
                 // get flows
-                token0Flow.current = await poolContract.getFlowIn(token0Address);
-                token1Flow.current = await poolContract.getFlowIn(token1Address);
+                token0Flow.current = await poolContract.getFlowIn(
+                    token0Address
+                );
+                token1Flow.current = await poolContract.getFlowIn(
+                    token1Address
+                );
 
                 // get existing user flows
                 if (address) {
                     const chainId = chain?.id;
                     const sf = await Framework.create({
                         chainId: Number(chainId),
-                        provider: provider,
+                        provider,
                     });
 
                     userToken0Flow.current = BigNumber.from(
-                        (await sf.cfaV1.getFlow({
-                            superToken: token0Address,
-                            sender: address,
-                            receiver: poolAddress,
-                            providerOrSigner: provider
-                        })).flowRate
-                    )
+                        (
+                            await sf.cfaV1.getFlow({
+                                superToken: token0Address,
+                                sender: address,
+                                receiver: poolAddress,
+                                providerOrSigner: provider,
+                            })
+                        ).flowRate
+                    );
                     userToken1Flow.current = BigNumber.from(
-                        (await sf.cfaV1.getFlow({
-                            superToken: token1Address,
-                            sender: address,
-                            receiver: poolAddress,
-                            providerOrSigner: provider
-                        })).flowRate
-                    )
+                        (
+                            await sf.cfaV1.getFlow({
+                                superToken: token1Address,
+                                sender: address,
+                                receiver: poolAddress,
+                                providerOrSigner: provider,
+                            })
+                        ).flowRate
+                    );
                 }
 
                 await refreshPrice();
@@ -260,9 +298,11 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                 setRefreshingPrice(false);
                 setPoolExists(false);
             }
-        }
+        };
 
         refresh();
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [store.inboundToken, store.outboundToken, address, chain]);
 
     // refresh spot pricing upon user input
@@ -270,12 +310,14 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
         const refresh = async () => {
             await refreshPrice();
 
-            if (isReversePricing.current == true) {
+            if (isReversePricing.current === true) {
                 isReversePricing.current = false;
             }
         };
 
         refresh();
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate]);
 
     // calculate reverse pricing if user edits expected outgoing flow
@@ -284,54 +326,68 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
             isReversePricing.current = true;
 
             // calculate swap flow rate
-            if (expectedFlowRate != '' && BigNumber.from(expectedFlowRate).gt(0)) {
+            if (
+                expectedFlowRate !== "" &&
+                BigNumber.from(expectedFlowRate).gt(0)
+            ) {
                 setSwapFlowRate(
                     token0Flow.current
                         .sub(userToken0Flow.current)
                         .mul(BigNumber.from(10).pow(18))
                         .div(
-                            token1Flow.current.mul(BigNumber.from(10).pow(18))
+                            token1Flow.current
+                                .mul(BigNumber.from(10).pow(18))
                                 .div(expectedFlowRate)
                                 .sub(BigNumber.from(10).pow(18))
                         )
                         .toString()
-                )
+                );
             } else {
-                setSwapFlowRate('')
-                setDisplayedSwapFlowRate('');
+                setSwapFlowRate("");
+                setDisplayedSwapFlowRate("");
             }
         };
 
         refresh();
+        // TODO: Assess missing dependency array values
     }, [expectedFlowRate]);
 
     return (
         <section className="flex flex-col items-center w-full">
-            <RealTimeBalance token={store.outboundToken} setBalance={setOutboundTokenBalance} />
-            <RealTimeBalance token={store.inboundToken} setBalance={setInboundTokenBalance} />
+            <RealTimeBalance
+                token={store.outboundToken}
+                setBalance={setOutboundTokenBalance}
+            />
+            <RealTimeBalance
+                token={store.inboundToken}
+                setBalance={setInboundTokenBalance}
+            />
             <WidgetContainer title="Swap">
                 <div className="flex flex-col items-center justify-center">
                     <div className="w-full py-1">
                         <TokenFlowField
-                            title="Flow Rate"
+                            // TODO: assess props
+                            // title="Flow Rate"
                             displayedValue={displayedSwapFlowRate}
                             setDisplayedValue={setDisplayedSwapFlowRate}
-                            formattedValue={swapFlowRate}
+                            // formattedValue={swapFlowRate}
                             setFormattedValue={setSwapFlowRate}
                             dropdownItems={flowrates}
                             dropdownValue={store.flowrateUnit}
                             setDropdownValue={store.setFlowrateUnit}
-                            isEther={true}
-                            shouldReformat={true}
+                            isEther
+                            shouldReformat
                             currentBalance={outboundTokenBalance}
                             token={store.outboundToken}
                             setToken={store.setOutboundToken}
                         />
                     </div>
                     <button
+                        type="button"
                         className="flex items-center justify-center w-10 h-10 -my-5 z-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:centered-shadow-sm-dark"
                         onClick={() => {
-                            const oldOutbound: TokenOption = store.outboundToken;
+                            const oldOutbound: TokenOption =
+                                store.outboundToken;
                             store.setOutboundToken(store.inboundToken);
                             store.setInboundToken(oldOutbound);
                         }}
@@ -340,12 +396,13 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                     </button>
                     <div className="w-full py-1">
                         <TokenFlowField
-                            title="Flow Rate"
+                            // TODO: assess props
+                            // title="Flow Rate"
                             displayedValue={displayedExpectedFlowRate}
                             setDisplayedValue={setDisplayedExpectedFlowRate}
-                            formattedValue={expectedFlowRate}
+                            // formattedValue={expectedFlowRate}
                             setFormattedValue={setExpectedFlowRate}
-                            isEther={true}
+                            isEther
                             shouldReformat={false}
                             currentBalance={inboundTokenBalance}
                             token={store.inboundToken}
@@ -358,8 +415,7 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                     token0Price={token0Price}
                     poolExists={poolExists}
                 />
-                {
-                    poolExists && swapFlowRate &&
+                {poolExists && swapFlowRate && (
                     <BufferWarning
                         minBalance={minBalance}
                         outboundTokenBalance={outboundTokenBalance}
@@ -368,15 +424,31 @@ const CreateStreamWidget = ({ showToast, setKeyNum }: CreateStreamWidgetProps) =
                         acceptedBuffer={acceptedBuffer}
                         setAcceptedBuffer={setAcceptedBuffer}
                     />
-                }
+                )}
                 <TransactionButton
-                    title={userToken0Flow.current.gt(0) ? 'Update Swap' : 'Swap'}
+                    title={
+                        userToken0Flow.current.gt(0) ? "Update Swap" : "Swap"
+                    }
                     loading={loading}
                     onClickFunction={swap}
-                    errorMessage={!poolExists ? 'Select valid token pair' : (!swapFlowRate || BigNumber.from(swapFlowRate).lte(0) ? 'Enter flow rate' : (!acceptedBuffer ? (userToken0Flow.current.gt(0) ? 'Update Swap' : 'Swap') : undefined))}
+                    errorMessage={
+                        // TODO: do not use nested ternary statements
+                        // eslint-disable-next-line no-nested-ternary
+                        !poolExists
+                            ? "Select valid token pair"
+                            : // eslint-disable-next-line no-nested-ternary
+                            !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
+                            ? "Enter flow rate"
+                            : // eslint-disable-next-line no-nested-ternary
+                            !acceptedBuffer
+                            ? userToken0Flow.current.gt(0)
+                                ? "Update Swap"
+                                : "Swap"
+                            : undefined
+                    }
                 />
             </WidgetContainer>
-        </section >
+        </section>
     );
 };
 

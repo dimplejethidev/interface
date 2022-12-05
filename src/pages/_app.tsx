@@ -8,25 +8,21 @@ import {
     darkTheme,
 } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { useRouter } from "next/router";
 
 import "../styles/globals.css";
 import CustomAvatar from "../components/CustomAvatar";
 import ToastType from "../types/ToastType";
 import ToastMessage from "../components/ToastMessage";
 import IToast from "../types/Toast";
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
 import Sidebar from "../components/Sidebar";
-import { useRouter } from "next/router";
-import DarkModeProvider, { useDarkMode } from "../utils/DarkModeProvider";
+import DarkModeProvider from "../utils/DarkModeProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
-    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY })]
+    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? "" })]
 );
-//[jsonRpcProvider({ rpc: () => { return {http: 'https://goerli.infura.io/v3/'} } })]
-//publicProvider()
 
 const { connectors } = getDefaultWallets({
     appName: "Aqueduct",
@@ -39,7 +35,7 @@ const wagmiClient = createClient({
     provider,
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
     const [toastList, setToastList] = useState<IToast[]>([]);
     let toast: IToast;
 
@@ -119,48 +115,57 @@ function MyApp({ Component, pageProps }: AppProps) {
     // dark mode params
     const [isDark, setIsDark] = useState<boolean>(false);
     useEffect(() => {
-        setIsDark(document.documentElement.classList.contains('dark'))
-    })
+        setIsDark(document.documentElement.classList.contains("dark"));
+    }, [setIsDark]);
 
     return (
-        <>
-            {
-                router.pathname == '/landing'
-                    ?
-                    <Component {...pageProps} />
-                    :
-                    <WagmiConfig client={wagmiClient}>
-                        <DarkModeProvider isDark={isDark} setIsDark={setIsDark}>
-                            <RainbowKitProvider
-                                chains={chains}
-                                theme={isDark ? darkTheme({ accentColor: "#2662CB" }) : lightTheme({ accentColor: "#2662CB" })}
-                                avatar={CustomAvatar}
-                            >
-                                <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
-                                    <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
-                                        <Sidebar isShown={isShown} setIsShown={setIsShown} />
-                                        <main
-                                            className={
-                                                "flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll "
-                                                + (isShown && " hidden md:flex ")
-                                            }
-                                        >
-                                            <div className="md:h-[50%]" />
-                                            <Component {...pageProps} showToast={showToast} />
-                                            <div className="md:h-[50%]" />
-                                        </main>
-                                    </div>
-                                    <ToastMessage
-                                        toastList={toastList}
-                                        setToastList={setToastList}
+        <div>
+            {router.pathname === "/landing" ? (
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                <Component {...pageProps} />
+            ) : (
+                <WagmiConfig client={wagmiClient}>
+                    <DarkModeProvider isDark={isDark} setIsDark={setIsDark}>
+                        <RainbowKitProvider
+                            chains={chains}
+                            theme={
+                                isDark
+                                    ? darkTheme({ accentColor: "#2662CB" })
+                                    : lightTheme({ accentColor: "#2662CB" })
+                            }
+                            avatar={CustomAvatar}
+                        >
+                            <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
+                                <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                                    <Sidebar
+                                        isShown={isShown}
+                                        setIsShown={setIsShown}
                                     />
+                                    <main
+                                        className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${
+                                            isShown && " hidden md:flex "
+                                        }`}
+                                    >
+                                        <div className="md:h-[50%]" />
+                                        <Component
+                                            // eslint-disable-next-line react/jsx-props-no-spreading
+                                            {...pageProps}
+                                            showToast={showToast}
+                                        />
+                                        <div className="md:h-[50%]" />
+                                    </main>
                                 </div>
-                            </RainbowKitProvider>
-                        </DarkModeProvider>
-                    </WagmiConfig>
-            }
-        </>
+                                <ToastMessage
+                                    toastList={toastList}
+                                    setToastList={setToastList}
+                                />
+                            </div>
+                        </RainbowKitProvider>
+                    </DarkModeProvider>
+                </WagmiConfig>
+            )}
+        </div>
     );
-}
+};
 
 export default MyApp;

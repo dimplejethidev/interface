@@ -18,10 +18,11 @@ interface StoreState {
     setFlowrateUnit: (flowrateUnit: GenericDropdownOption) => void;
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export const useStore = create<StoreState>()((set) => ({
-    outboundToken: tokens.find((t) => t.value == Token.fDAIxp)!,
-    inboundToken: tokens.find((t) => t.value == Token.fUSDCxp)!,
-    upgradeDowngradeToken: tokens.find((t) => t.value == Token.fDAIxp)!,
+    outboundToken: tokens.find((t) => t.value === Token.fDAIxp)!,
+    inboundToken: tokens.find((t) => t.value === Token.fUSDCxp)!,
+    upgradeDowngradeToken: tokens.find((t) => t.value === Token.fDAIxp)!,
     selectedToken: Token.fDAIxp,
     flowrateUnit: flowrates[0],
     setOutboundToken: (outboundToken: TokenOption) =>

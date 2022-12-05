@@ -1,6 +1,6 @@
-import { BigNumber, ethers } from "ethers"
-import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { useAccount, useProvider } from "wagmi"
+import { BigNumber, ethers } from "ethers";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useAccount, useProvider } from "wagmi";
 import { TokenOption } from "../types/TokenOption";
 
 const ANIMATION_MINIMUM_STEP_TIME = 100;
@@ -12,7 +12,9 @@ interface RealTimeBalanceProps {
 }
 
 const RealTimeBalance = ({ token, setBalance }: RealTimeBalanceProps) => {
-    const [flowRate, setFlowRate] = useState<BigNumber>(ethers.BigNumber.from(0));
+    const [flowRate, setFlowRate] = useState<BigNumber>(
+        ethers.BigNumber.from(0)
+    );
     const provider = useProvider();
     const { address } = useAccount();
 
@@ -45,7 +47,7 @@ const RealTimeBalance = ({ token, setBalance }: RealTimeBalanceProps) => {
                         .div(1000)
                         .add(
                             (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) /
-                            1000
+                                1000
                         )
                         .toString()
                 )
@@ -73,13 +75,17 @@ const RealTimeBalance = ({ token, setBalance }: RealTimeBalanceProps) => {
         return () => {
             clearTimeout(timer);
         };
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [time]);
 
     useEffect(() => {
         refresh();
+        // TODO: Assess missing dependency array values
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [address, token]);
 
-    return (<div/>)
-}
+    return <div />;
+};
 
 export default RealTimeBalance;

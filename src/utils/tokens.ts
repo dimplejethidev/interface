@@ -1,10 +1,10 @@
 import Token from "../types/Token";
 import { TokenOption } from "../types/TokenOption";
-import { ETHxp, fDAI, fDAIxp, fUSDC, fUSDCxp } from "../utils/constants";
+import { ETHxp, fDAI, fDAIxp, fUSDC, fUSDCxp } from "./constants";
 
-import ethLogo from "./../../public/eth-logo.png";
-import daiLogo from "./../../public/dai-logo.png";
-import usdcLogo from "./../../public/usdc-logo.png";
+import ethLogo from "../../public/eth-logo.png";
+import daiLogo from "../../public/dai-logo.png";
+import usdcLogo from "../../public/usdc-logo.png";
 
 const tokens: TokenOption[] = [
     {
@@ -16,10 +16,10 @@ const tokens: TokenOption[] = [
             label: "ETH",
             value: Token.ETH,
             logo: ethLogo.src,
-            address: '0x0',
-            colorHex: '#00ABEE'
+            address: "0x0",
+            colorHex: "#00ABEE",
         },
-        colorHex: '#00ABEE'
+        colorHex: "#00ABEE",
     },
     {
         label: "fDAIxp",
@@ -31,9 +31,9 @@ const tokens: TokenOption[] = [
             value: Token.fDAI,
             logo: daiLogo.src,
             address: fDAI,
-            colorHex: '#F5AC37'
+            colorHex: "#F5AC37",
         },
-        colorHex: '#F5AC37'
+        colorHex: "#F5AC37",
     },
     {
         label: "fUSDCxp",
@@ -45,9 +45,9 @@ const tokens: TokenOption[] = [
             value: Token.fUSDC,
             logo: usdcLogo.src,
             address: fUSDC,
-            colorHex: '#2775CA'
+            colorHex: "#2775CA",
         },
-        colorHex: '#2775CA'
+        colorHex: "#2775CA",
     },
 ];
 

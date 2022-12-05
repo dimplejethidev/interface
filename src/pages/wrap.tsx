@@ -8,13 +8,16 @@ interface WrapProps {
 }
 
 const Wrap: NextPage<WrapProps> = ({ showToast }) => {
-
     // used to easily reset component state
     const [keyNum, setKeyNum] = useState(1);
 
     return (
-        <UpgradeDowngradeWidget showToast={showToast} key={'wrap-' + keyNum} setKeyNum={setKeyNum} />
+        <UpgradeDowngradeWidget
+            showToast={showToast}
+            key={`wrap-${keyNum}`}
+            setKeyNum={setKeyNum}
+        />
     );
-}
+};
 
 export default Wrap;

@@ -3,7 +3,6 @@ import Select, {
     ControlProps,
     OptionProps,
     StylesConfig,
-    ActionMeta,
 } from "react-select";
 import { GenericDropdownOption } from "../types/GenericDropdownOption";
 
@@ -12,7 +11,7 @@ export const customStyles: StylesConfig<GenericDropdownOption, IsMulti> = {
     menu: (provided) => ({
         ...provided,
         paddingLeft: 8,
-        borderRadius: 16
+        borderRadius: 16,
     }),
     menuList: (provided) => ({
         ...provided,
@@ -30,13 +29,19 @@ export const customStyles: StylesConfig<GenericDropdownOption, IsMulti> = {
         marginBottom: 8,
         display: "flex",
         alignItems: "center",
-        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
-        color: '#00000099'
+        // TODO: do not use nested ternary statements
+        // eslint-disable-next-line no-nested-ternary
+        backgroundColor: state.isSelected
+            ? "#0460CE20"
+            : state.isFocused
+            ? "#00000008"
+            : "transparent",
+        color: "#00000099",
     }),
     control: (base, state) => ({
         ...base,
-        width: '6rem',
-        height: 'min-content',
+        width: "6rem",
+        height: "min-content",
         paddingTop: 10,
         paddingBottom: 10,
         paddingLeft: 10,
@@ -44,23 +49,23 @@ export const customStyles: StylesConfig<GenericDropdownOption, IsMulti> = {
         fontSize: "0.85rem",
         borderWidth: 1,
         borderColor: "rgb(229 231 235)",
-        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
-        '&:hover': {
-            border: '1px solid #0460CE',
+        boxShadow: state.isFocused ? "0 0 0 1px #0460CE" : "none",
+        "&:hover": {
+            border: "1px solid #0460CE",
         },
         fontWeight: 600,
-        borderRadius: 10
+        borderRadius: 10,
     }),
     singleValue: (provided) => ({
         ...provided,
-        color: "rgb(100 116 139)"
-    })
+        color: "rgb(100 116 139)",
+    }),
 };
 export const customStylesDark: StylesConfig<GenericDropdownOption, IsMulti> = {
     menu: (provided) => ({
         ...provided,
         paddingLeft: 8,
-        borderRadius: 16
+        borderRadius: 16,
     }),
     menuList: (provided) => ({
         ...provided,
@@ -78,54 +83,57 @@ export const customStylesDark: StylesConfig<GenericDropdownOption, IsMulti> = {
         marginBottom: 8,
         display: "flex",
         alignItems: "center",
-        backgroundColor: state.isSelected ? '#0460CE20' : (state.isFocused ? '#00000008' : 'transparent'),
-        color: '#00000099'
+        // TODO: do not use nested ternary statements
+        // eslint-disable-next-line no-nested-ternary
+        backgroundColor: state.isSelected
+            ? "#0460CE20"
+            : state.isFocused
+            ? "#00000008"
+            : "transparent",
+        color: "#00000099",
     }),
     control: (base, state) => ({
         ...base,
-        width: '8.5rem',
+        width: "8.5rem",
         paddingTop: 20,
         paddingBottom: 20,
         paddingLeft: 10,
         paddingRight: 10,
-        height: '100%',
+        height: "100%",
         fontSize: "0.85rem",
         borderWidth: 1,
         borderColor: "rgb(82 82 91)",
-        boxShadow: state.isFocused ? '0 0 0 1px #0460CE' : 'none',
-        '&:hover': {
-            border: '1px solid #0460CE',
+        boxShadow: state.isFocused ? "0 0 0 1px #0460CE" : "none",
+        "&:hover": {
+            border: "1px solid #0460CE",
         },
         fontWeight: 600,
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15,
-        backgroundColor: 'rgb(24 24 27)'
+        backgroundColor: "rgb(24 24 27)",
     }),
     singleValue: (provided) => ({
         ...provided,
-        color: "rgb(100 116 139)"
-    })
+        color: "rgb(100 116 139)",
+    }),
 };
 
-const Control = ({ children, ...props }: ControlProps<GenericDropdownOption, false>) => {
-    // @ts-ignore - react-select docs suggested ts-ignore here
-    const { logo } = props.selectProps;
-    return (
-        <components.Control {...props} >
-            {children}
-        </components.Control>
-    );
-};
-
-const Option = ({ children, ...props }: OptionProps<GenericDropdownOption, false>) => {
-    return (
-        <components.Option {...props}>
-            {children}
-        </components.Option>
-    );
-};
+const Control = ({
+    children,
+    ...props
+}: ControlProps<GenericDropdownOption, false>) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <components.Control {...props}>{children}</components.Control>
+);
+const Option = ({
+    children,
+    ...props
+}: OptionProps<GenericDropdownOption, false>) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <components.Option {...props}>{children}</components.Option>
+);
 
 interface GenericDropdownProps {
     options: GenericDropdownOption[];
@@ -133,11 +141,12 @@ interface GenericDropdownProps {
     setDropdownValue: (value: GenericDropdownOption) => void;
 }
 
-const TokenDropdown = ({ options, dropdownValue, setDropdownValue }: GenericDropdownProps) => {
-    const onChange = (
-        option: GenericDropdownOption | null,
-        actionMeta: ActionMeta<GenericDropdownOption>
-    ) => {
+const TokenDropdown = ({
+    options,
+    dropdownValue,
+    setDropdownValue,
+}: GenericDropdownProps) => {
+    const onChange = (option: GenericDropdownOption | null) => {
         if (option) {
             setDropdownValue(option);
         }
@@ -152,8 +161,8 @@ const TokenDropdown = ({ options, dropdownValue, setDropdownValue }: GenericDrop
                     options={options}
                     styles={customStyles}
                     // @ts-ignore - react-select docs suggested ts-ignore here
-                    //placeholder={selectTokenOption.label}
-                    //isSearchable
+                    // placeholder={selectTokenOption.label}
+                    // isSearchable
                     value={dropdownValue}
                     isMulti={false}
                     isSearchable={false}
@@ -168,8 +177,8 @@ const TokenDropdown = ({ options, dropdownValue, setDropdownValue }: GenericDrop
                     options={options}
                     styles={customStylesDark}
                     // @ts-ignore - react-select docs suggested ts-ignore here
-                    //placeholder={selectTokenOption.label}
-                    //isSearchable
+                    // placeholder={selectTokenOption.label}
+                    // isSearchable
                     value={dropdownValue}
                     isMulti={false}
                     isSearchable={false}

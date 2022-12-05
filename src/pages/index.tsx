@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import "tailwindcss/tailwind.css";
 
-import Sidebar from "../components/Sidebar";
 import CreateStreamWidget from "../components/widgets/CreateStreamWidget";
 import ToastType from "../types/ToastType";
 
@@ -11,12 +10,15 @@ interface SwapProps {
 }
 
 const Swap: NextPage<SwapProps> = ({ showToast }) => {
-
     // used to easily reset component state
     const [keyNum, setKeyNum] = useState(1);
 
     return (
-        <CreateStreamWidget showToast={showToast} key={'swap-' + keyNum} setKeyNum={setKeyNum} />
+        <CreateStreamWidget
+            showToast={showToast}
+            key={`swap-${keyNum}`}
+            setKeyNum={setKeyNum}
+        />
     );
 };
 

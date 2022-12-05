@@ -1,7 +1,6 @@
+import { NextPage } from "next";
 import PageNotFound from "../components/PageNotFound";
 
-export default function Custom404() {
-    return (
-        <PageNotFound />
-    )
-}
+const Custom404: NextPage = () => <PageNotFound />;
+
+export default Custom404;

@@ -3,7 +3,7 @@ import {
     ETHxpfDAIxpPool,
     fDAIxpETHxpPool,
     fDAIxpfUSDCxpPool,
-} from "./../utils/constants";
+} from "../utils/constants";
 
 const getPoolAddress = (outboundToken: Token, inboundToken: Token) => {
     let pool: string;
