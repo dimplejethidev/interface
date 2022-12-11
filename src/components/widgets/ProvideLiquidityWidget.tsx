@@ -217,7 +217,7 @@ const ProvideLiquidityWidget = ({
             if (calculatedToken0Flow.gt(0) && calculatedToken1Flow.gt(0)) {
                 setToken0Price(
                     parseFloat(calculatedToken0Flow.toString()) /
-                        parseFloat(calculatedToken1Flow.toString())
+                    parseFloat(calculatedToken1Flow.toString())
                 );
             } else {
                 setToken0Price(0);
@@ -294,38 +294,38 @@ const ProvideLiquidityWidget = ({
             const token0Address = store.outboundToken.address;
             const token1Address = store.inboundToken.address;
 
-            const poolABI = [
-                "function getFlowIn(address token) external view returns (uint128 flowIn)",
-            ];
-
             try {
                 const poolAddress = getPoolAddress(
                     store.inboundToken.value,
                     store.outboundToken.value
                 );
                 setPoolExists(true);
-                const poolContract = new ethers.Contract(
-                    poolAddress,
-                    poolABI,
-                    provider
-                );
+
+                // init sf framework
+                const chainId = chain?.id;
+                const sf = await Framework.create({
+                    chainId: Number(chainId),
+                    provider,
+                });
 
                 // get flows
-                token0Flow.current = await poolContract.getFlowIn(
-                    token0Address
+                token0Flow.current = BigNumber.from(
+                    await sf.cfaV1.getNetFlow({
+                        superToken: token0Address,
+                        account: poolAddress,
+                        providerOrSigner: provider
+                    })
                 );
-                token1Flow.current = await poolContract.getFlowIn(
-                    token1Address
+                token1Flow.current = BigNumber.from(
+                    await sf.cfaV1.getNetFlow({
+                        superToken: token1Address,
+                        account: poolAddress,
+                        providerOrSigner: provider
+                    })
                 );
 
                 // get existing user flows
                 if (address) {
-                    const chainId = chain?.id;
-                    const sf = await Framework.create({
-                        chainId: Number(chainId),
-                        provider,
-                    });
-
                     userToken0Flow.current = BigNumber.from(
                         (
                             await sf.cfaV1.getFlow({
@@ -463,7 +463,7 @@ const ProvideLiquidityWidget = ({
                 <TransactionButton
                     title={
                         userToken0Flow.current.gt(0) ||
-                        userToken1Flow.current.gt(0)
+                            userToken1Flow.current.gt(0)
                             ? "Update Position"
                             : "Provide Liquidity"
                     }
@@ -476,17 +476,17 @@ const ProvideLiquidityWidget = ({
                             ? "Select valid token pair"
                             : // eslint-disable-next-line no-nested-ternary
                             !swapFlowRate0 ||
-                              BigNumber.from(swapFlowRate0).lte(0) ||
-                              !swapFlowRate1 ||
-                              BigNumber.from(swapFlowRate1).lte(0)
-                            ? "Enter flow rates"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !acceptedBuffer
-                            ? userToken0Flow.current.gt(0) ||
-                              userToken1Flow.current.gt(0)
-                                ? "Update Position"
-                                : "Provide Liquidity"
-                            : undefined
+                                BigNumber.from(swapFlowRate0).lte(0) ||
+                                !swapFlowRate1 ||
+                                BigNumber.from(swapFlowRate1).lte(0)
+                                ? "Enter flow rates"
+                                : // eslint-disable-next-line no-nested-ternary
+                                !acceptedBuffer
+                                    ? userToken0Flow.current.gt(0) ||
+                                        userToken1Flow.current.gt(0)
+                                        ? "Update Position"
+                                        : "Provide Liquidity"
+                                    : undefined
                     }
                 />
             </WidgetContainer>

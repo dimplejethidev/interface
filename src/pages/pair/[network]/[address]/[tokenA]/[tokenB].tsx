@@ -23,6 +23,7 @@ import getToken from "../../../../../utils/getToken";
 import ToastType from "../../../../../types/ToastType";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
 import getToastErrorType from "../../../../../utils/getToastErrorType";
+import SwapData from "../../../../../types/SwapData";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -75,7 +76,7 @@ const BalanceField = ({
                 isTwap
                     ? "text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl"
                     : "text-gray-300 dark:text-slate-500/80 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold"
-            }`}
+                }`}
         >
             {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <img
@@ -306,10 +307,8 @@ const PoolInteractionVisualization: NextPage<
     // Refresh function called on interval
     async function refresh() {
         const poolABI = [
-            "function getFlowIn(address token) external view returns (uint128 flowIn)",
-            "function getTwapNetFlowRate(address token, address user) external view returns (int96 netFlowRate)",
-            "function getUserCumulativeDelta(address token, address user, uint256 timestamp) public view returns (uint256 cumulativeDelta)",
-            "function getUserReward(address token, address user, uint256 timestamp) public view returns (int256 reward)",
+            "function getUserSwapData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
+            "function getUserRewardData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
         ];
         if (!userAddress || !chain || !provider || !token0 || !token1) {
             return;
@@ -371,66 +370,35 @@ const PoolInteractionVisualization: NextPage<
                         .div(1000)
                         .add(
                             (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) /
-                                1000
+                            1000
                         )
                 );
             }
 
-            // get twap params
-            const twapFlowRate = await poolContract.getTwapNetFlowRate(
-                tokenAddress,
-                userAddress
-            );
-
-            // calculate twap balances
-            let initialTwapBalance: BigNumber = BigNumber.from(0);
-            let futureTwapBalance: BigNumber = BigNumber.from(0);
-            if (twapFlowRate.gt(0)) {
-                // use twap flow rate
-                const decodeConst = BigNumber.from(2).pow(128);
-                initialTwapBalance = (
-                    await poolContract.getUserCumulativeDelta(
-                        tokenAddress,
-                        userAddress,
-                        currentTimestampBigNumber.div(1000).toString()
-                    )
-                )
-                    .mul(twapFlowRate)
-                    .div(decodeConst);
-                futureTwapBalance = (
-                    await poolContract.getUserCumulativeDelta(
-                        tokenAddress,
-                        userAddress,
-                        currentTimestampBigNumber
-                            .div(1000)
-                            .add(
-                                (REFRESH_INTERVAL *
-                                    ANIMATION_MINIMUM_STEP_TIME) /
-                                    1000
-                            )
-                            .toString()
-                    )
-                )
-                    .mul(twapFlowRate)
-                    .div(decodeConst);
-            }
-
-            // calculate rewards
-            const initialRewardBalance = await poolContract.getUserReward(
-                tokenAddress,
-                userAddress,
-                currentTimestampBigNumber.div(1000).toString()
-            );
-            const futureRewardBalance = await poolContract.getUserReward(
-                tokenAddress,
-                userAddress,
+            // new consts
+            const decodeConst = BigNumber.from(2).pow(128);
+            const futureTimestampBigNumber: BigNumber =
                 currentTimestampBigNumber
                     .div(1000)
                     .add(
-                        (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000
-                    )
-                    .toString()
-            );
+                        (REFRESH_INTERVAL *
+                            ANIMATION_MINIMUM_STEP_TIME) /
+                        1000
+                    );
+
+            // calculate twap balances
+            const swapData: SwapData = await poolContract.getUserSwapData(tokenAddress, userAddress, currentTimestampBigNumber.div(1000).toString());
+            const initialTwapBalance: BigNumber = swapData.units.mul(swapData.realTimeCumulative.sub(swapData.initialCumulative)).div(decodeConst);
+            const futureSwapData: SwapData = await poolContract.getUserSwapData(tokenAddress, userAddress, futureTimestampBigNumber.toString());
+            const futureTwapBalance: BigNumber = futureSwapData.units.mul(futureSwapData.realTimeCumulative.sub(futureSwapData.initialCumulative)).div(decodeConst);
+
+            // calculate reward balances
+            const rewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, currentTimestampBigNumber.div(1000).toString());
+            var initialRewardBalance: BigNumber = rewardData.units.mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative)).div(decodeConst).sub(initialBalance.div(100));
+            const futureRewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, futureTimestampBigNumber.toString());
+            var futureRewardBalance: BigNumber = futureRewardData.units.mul(futureRewardData.realTimeCumulative.sub(futureRewardData.initialCumulative)).div(decodeConst).sub(futureBalance.div(100));
+            if (initialRewardBalance.lt(0)) { initialRewardBalance = BigNumber.from(0) }
+            if (futureRewardBalance.lt(0)) { futureRewardBalance = BigNumber.from(0) }
 
             return {
                 initialBalance,
@@ -504,22 +472,41 @@ const PoolInteractionVisualization: NextPage<
         if (twapFlowRate.gt(0) && initialTwapBalance.gt(0)) {
             setAveragePrice(
                 initialBalance0.mul(1000).div(initialTwapBalance).toNumber() /
-                    1000
+                1000
             );
         } else if (initialTwapBalance0.gt(0)) {
             setAveragePrice(
                 initialBalance.mul(1000).div(initialTwapBalance0).toNumber() /
-                    1000
+                1000
             );
         }
 
         // get current price
+        /*
         const token0Flow: BigNumber = await poolContract.getFlowIn(
             token0.address
         );
         const token1Flow: BigNumber = await poolContract.getFlowIn(
             token1.address
         );
+        */
+
+        // get current price
+        const token0Flow: BigNumber = BigNumber.from(
+            await sf.cfaV1.getNetFlow({
+                superToken: token0.address,
+                account: poolAddress,
+                providerOrSigner: provider
+            })
+        );
+        const token1Flow: BigNumber = BigNumber.from(
+            await sf.cfaV1.getNetFlow({
+                superToken: token1.address,
+                account: poolAddress,
+                providerOrSigner: provider
+            })
+        );
+
         if (twapFlowRate.gt(0)) {
             // setCurrentPrice(token1Flow.mul(1000).div(token0Flow).toNumber() / 1000);
             setCurrentPrice(
@@ -579,9 +566,8 @@ const PoolInteractionVisualization: NextPage<
         <div className="flex justify-center w-full">
             {isLoading || (!isLoading && positionFound) ? (
                 <div
-                    className={`w-full max-w-4xl space-y-4 mx-4 md:mx-8 ${
-                        isLoading ? "opacity-" : ""
-                    }`}
+                    className={`w-full max-w-4xl space-y-4 mx-4 md:mx-8 ${isLoading ? "opacity-" : ""
+                        }`}
                 >
                     <div className="flex w-full max-w-4xl space-x-2 pt-4 md:pt-0">
                         <Link href="/my-streams">
@@ -916,13 +902,13 @@ const PoolInteractionVisualization: NextPage<
                                             href={
                                                 address
                                                     ? getTweetTemplate(
-                                                          getSharedLink(
-                                                              "goerli",
-                                                              address,
-                                                              token0.address,
-                                                              token1.address
-                                                          )
-                                                      )
+                                                        getSharedLink(
+                                                            "goerli",
+                                                            address,
+                                                            token0.address,
+                                                            token1.address
+                                                        )
+                                                    )
                                                     : ""
                                             }
                                             target="_blank"

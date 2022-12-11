@@ -6,6 +6,7 @@ import GenericTable from "../table/GenericTable";
 import { fDAIxp, fDAIxpfUSDCxpPool, fUSDCxp } from "../../utils/constants";
 import { TokenOption } from "../../types/TokenOption";
 import getToken from "../../utils/getToken";
+import { ethers } from "ethers";
 
 const TextField = ({ title }: { title: string }) => (
     <div className="monospace-font text-sm font-semibold">{title}</div>
@@ -77,8 +78,8 @@ const StreamsTable = () => {
                 pools.map(async (p) => {
                     const s = await sf.cfaV1.getFlow({
                         superToken: p.token0,
-                        sender: p.address,
-                        receiver: address,
+                        sender: address,
+                        receiver: p.address,
                         providerOrSigner: provider,
                     });
 
