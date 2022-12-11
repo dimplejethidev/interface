@@ -394,25 +394,29 @@ const PoolInteractionVisualization: NextPage<
 
             // calculate reward balances
             const rewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, currentTimestampBigNumber.div(1000).toString());
-            var initialRewardBalance: BigNumber = rewardData.units.mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative)).div(decodeConst).sub(initialBalance.div(100));
+            const initialRewardBalance: BigNumber = rewardData.units.mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative)).div(decodeConst).sub(initialBalance.div(100));
             const futureRewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, futureTimestampBigNumber.toString());
-            var futureRewardBalance: BigNumber = futureRewardData.units.mul(futureRewardData.realTimeCumulative.sub(futureRewardData.initialCumulative)).div(decodeConst).sub(futureBalance.div(100));
-            if (initialRewardBalance.lt(0)) { initialRewardBalance = BigNumber.from(0) }
-            if (futureRewardBalance.lt(0)) { futureRewardBalance = BigNumber.from(0) }
+            const futureRewardBalance: BigNumber = futureRewardData.units.mul(futureRewardData.realTimeCumulative.sub(futureRewardData.initialCumulative)).div(decodeConst).sub(futureBalance.div(100));
 
             return {
                 initialBalance,
                 initialTwapBalance,
-                initialRewardBalance,
+                initialRewardBalance:
+                    initialRewardBalance.gt(0) ? initialRewardBalance : BigNumber.from(0),
                 flowRate: futureBalance
                     .sub(initialBalance)
                     .div(REFRESH_INTERVAL),
                 twapFlowRate: futureTwapBalance
                     .sub(initialTwapBalance)
                     .div(REFRESH_INTERVAL),
-                rewardFlowRate: futureRewardBalance
-                    .sub(initialRewardBalance)
-                    .div(REFRESH_INTERVAL),
+                rewardFlowRate:
+                    futureRewardBalance.gt(0) ?
+                        (
+                            futureRewardBalance
+                                .sub(initialRewardBalance)
+                                .div(REFRESH_INTERVAL)
+                        ) :
+                        BigNumber.from(0),
                 startDate: flowInfo.timestamp,
             };
         }

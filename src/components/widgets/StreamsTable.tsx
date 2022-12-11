@@ -6,7 +6,6 @@ import GenericTable from "../table/GenericTable";
 import { fDAIxp, fDAIxpfUSDCxpPool, fUSDCxp } from "../../utils/constants";
 import { TokenOption } from "../../types/TokenOption";
 import getToken from "../../utils/getToken";
-import { ethers } from "ethers";
 
 const TextField = ({ title }: { title: string }) => (
     <div className="monospace-font text-sm font-semibold">{title}</div>
