@@ -410,21 +410,23 @@ const CreateStreamWidget = ({
                         />
                     </div>
                 </div>
-                <PricingField
-                    refreshingPrice={refreshingPrice}
-                    token0Price={token0Price}
-                    poolExists={poolExists}
-                />
-                {poolExists && swapFlowRate && (
-                    <BufferWarning
-                        minBalance={minBalance}
-                        outboundTokenBalance={outboundTokenBalance}
-                        outboundToken={store.outboundToken}
-                        buffer={deposit}
-                        acceptedBuffer={acceptedBuffer}
-                        setAcceptedBuffer={setAcceptedBuffer}
+                <div>
+                    <PricingField
+                        refreshingPrice={refreshingPrice}
+                        token0Price={token0Price}
+                        poolExists={poolExists}
                     />
-                )}
+                    <div className={"transition-all duration-300 overflow-hidden rounded-2xl " + ((poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 ')}>
+                        <BufferWarning
+                            minBalance={minBalance}
+                            outboundTokenBalance={outboundTokenBalance}
+                            outboundToken={store.outboundToken}
+                            buffer={deposit}
+                            acceptedBuffer={acceptedBuffer}
+                            setAcceptedBuffer={setAcceptedBuffer}
+                        />
+                    </div>
+                </div>
                 <TransactionButton
                     title={
                         userToken0Flow.current.gt(0) ? "Update Swap" : "Swap"

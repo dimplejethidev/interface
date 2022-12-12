@@ -56,11 +56,10 @@ const SideBarTab = ({
         <button
             type="button"
             className={`flex w-full items-center space-x-3 pl-4 pr-8 py-4 md:pl-2 md:pr-6 md:py-2 rounded-xl transition-all ease-in-out duration-300
-                        ${
-                            router.asPath === page
-                                ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
-                                : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
-                        } `}
+                        ${router.asPath === page
+                    ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
+                } `}
             onClick={async () => {
                 if (page) {
                     router.push(page);
@@ -76,20 +75,18 @@ const SideBarTab = ({
             }}
         >
             <div
-                className={`bg-gray-100 p-2 rounded-lg ${
-                    router.asPath === page
-                        ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
-                        : "text-gray-400 dark:bg-gray-800/60 dark:text-white"
-                }`}
+                className={`bg-gray-100 p-2 rounded-lg ${router.asPath === page
+                    ? "bg-aqueductBlue/10 text-aqueductBlue dark:bg-transparent"
+                    : "text-gray-400 dark:bg-gray-800/60 dark:text-white"
+                    }`}
             >
                 {icon}
             </div>
             <p
-                className={`text-sm font-medium ${
-                    router.asPath === page
-                        ? "bg-transparent text-aqueductBlue"
-                        : "text-gray-600 dark:text-white"
-                }`}
+                className={`text-sm font-medium ${router.asPath === page
+                    ? "bg-transparent text-aqueductBlue"
+                    : "text-gray-600 dark:text-white"
+                    }`}
             >
                 {label}
             </p>
@@ -116,7 +113,7 @@ const Sidebar = ({
     }, []);
 
     return (
-        <header className="flex flex-col p-4 w-full md:w-64 md:h-screen space-y-8 border-2 dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
+        <header className="flex flex-col p-4 w-full md:w-64 md:h-full space-y-8 bg-transparent border-r2 md:border-[1px] dark:md:border-2 dark:md:bg-gray-900/60 dark:md:border-gray-800/60 md:centered-shadow dark:md:centered-shadow-dark rounded-2xl dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
             <Head>
                 <title>Aqueduct</title>
                 <meta
@@ -150,11 +147,10 @@ const Sidebar = ({
                 </button>
             </div>
             <div
-                className={`grow space-y-8 transition-all duration-500 ${
-                    isShown
-                        ? "flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50"
-                        : "hidden md:flex md:flex-col"
-                }`}
+                className={`grow space-y-8 transition-all duration-500 ${isShown
+                    ? "flex flex-col w-full top-[64px] bottom-0 md:top-0 p-4 md:p-0 left-0 absolute md:relative z-50"
+                    : "hidden md:flex md:flex-col"
+                    }`}
             >
                 <CustomWalletConnectButton />
                 <ul className="space-y-3 pb-8">
@@ -180,6 +176,7 @@ const Sidebar = ({
                                 document.documentElement.classList.add("dark");
                                 localStorage.setItem("color-theme", "light");
                                 darkContext?.setIsDark(true);
+                                document.body.style.background = '#000000'
                             }}
                         />
                     </div>
@@ -194,6 +191,7 @@ const Sidebar = ({
                                 );
                                 localStorage.setItem("color-theme", "dark");
                                 darkContext?.setIsDark(false);
+                                document.body.style.background = '#ffffff'
                             }}
                         />
                     </div>

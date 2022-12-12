@@ -364,9 +364,7 @@ const ProvideLiquidityWidget = ({
     // refresh spot pricing upon user input
     useEffect(() => {
         const refresh = async () => {
-            setRefreshingPrice(true);
             await refreshPrice();
-            setRefreshingPrice(false);
         };
 
         refresh();
@@ -433,13 +431,13 @@ const ProvideLiquidityWidget = ({
                         />
                     </div>
                 </div>
-                <PricingField
-                    refreshingPrice={refreshingPrice}
-                    token0Price={token0Price}
-                    poolExists={poolExists}
-                />
-                {poolExists && swapFlowRate0 && swapFlowRate1 && (
-                    <div className="space-y-2">
+                <div>
+                    <PricingField
+                        refreshingPrice={refreshingPrice}
+                        token0Price={token0Price}
+                        poolExists={poolExists}
+                    />
+                    <div className={"space-y-2 transition-all duration-300 overflow-hidden rounded-2xl " + ((poolExists && swapFlowRate0 && swapFlowRate1) ? ' max-h-64 pt-6 ' : ' max-h-0 ')}>
                         <BufferWarning
                             minBalance={minBalance0}
                             outboundTokenBalance={outboundTokenBalance}
@@ -459,7 +457,7 @@ const ProvideLiquidityWidget = ({
                             )}
                         />
                     </div>
-                )}
+                </div>
                 <TransactionButton
                     title={
                         userToken0Flow.current.gt(0) ||
