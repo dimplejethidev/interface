@@ -9,8 +9,8 @@ interface SelectProps {
     options: GenericDropdownOption[] | TokenOption[];
     dropdownValue: GenericDropdownOption | TokenOption;
     setDropdownValue:
-        | ((value: GenericDropdownOption) => void)
-        | ((token: TokenOption) => void);
+    | ((value: GenericDropdownOption) => void)
+    | ((token: TokenOption) => void);
     // eslint-disable-next-line react/require-default-props
     isNonSuperToken?: boolean;
 }
@@ -73,11 +73,13 @@ const Select = ({
                                 {({ selected }) => (
                                     <div className="flex items-center ml-3 space-x-3">
                                         {option.logo && (
-                                            <Image
-                                                src={option.logo}
-                                                width="20"
-                                                height="20"
-                                            />
+                                            <div className="w-5 h-5">
+                                                <Image
+                                                    src={option.logo}
+                                                    width={20}
+                                                    height={20}
+                                                />
+                                            </div>
                                         )}
                                         <span
                                             className={classNames(
@@ -87,8 +89,8 @@ const Select = ({
                                             )}
                                         >
                                             {isNonSuperToken &&
-                                            "underlyingToken" in option &&
-                                            option.underlyingToken
+                                                "underlyingToken" in option &&
+                                                option.underlyingToken
                                                 ? option.underlyingToken.label
                                                 : option.label}
                                         </span>

@@ -7,10 +7,13 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { FiMoon } from "react-icons/fi";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import logo from "../../public/aq-logo-11-22.png";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { useDarkMode } from "../utils/DarkModeProvider";
+import { FaDollarSign } from 'react-icons/fa'
+import { useAccount } from "wagmi";
+import { TutorialItemState, useTutorial } from "../utils/TutorialProvider";
 
 interface SideBarTabProps {
     icon: any;
@@ -112,6 +115,18 @@ const Sidebar = ({
         // TODO: Assess missing dependency array values
     }, []);
 
+    const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false);
+    const { address, isConnected } = useAccount();
+    const tutorialContext = useTutorial();
+
+    useEffect(() => {
+        if (isConnected) {
+            setIsDefinitelyConnected(true);
+        } else {
+            setIsDefinitelyConnected(false);
+        }
+    }, [address]);
+
     return (
         <header className="flex flex-col p-4 w-full md:w-64 md:h-full space-y-8 bg-transparent border-r2 md:border-[1px] dark:md:border-2 dark:md:bg-gray-900/60 dark:md:border-gray-800/60 md:centered-shadow dark:md:centered-shadow-dark rounded-2xl dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
             <Head>
@@ -152,7 +167,15 @@ const Sidebar = ({
                     : "hidden md:flex md:flex-col"
                     }`}
             >
-                <CustomWalletConnectButton />
+                <div className={
+                    tutorialContext?.connectedWallet == TutorialItemState.ShowHint ?
+                        "after:rounded-2xl relative cursor-pointer after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                        :
+                        ""
+                }
+                >
+                    <CustomWalletConnectButton />
+                </div>
                 <ul className="space-y-3 pb-8">
                     {navItems.map(({ icon, label, page }) => (
                         <SideBarTab
@@ -165,8 +188,27 @@ const Sidebar = ({
                     ))}
                 </ul>
                 <div className="flex grow" />
-                <div>
+                <div className="space-y-2">
                     <div className="flex grow" />
+                    {
+                        isDefinitelyConnected &&
+                        <div className={
+                            tutorialContext?.requestedPay == TutorialItemState.ShowHint ?
+                                "after:rounded-2xl relative cursor-pointer after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                                :
+                                ""
+                        }
+                        >
+                            <SideBarTab
+                                icon={<FaDollarSign size={18} />}
+                                label="Request funds"
+                                key="Request funds"
+                                onClick={() => {
+                                    // give user funds
+                                }}
+                            />
+                        </div>
+                    }
                     <div className="flex dark:hidden">
                         <SideBarTab
                             icon={<FiMoon size={18} />}
@@ -197,7 +239,7 @@ const Sidebar = ({
                     </div>
                 </div>
             </div>
-        </header>
+        </header >
     );
 };
 

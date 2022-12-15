@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
     getDefaultWallets,
@@ -19,6 +19,7 @@ import IToast from "../types/Toast";
 import Sidebar from "../components/Sidebar";
 import DarkModeProvider from "../utils/DarkModeProvider";
 import TutorialChecklistPopup from "../components/TutorialChecklistPopup";
+import TutorialProvider from "../utils/TutorialProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
@@ -141,33 +142,35 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                             }
                             avatar={CustomAvatar}
                         >
-                            <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
-                                <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
-                                    <div className="p-4">
-                                        <Sidebar
-                                            isShown={isShown}
-                                            setIsShown={setIsShown}
-                                        />
+                            <TutorialProvider>
+                                <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
+                                    <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                                        <div className="w-full md:w-auto md:p-4">
+                                            <Sidebar
+                                                isShown={isShown}
+                                                setIsShown={setIsShown}
+                                            />
+                                        </div>
+                                        <main
+                                            className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${isShown && " hidden md:flex "
+                                                }`}
+                                        >
+                                            <div className="md:h-[50%]" />
+                                            <Component
+                                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                                {...pageProps}
+                                                showToast={showToast}
+                                            />
+                                            <div className="md:h-[50%]" />
+                                        </main>
                                     </div>
-                                    <main
-                                        className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${isShown && " hidden md:flex "
-                                            }`}
-                                    >
-                                        <div className="md:h-[50%]" />
-                                        <Component
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
-                                            {...pageProps}
-                                            showToast={showToast}
-                                        />
-                                        <div className="md:h-[50%]" />
-                                    </main>
+                                    <ToastMessage
+                                        toastList={toastList}
+                                        setToastList={setToastList}
+                                    />
+                                    <TutorialChecklistPopup />
                                 </div>
-                                <ToastMessage
-                                    toastList={toastList}
-                                    setToastList={setToastList}
-                                />
-                                <TutorialChecklistPopup />
-                            </div>
+                            </TutorialProvider>
                         </RainbowKitProvider>
                     </DarkModeProvider>
                 </WagmiConfig>

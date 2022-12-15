@@ -1,3 +1,4 @@
+/* prettier-ignore */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Red+Hat+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
 
@@ -86,14 +87,32 @@
         border-top: 2px solid black;
         border-bottom: 2px solid black;
     }
+
+    .animate-spin-slow {
+        animation: spin 5s linear infinite;
+    }
+
+    .animate-border {
+        animation: clippath 3s infinite -1.5s linear;
+    }
 }
 
-.test {
-    background-color: 'blue';
-    box-shadow: '0 0 0 1px #0460CE';
-}
+@keyframes clippath {
 
-/*
-filter:
-            drop-shadow(0px 0px 5px #F5AC37AA) drop-shadow(0px 0px 50px #F5AC37);
-            */
+    0%,
+    100% {
+        clip-path: inset(0 0 95% 0);
+    }
+
+    25% {
+        clip-path: inset(0 95% 0 0);
+    }
+
+    50% {
+        clip-path: inset(95% 0 0 0);
+    }
+
+    75% {
+        clip-path: inset(0 0 0 95%);
+    }
+}

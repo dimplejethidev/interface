@@ -15,6 +15,7 @@ import { TokenOption } from "../../types/TokenOption";
 import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
 import getToastErrorType from "../../utils/getToastErrorType";
+import { TutorialItemState, useTutorial } from "../../utils/TutorialProvider";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -31,6 +32,7 @@ const CreateStreamWidget = ({
     const signer = rainbowSigner as ethers.Signer;
     const { chain } = useNetwork();
     const { address } = useAccount();
+    const tutorialContext = useTutorial();
 
     // user input
     const [displayedSwapFlowRate, setDisplayedSwapFlowRate] =
@@ -316,6 +318,10 @@ const CreateStreamWidget = ({
         };
 
         refresh();
+
+        // get rid of tutorial hint
+        tutorialContext?.setStartedSwap(TutorialItemState.Incomplete);
+
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate]);
@@ -364,23 +370,31 @@ const CreateStreamWidget = ({
             />
             <WidgetContainer title="Swap">
                 <div className="flex flex-col items-center justify-center">
-                    <div className="w-full py-1">
-                        <TokenFlowField
-                            // TODO: assess props
-                            // title="Flow Rate"
-                            displayedValue={displayedSwapFlowRate}
-                            setDisplayedValue={setDisplayedSwapFlowRate}
-                            // formattedValue={swapFlowRate}
-                            setFormattedValue={setSwapFlowRate}
-                            dropdownItems={flowrates}
-                            dropdownValue={store.flowrateUnit}
-                            setDropdownValue={store.setFlowrateUnit}
-                            isEther
-                            shouldReformat
-                            currentBalance={outboundTokenBalance}
-                            token={store.outboundToken}
-                            setToken={store.setOutboundToken}
-                        />
+                    <div className="w-full py-1 ">
+                        <div className={
+                            tutorialContext?.startedSwap == TutorialItemState.ShowHint
+                                ?
+                                "after:rounded-2xl relative after:pointer-events-none after:animate-border after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                                :
+                                ""
+                        }>
+                            <TokenFlowField
+                                // TODO: assess props
+                                // title="Flow Rate"
+                                displayedValue={displayedSwapFlowRate}
+                                setDisplayedValue={setDisplayedSwapFlowRate}
+                                // formattedValue={swapFlowRate}
+                                setFormattedValue={setSwapFlowRate}
+                                dropdownItems={flowrates}
+                                dropdownValue={store.flowrateUnit}
+                                setDropdownValue={store.setFlowrateUnit}
+                                isEther
+                                shouldReformat
+                                currentBalance={outboundTokenBalance}
+                                token={store.outboundToken}
+                                setToken={store.setOutboundToken}
+                            />
+                        </div>
                     </div>
                     <button
                         type="button"
@@ -450,7 +464,7 @@ const CreateStreamWidget = ({
                     }
                 />
             </WidgetContainer>
-        </section>
+        </section >
     );
 };
 
