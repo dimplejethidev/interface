@@ -149,6 +149,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                             <Sidebar
                                                 isShown={isShown}
                                                 setIsShown={setIsShown}
+                                                showToast={showToast}
                                             />
                                         </div>
                                         <main

@@ -12,8 +12,14 @@ import logo from "../../public/aq-logo-11-22.png";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { useDarkMode } from "../utils/DarkModeProvider";
 import { FaDollarSign } from 'react-icons/fa'
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 import { TutorialItemState, useTutorial } from "../utils/TutorialProvider";
+import { BigNumber, ethers } from "ethers";
+import { fDAIxp, fDAIxpDistributor } from "../utils/constants";
+import ToastType from "../types/ToastType";
+import getToastErrorType from "../utils/getToastErrorType";
+import LoadingSpinner from "./LoadingSpinner";
+import { Framework } from "@superfluid-finance/sdk-core";
 
 interface SideBarTabProps {
     icon: any;
@@ -100,11 +106,17 @@ const SideBarTab = ({
 const Sidebar = ({
     isShown,
     setIsShown,
+    showToast
 }: {
     isShown: boolean;
     setIsShown: Dispatch<SetStateAction<boolean>>;
+    showToast: (type: ToastType) => void;
 }) => {
     const darkContext = useDarkMode();
+    const { data: rainbowSigner } = useSigner();
+    const signer = rainbowSigner as ethers.Signer;
+    const { chain } = useNetwork();
+    const provider = useProvider();
 
     useEffect(() => {
         if (localStorage.getItem("color-theme") === "light") {
@@ -118,6 +130,7 @@ const Sidebar = ({
     const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false);
     const { address, isConnected } = useAccount();
     const tutorialContext = useTutorial();
+    const [isRequestingFunds, setIsRequestingFunds] = useState(false);
 
     useEffect(() => {
         if (isConnected) {
@@ -126,6 +139,32 @@ const Sidebar = ({
             setIsDefinitelyConnected(false);
         }
     }, [address]);
+
+    // only show request funds button if user isn't already receiving the stream
+    const [showRequestFunds, setShowRequestFunds] = useState(false);
+    useEffect(() => {
+        async function checkFundFlow() {
+            if (!address) { return; }
+
+            const chainId = chain?.id;
+            const sf = await Framework.create({
+                chainId: Number(chainId),
+                provider,
+            });
+            const flow = (
+                await sf.cfaV1.getFlow({
+                    superToken: fDAIxp,
+                    sender: fDAIxpDistributor,
+                    receiver: address,
+                    providerOrSigner: provider,
+                })
+            ).flowRate;
+
+            setShowRequestFunds(BigNumber.from(flow).eq(0));
+        }
+
+        checkFundFlow();
+    }, [address, tutorialContext?.requestedPay])
 
     return (
         <header className="flex flex-col p-4 w-full md:w-64 md:h-full space-y-8 bg-transparent border-r2 md:border-[1px] dark:md:border-2 dark:md:bg-gray-900/60 dark:md:border-gray-800/60 md:centered-shadow dark:md:centered-shadow-dark rounded-2xl dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
@@ -169,7 +208,7 @@ const Sidebar = ({
             >
                 <div className={
                     tutorialContext?.connectedWallet == TutorialItemState.ShowHint ?
-                        "after:rounded-2xl relative cursor-pointer after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                        "after:rounded-2xl relative after:pointer-events-none after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
                         :
                         ""
                 }
@@ -191,20 +230,44 @@ const Sidebar = ({
                 <div className="space-y-2">
                     <div className="flex grow" />
                     {
-                        isDefinitelyConnected &&
+                        isDefinitelyConnected && showRequestFunds &&
                         <div className={
                             tutorialContext?.requestedPay == TutorialItemState.ShowHint ?
-                                "after:rounded-2xl relative cursor-pointer after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                                "after:rounded-2xl relative after:pointer-events-none after:animate-border after:-m-1 after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
                                 :
                                 ""
                         }
                         >
                             <SideBarTab
-                                icon={<FaDollarSign size={18} />}
+                                icon={
+                                    isRequestingFunds
+                                        ?
+                                        <LoadingSpinner size={18} />
+                                        :
+                                        <FaDollarSign size={18} />
+                                }
                                 label="Request funds"
                                 key="Request funds"
-                                onClick={() => {
+                                onClick={async () => {
                                     // give user funds
+                                    const distributorABI = [
+                                        "function requestTokens() external",
+                                    ];
+                                    const distributorContract = new ethers.Contract(
+                                        fDAIxpDistributor,
+                                        distributorABI,
+                                        signer
+                                    );
+                                    setIsRequestingFunds(true);
+                                    try {
+                                        const result = await distributorContract.requestTokens();
+                                        await result.wait();
+                                        tutorialContext?.setRequestedPay(TutorialItemState.Complete);
+                                        showToast(ToastType.Success);
+                                    } catch (error) {
+                                        showToast(getToastErrorType(error));
+                                    }
+                                    setIsRequestingFunds(false);
                                 }}
                             />
                         </div>

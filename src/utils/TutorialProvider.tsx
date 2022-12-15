@@ -2,6 +2,10 @@ import { useRouter } from "next/router";
 import { createContext, useContext, Dispatch, SetStateAction, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 
+const STORE_CONNECTED_WALLET_ID = "tutorial-connectedWallet";
+const STORE_REQUESTED_PAY_ID = "tutorial-requestedPay";
+const STORE_STARTED_SWAP_ID = "tutorial-startedSwap";
+
 export enum TutorialItemState {
     Incomplete,
     ShowHint,
@@ -12,9 +16,9 @@ interface TutorialContextInterface {
     connectedWallet: TutorialItemState;
     requestedPay: TutorialItemState;
     startedSwap: TutorialItemState;
-    setConnectedWallet: Dispatch<SetStateAction<TutorialItemState>>;
-    setRequestedPay: Dispatch<SetStateAction<TutorialItemState>>;
-    setStartedSwap: Dispatch<SetStateAction<TutorialItemState>>;
+    setConnectedWallet: (state: TutorialItemState) => void; //Dispatch<SetStateAction<TutorialItemState>>;
+    setRequestedPay: (state: TutorialItemState) => void;
+    setStartedSwap: (state: TutorialItemState) => void;
 }
 
 const TutorialContext = createContext<TutorialContextInterface | null>(null);
@@ -24,9 +28,41 @@ export function useTutorial() {
 }
 
 const TutorialProvider = ({ children }: { children: JSX.Element }) => {
-    const [connectedWallet, setConnectedWallet] = useState(TutorialItemState.Incomplete);
-    const [requestedPay, setRequestedPay] = useState(TutorialItemState.Incomplete);
-    const [startedSwap, setStartedSwap] = useState(TutorialItemState.Incomplete);
+
+    // if local storage params are empty, set them
+    /*
+    [STORE_CONNECTED_WALLET_ID, STORE_REQUESTED_PAY_ID, STORE_STARTED_SWAP_ID].map((id: string) => {
+        if (!localStorage.getItem(id)) {
+            localStorage.setItem(id, TutorialItemState.Incomplete.toString());
+        }
+    });
+    */
+
+    // initialize all items as 'incomplete'
+    const [connectedWallet, _setConnectedWallet] = useState<TutorialItemState>(TutorialItemState.Incomplete);
+    const [requestedPay, _setRequestedPay] = useState<TutorialItemState>(TutorialItemState.Incomplete);
+    const [startedSwap, _setStartedSwap] = useState<TutorialItemState>(TutorialItemState.Incomplete);
+
+    // assign state from local storage
+    useEffect(() => {
+        _setConnectedWallet(parseInt(localStorage.getItem(STORE_CONNECTED_WALLET_ID) ?? '0'));
+        _setRequestedPay(parseInt(localStorage.getItem(STORE_REQUESTED_PAY_ID) ?? '0'));
+        _setStartedSwap(parseInt(localStorage.getItem(STORE_STARTED_SWAP_ID) ?? '0'));
+    }, [])
+
+    // create functions that update state and local storage
+    const setConnectedWallet = (state: TutorialItemState) => {
+        _setConnectedWallet(state);
+        localStorage.setItem(STORE_CONNECTED_WALLET_ID, state.toString());
+    }
+    const setRequestedPay = (state: TutorialItemState) => {
+        _setRequestedPay(state);
+        localStorage.setItem(STORE_REQUESTED_PAY_ID, state.toString());
+    }
+    const setStartedSwap = (state: TutorialItemState) => {
+        _setStartedSwap(state);
+        localStorage.setItem(STORE_STARTED_SWAP_ID, state.toString());
+    }
 
     // detect if wallet has connected
     const { isConnected } = useAccount();
@@ -43,6 +79,7 @@ const TutorialProvider = ({ children }: { children: JSX.Element }) => {
             router.push('/')
         }
     }, [startedSwap])
+
 
     // TODO: Assess whether we should add useMemo here
     // eslint-disable-next-line react/jsx-no-constructed-context-values

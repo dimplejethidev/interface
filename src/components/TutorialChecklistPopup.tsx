@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { AiOutlineQuestionCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { BsCheckLg } from "react-icons/bs";
 import { IoChevronDownOutline } from "react-icons/io5";
@@ -7,7 +7,7 @@ import { TutorialItemState, useTutorial } from "../utils/TutorialProvider";
 interface ChecklistItemProps {
     text: string;
     itemState?: TutorialItemState;
-    setItemState?: Dispatch<SetStateAction<TutorialItemState>>;
+    setItemState?: (state: TutorialItemState) => void;
 }
 
 const ChecklistItem = ({ text, itemState, setItemState }: ChecklistItemProps) => {

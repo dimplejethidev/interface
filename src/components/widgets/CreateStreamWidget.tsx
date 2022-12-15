@@ -103,16 +103,14 @@ const CreateStreamWidget = ({
             if (token) {
                 if (userToken0Flow.current.gt(0)) {
                     // update stream
-                    const createFlowOperation = superfluid.cfaV1.updateFlow({
+                    const updateFlowOperation = superfluid.cfaV1.updateFlow({
                         receiver: pool,
                         flowRate: swapFlowRate,
                         superToken: token,
                         sender,
                     });
-                    const result = await createFlowOperation.exec(signer);
+                    const result = await updateFlowOperation.exec(signer);
                     await result.wait();
-
-                    console.log("Stream created: ", result);
                 } else {
                     // create stream
                     const createFlowOperation = superfluid.cfaV1.createFlow({
@@ -124,7 +122,10 @@ const CreateStreamWidget = ({
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
 
-                    // console.log("Stream created: ", result);
+                    // mark item completed, setTimeout fixes problem related to component reset
+                    setTimeout(() => {
+                        tutorialContext?.setStartedSwap(TutorialItemState.Complete);
+                    }, 0);
                 }
 
                 showToast(ToastType.Success);
