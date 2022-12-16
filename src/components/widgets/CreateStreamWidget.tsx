@@ -320,9 +320,6 @@ const CreateStreamWidget = ({
 
         refresh();
 
-        // get rid of tutorial hint
-        tutorialContext?.setStartedSwap(TutorialItemState.Incomplete);
-
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate]);

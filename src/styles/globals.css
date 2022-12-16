@@ -61,6 +61,11 @@
             drop-shadow(0px 0px 5px #F5AC37AA) drop-shadow(0px 0px 50px #F5AC37);
     }
 
+    .glow-blue-xs {
+        filter:
+            drop-shadow(0px 0px 5px #0460CE88) drop-shadow(0px 0px 50px #0460CEDD);
+    }
+
     .textbox-outline {
         box-shadow: 0 0 0 1px #0460CE;
     }

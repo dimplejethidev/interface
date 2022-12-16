@@ -125,6 +125,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         }
     }, [setIsDark]);
 
+    // route to welcome message if first time user
+    useEffect(() => {
+        if (router.pathname.substring(0, 5) != '/pair' && !localStorage.getItem('hide-welcome-message')) {
+            router.push('/welcome');
+            localStorage.setItem('hide-welcome-message', 'true');
+        }
+    }, [])
+
     return (
         <div>
             {router.pathname === "/landing" ? (

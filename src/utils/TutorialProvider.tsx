@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { createContext, useContext, Dispatch, SetStateAction, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 
 const STORE_CONNECTED_WALLET_ID = "tutorial-connectedWallet";
@@ -28,15 +28,6 @@ export function useTutorial() {
 }
 
 const TutorialProvider = ({ children }: { children: JSX.Element }) => {
-
-    // if local storage params are empty, set them
-    /*
-    [STORE_CONNECTED_WALLET_ID, STORE_REQUESTED_PAY_ID, STORE_STARTED_SWAP_ID].map((id: string) => {
-        if (!localStorage.getItem(id)) {
-            localStorage.setItem(id, TutorialItemState.Incomplete.toString());
-        }
-    });
-    */
 
     // initialize all items as 'incomplete'
     const [connectedWallet, _setConnectedWallet] = useState<TutorialItemState>(TutorialItemState.Incomplete);
