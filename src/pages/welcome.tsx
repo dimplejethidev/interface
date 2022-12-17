@@ -10,7 +10,6 @@ import { VscGraphLine } from "react-icons/vsc";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 
 import WidgetContainer from "../components/widgets/WidgetContainer";
-import ToastType from "../types/ToastType";
 
 interface SlideItem {
     title: string;
@@ -77,7 +76,8 @@ const Welcome: NextPage = () => {
                     <div className="overflow-hidden">
                         {
                             slideItems.map((e, i) => (
-                                <div className={'transition-all ' + (i < slideIndex ? 'duration-300 -translate-x-4 opacity-0 h-0 ' : (i > slideIndex ? ' translate-x-8 opacity-0 h-0 overflow-hidden ' : ' duration-1000 '))}>
+                                // eslint-disable-next-line no-nested-ternary
+                                <div className={`transition-all ${i < slideIndex ? 'duration-300 -translate-x-4 opacity-0 h-0 ' : (i > slideIndex ? ' translate-x-8 opacity-0 h-0 overflow-hidden ' : ' duration-1000 ')}`}>
                                     <Slide slideItem={e} />
                                 </div>
                             ))
@@ -86,13 +86,11 @@ const Welcome: NextPage = () => {
 
                     <div className="flex items-end space-x-2">
                         {
-                            slideItems.map((e, i) => {
-                                return (
-                                    <div className={
-                                        `transition-all duration-1000 w-6 md:w-12 h-2 rounded-full ${i <= slideIndex ? " bg-aqueductBlue/70 " : " bg-aqueductBlue/20 "}`
-                                    } />
-                                )
-                            })
+                            slideItems.map((e, i) => (
+                                <div className={
+                                    `transition-all duration-1000 w-6 md:w-12 h-2 rounded-full ${i <= slideIndex ? " bg-aqueductBlue/70 " : " bg-aqueductBlue/20 "}`
+                                } />
+                            ))
                         }
                         <div className="flex grow" />
                         <button

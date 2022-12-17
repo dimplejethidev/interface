@@ -10,49 +10,48 @@ interface ChecklistItemProps {
     setItemState: (state: TutorialItemState) => void;
 }
 
-const ChecklistItem = ({ text, itemState, setItemState }: ChecklistItemProps) => {
-    return (
-        <div className="flex items-center space-x-3">
-            <div
-                className={`flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 transition-all duration-500 
+const ChecklistItem = ({ text, itemState, setItemState }: ChecklistItemProps) => (
+    <div className="flex items-center space-x-3">
+        <div
+            className={`flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 transition-all duration-500 
                     ${itemState === TutorialItemState.Complete
-                        ? "border-aqueductBlue bg-aqueductBlue"
-                        : "border-gray-300 dark:border-gray-700"
-                    }`
-                }
-            >
-                {itemState === TutorialItemState.Complete && <BsCheckLg size={8} />}
-            </div>
-            <div>
-                {text}
-            </div>
-            <div className="flex grow w-8" />
-            {
-                itemState !== TutorialItemState.Complete &&
-                <button
-                    type="button"
-                    onClick={() => {
-                        if (setItemState) {
-                            itemState === TutorialItemState.ShowHint ?
-                                setItemState(TutorialItemState.Incomplete)
-                                :
-                                setItemState(TutorialItemState.ShowHint)
-                        }
-                    }}
-                    className='transition-all duration-300 hover:scale-105'
-                >
-                    {
-                        itemState === TutorialItemState.ShowHint
-                            ?
-                            <AiOutlineCloseCircle size={20} />
-                            :
-                            <AiOutlineQuestionCircle size={20} />
-                    }
-                </button>
+                    ? "border-aqueductBlue bg-aqueductBlue"
+                    : "border-gray-300 dark:border-gray-700"
+                }`
             }
+        >
+            {itemState === TutorialItemState.Complete && <BsCheckLg size={8} />}
         </div>
-    )
-}
+        <div>
+            {text}
+        </div>
+        <div className="flex grow w-8" />
+        {
+            itemState !== TutorialItemState.Complete &&
+            <button
+                type="button"
+                onClick={() => {
+                    if (!setItemState) { return }
+                    if (itemState === TutorialItemState.ShowHint) {
+                        setItemState(TutorialItemState.Incomplete)
+                    } else {
+                        setItemState(TutorialItemState.ShowHint)
+                    }
+                }}
+                className='transition-all duration-300 hover:scale-105'
+            >
+                {
+                    itemState === TutorialItemState.ShowHint
+                        ?
+                        <AiOutlineCloseCircle size={20} />
+                        :
+                        <AiOutlineQuestionCircle size={20} />
+                }
+            </button>
+        }
+    </div>
+)
+
 
 const TutorialChecklistPopup = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
@@ -69,6 +68,7 @@ const TutorialChecklistPopup = () => {
                 </div>
                 <div className='flex grow' />
                 <button
+                    type="button"
                     className={`transition-all duration-500 ${isCollapsed ? " rotate-180 " : " rotate-0 "}`}
                     onClick={() => {
                         setIsCollapsed(!isCollapsed);
