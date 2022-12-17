@@ -203,7 +203,7 @@ const CreateStreamWidget = ({
                                     !isWrapping
                                         ? store.upgradeDowngradeToken
                                         : store.upgradeDowngradeToken
-                                              .underlyingToken
+                                            .underlyingToken
                                 }
                                 setToken={store.setUpgradeDowngradeToken}
                                 isNonSuperToken={isWrapping}
@@ -227,7 +227,7 @@ const CreateStreamWidget = ({
                                     isWrapping
                                         ? store.upgradeDowngradeToken
                                         : store.upgradeDowngradeToken
-                                              .underlyingToken
+                                            .underlyingToken
                                 }
                             />
                         )}
@@ -240,13 +240,16 @@ const CreateStreamWidget = ({
                     errorMessage={
                         // {/* TODO: do not use nested ternary statements */}
                         // eslint-disable-next-line no-nested-ternary
-                        !amount || BigNumber.from(amount).lte(0)
-                            ? "Enter Amount"
-                            : (isWrapping &&
-                                  underlyingTokenBalance.lt(amount)) ||
-                              (!isWrapping && superTokenBalance.lt(amount))
-                            ? "Insufficient Balance"
-                            : undefined
+                        !signer
+                            ? "Connect wallet"
+                            : // eslint-disable-next-line no-nested-ternary
+                            !amount || BigNumber.from(amount).lte(0)
+                                ? "Enter Amount"
+                                : (isWrapping &&
+                                    underlyingTokenBalance.lt(amount)) ||
+                                    (!isWrapping && superTokenBalance.lt(amount))
+                                    ? "Insufficient Balance"
+                                    : undefined
                     }
                 />
             </WidgetContainer>

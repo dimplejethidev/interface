@@ -470,21 +470,24 @@ const ProvideLiquidityWidget = ({
                     errorMessage={
                         // TODO: do not use nested ternary statements
                         // eslint-disable-next-line no-nested-ternary
-                        !poolExists
-                            ? "Select valid token pair"
+                        !signer
+                            ? "Connect wallet"
                             : // eslint-disable-next-line no-nested-ternary
-                            !swapFlowRate0 ||
-                                BigNumber.from(swapFlowRate0).lte(0) ||
-                                !swapFlowRate1 ||
-                                BigNumber.from(swapFlowRate1).lte(0)
-                                ? "Enter flow rates"
+                            !poolExists
+                                ? "Select valid token pair"
                                 : // eslint-disable-next-line no-nested-ternary
-                                !acceptedBuffer
-                                    ? userToken0Flow.current.gt(0) ||
-                                        userToken1Flow.current.gt(0)
-                                        ? "Update Position"
-                                        : "Provide Liquidity"
-                                    : undefined
+                                !swapFlowRate0 ||
+                                    BigNumber.from(swapFlowRate0).lte(0) ||
+                                    !swapFlowRate1 ||
+                                    BigNumber.from(swapFlowRate1).lte(0)
+                                    ? "Enter flow rates"
+                                    : // eslint-disable-next-line no-nested-ternary
+                                    !acceptedBuffer
+                                        ? userToken0Flow.current.gt(0) ||
+                                            userToken1Flow.current.gt(0)
+                                            ? "Update Position"
+                                            : "Provide Liquidity"
+                                        : undefined
                     }
                 />
             </WidgetContainer>

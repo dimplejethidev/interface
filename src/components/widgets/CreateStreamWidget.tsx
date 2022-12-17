@@ -447,17 +447,20 @@ const CreateStreamWidget = ({
                     errorMessage={
                         // TODO: do not use nested ternary statements
                         // eslint-disable-next-line no-nested-ternary
-                        !poolExists
-                            ? "Select valid token pair"
+                        !signer
+                            ? "Connect wallet"
                             : // eslint-disable-next-line no-nested-ternary
-                            !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
-                                ? "Enter flow rate"
+                            !poolExists
+                                ? "Select valid token pair"
                                 : // eslint-disable-next-line no-nested-ternary
-                                !acceptedBuffer
-                                    ? userToken0Flow.current.gt(0)
-                                        ? "Update Swap"
-                                        : "Swap"
-                                    : undefined
+                                !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
+                                    ? "Enter flow rate"
+                                    : // eslint-disable-next-line no-nested-ternary
+                                    !acceptedBuffer
+                                        ? userToken0Flow.current.gt(0)
+                                            ? "Update Swap"
+                                            : "Swap"
+                                        : undefined
                     }
                 />
             </WidgetContainer>
