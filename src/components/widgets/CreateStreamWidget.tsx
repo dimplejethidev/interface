@@ -16,6 +16,7 @@ import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
 import getToastErrorType from "../../utils/getToastErrorType";
 import { TutorialItemState, useTutorial } from "../../utils/TutorialProvider";
+import PriceImpactWarning from "../PriceImpactWarning";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -56,6 +57,7 @@ const CreateStreamWidget = ({
     const [priceTimeout, setPriceTimeout] = useState<
         NodeJS.Timeout | undefined
     >(undefined);
+    const [priceImpact, setPriceImpact] = useState<number>(0);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
@@ -170,15 +172,24 @@ const CreateStreamWidget = ({
                 setToken0Price(0);
             }
 
-            // calculate price multiple
             if (calculatedToken0Flow.gt(0)) {
+                // calculate price multiple
                 setPriceMultiple(
                     token1Flow.current
                         .mul(BigNumber.from(2).pow(128))
                         .div(calculatedToken0Flow)
                 );
+
+                // calculate price impact
+                setPriceImpact(
+                    1 - (
+                        parseFloat(token0Flow.current.toString()) /
+                        parseFloat(calculatedToken0Flow.toString())
+                    )
+                )
             } else {
                 setPriceMultiple(BigNumber.from(0));
+                setPriceImpact(0);
             }
 
             // calculate deposit
@@ -427,7 +438,12 @@ const CreateStreamWidget = ({
                         token0Price={token0Price}
                         poolExists={poolExists}
                     />
-                    <div className={`transition-all duration-300 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
+                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(priceImpact > 0.5) ? ' max-h-64 pt-6 -mb-2 ' : ' max-h-0 '}`}>
+                        <PriceImpactWarning
+                            priceImpact={priceImpact}
+                        />
+                    </div>
+                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
                         <BufferWarning
                             minBalance={minBalance}
                             outboundTokenBalance={outboundTokenBalance}

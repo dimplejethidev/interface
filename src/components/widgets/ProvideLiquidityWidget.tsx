@@ -437,7 +437,7 @@ const ProvideLiquidityWidget = ({
                         token0Price={token0Price}
                         poolExists={poolExists}
                     />
-                    <div className={`space-y-2 transition-all duration-300 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate0 && swapFlowRate1) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
+                    <div className={`space-y-2 transition-all duration-700 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate0 && swapFlowRate1) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
                         <BufferWarning
                             minBalance={minBalance0}
                             outboundTokenBalance={outboundTokenBalance}

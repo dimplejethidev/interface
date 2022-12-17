@@ -24,30 +24,34 @@ const BufferWarning = ({
     shouldHideAcceptButton,
 }: BufferWarningProps) => (
     <div>
-        {minBalance.lt(outboundTokenBalance) ? (
-            <div
-                className={`text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 ${
-                    acceptedBuffer
-                        ? "bg-gray-100 dark:bg-gray-700/60 text-gray-900/90 dark:text-gray-400"
-                        : "bg-red-100 dark:bg-red-500/20 text-red-900/90 dark:text-red-400/90"
-                }`}
-            >
+        <div
+            className={`text-xs px-6 py-4 rounded-2xl transition-color duration-500 
+                ${acceptedBuffer
+                    ? " bg-gray-100 dark:bg-gray-700/60 text-gray-900/90 dark:text-gray-400 "
+                    : " bg-red-100 dark:bg-red-500/20 text-red-900/90 dark:text-red-400/90 "
+                }
+            `}
+        >
+            <div className={`transition-[max-height, opacity] duration-700 space-y-4 overflow-hidden
+                ${minBalance.lt(outboundTokenBalance)
+                    ? " max-h-24 opacity-100 "
+                    : " max-h-0 opacity-0 "
+                }
+            `}>
                 <p>
-                    {`If you do not cancel the ${
-                        outboundToken.label
-                    } stream before your balance reaches zero, you will lose your ${ethers.utils.formatEther(
-                        buffer
-                    )} ${outboundToken.label} buffer.`}
+                    {`If you do not cancel the ${outboundToken.label
+                        } stream before your balance reaches zero, you will lose your ${ethers.utils.formatEther(
+                            buffer
+                        )} ${outboundToken.label} buffer.`}
                 </p>
                 {setAcceptedBuffer && !shouldHideAcceptButton && (
                     <div className="flex space-x-2 pb-1 items-center">
                         <button
                             type="button"
-                            className={`flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 ${
-                                acceptedBuffer
-                                    ? "border-aqueductBlue bg-aqueductBlue"
-                                    : "border-red-900/90 dark:border-red-400/90"
-                            }`}
+                            className={`flex items-center justify-center text-white border-[2px] rounded-md w-5 h-5 ${acceptedBuffer
+                                ? "border-aqueductBlue bg-aqueductBlue"
+                                : "border-red-900/90 dark:border-red-400/90"
+                                }`}
                             onClick={() => {
                                 setAcceptedBuffer(!acceptedBuffer);
                             }}
@@ -58,8 +62,12 @@ const BufferWarning = ({
                     </div>
                 )}
             </div>
-        ) : (
-            <div className="text-xs px-6 py-4 rounded-2xl space-y-4 transition-all duration-500 bg-red-100 dark:bg-red-500/20 text-red-900/90 dark:text-red-400/90 ">
+            <div className={`transition-[max-height, opacity] duration-700 overflow-hidden
+                ${minBalance.lt(outboundTokenBalance)
+                    ? " max-h-0 opacity-0 "
+                    : " max-h-16 opacity-100 "
+                }
+            `}>
                 {buffer.gt(outboundTokenBalance) ? (
                     <p>
                         {`You do not have enough balance to cover the ${ethers.utils.formatEther(
@@ -72,7 +80,7 @@ const BufferWarning = ({
                     </p>
                 )}
             </div>
-        )}
+        </div>
     </div>
 );
 
