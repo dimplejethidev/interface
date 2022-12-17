@@ -52,7 +52,6 @@ const ChecklistItem = ({ text, itemState, setItemState }: ChecklistItemProps) =>
     </div>
 )
 
-
 const TutorialChecklistPopup = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const tutorialContext = useTutorial();

@@ -231,6 +231,9 @@ const CreateStreamWidget = ({
                     )
                 );
             }
+
+            // turn off reverse pricing
+            isReversePricing.current = false;
         }
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -312,10 +315,6 @@ const CreateStreamWidget = ({
     useEffect(() => {
         const refresh = async () => {
             await refreshPrice();
-
-            if (isReversePricing.current === true) {
-                isReversePricing.current = false;
-            }
         };
 
         refresh();
