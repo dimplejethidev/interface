@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
     getDefaultWallets,
@@ -127,11 +127,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
     // route to welcome message if first time user
     useEffect(() => {
-        if (router.pathname.substring(0, 5) != '/pair' && !localStorage.getItem('hide-welcome-message')) {
+        if (router.pathname.substring(0, 5) !== '/pair' && !localStorage.getItem('hide-welcome-message')) {
             router.push('/welcome');
             localStorage.setItem('hide-welcome-message', 'true');
         }
-    }, [])
+    }, [router])
 
     return (
         <div>

@@ -370,7 +370,7 @@ const CreateStreamWidget = ({
                 <div className="flex flex-col items-center justify-center">
                     <div className="w-full py-1 ">
                         <div className={
-                            tutorialContext?.startedSwap == TutorialItemState.ShowHint
+                            tutorialContext?.startedSwap === TutorialItemState.ShowHint
                                 ?
                                 "after:rounded-2xl relative after:pointer-events-none after:animate-border after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
                                 :
@@ -428,7 +428,7 @@ const CreateStreamWidget = ({
                         token0Price={token0Price}
                         poolExists={poolExists}
                     />
-                    <div className={"transition-all duration-300 overflow-hidden rounded-2xl " + ((poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 ')}>
+                    <div className={`transition-all duration-300 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
                         <BufferWarning
                             minBalance={minBalance}
                             outboundTokenBalance={outboundTokenBalance}
