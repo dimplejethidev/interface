@@ -18,6 +18,8 @@ import ToastMessage from "../components/ToastMessage";
 import IToast from "../types/Toast";
 import Sidebar from "../components/Sidebar";
 import DarkModeProvider from "../utils/DarkModeProvider";
+import TutorialChecklistPopup from "../components/TutorialChecklistPopup";
+import TutorialProvider from "../utils/TutorialProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
@@ -115,8 +117,21 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     // dark mode params
     const [isDark, setIsDark] = useState<boolean>(false);
     useEffect(() => {
-        setIsDark(document.documentElement.classList.contains("dark"));
+        const dark = document.documentElement.classList.contains("dark");
+        setIsDark(dark);
+
+        if (dark) {
+            document.body.style.background = '#000000'
+        }
     }, [setIsDark]);
+
+    // route to welcome message if first time user
+    useEffect(() => {
+        if (router.pathname.substring(0, 5) !== '/pair' && !localStorage.getItem('hide-welcome-message')) {
+            router.push('/welcome');
+            localStorage.setItem('hide-welcome-message', 'true');
+        }
+    }, [router])
 
     return (
         <div>
@@ -135,31 +150,36 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                             }
                             avatar={CustomAvatar}
                         >
-                            <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
-                                <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
-                                    <Sidebar
-                                        isShown={isShown}
-                                        setIsShown={setIsShown}
+                            <TutorialProvider>
+                                <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
+                                    <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
+                                        <div className="w-full md:w-auto md:p-4">
+                                            <Sidebar
+                                                isShown={isShown}
+                                                setIsShown={setIsShown}
+                                                showToast={showToast}
+                                            />
+                                        </div>
+                                        <main
+                                            className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${isShown && " hidden md:flex "
+                                                }`}
+                                        >
+                                            <div className="md:h-[50%]" />
+                                            <Component
+                                                // eslint-disable-next-line react/jsx-props-no-spreading
+                                                {...pageProps}
+                                                showToast={showToast}
+                                            />
+                                            <div className="md:h-[50%]" />
+                                        </main>
+                                    </div>
+                                    <ToastMessage
+                                        toastList={toastList}
+                                        setToastList={setToastList}
                                     />
-                                    <main
-                                        className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${
-                                            isShown && " hidden md:flex "
-                                        }`}
-                                    >
-                                        <div className="md:h-[50%]" />
-                                        <Component
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
-                                            {...pageProps}
-                                            showToast={showToast}
-                                        />
-                                        <div className="md:h-[50%]" />
-                                    </main>
+                                    <TutorialChecklistPopup />
                                 </div>
-                                <ToastMessage
-                                    toastList={toastList}
-                                    setToastList={setToastList}
-                                />
-                            </div>
+                            </TutorialProvider>
                         </RainbowKitProvider>
                     </DarkModeProvider>
                 </WagmiConfig>

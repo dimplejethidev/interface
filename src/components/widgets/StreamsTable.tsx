@@ -77,8 +77,8 @@ const StreamsTable = () => {
                 pools.map(async (p) => {
                     const s = await sf.cfaV1.getFlow({
                         superToken: p.token0,
-                        sender: p.address,
-                        receiver: address,
+                        sender: address,
+                        receiver: p.address,
                         providerOrSigner: provider,
                     });
 

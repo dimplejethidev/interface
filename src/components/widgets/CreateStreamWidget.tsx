@@ -15,6 +15,8 @@ import { TokenOption } from "../../types/TokenOption";
 import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
 import getToastErrorType from "../../utils/getToastErrorType";
+import { TutorialItemState, useTutorial } from "../../utils/TutorialProvider";
+import PriceImpactWarning from "../PriceImpactWarning";
 
 interface CreateStreamWidgetProps {
     showToast: (type: ToastType) => {};
@@ -31,6 +33,7 @@ const CreateStreamWidget = ({
     const signer = rainbowSigner as ethers.Signer;
     const { chain } = useNetwork();
     const { address } = useAccount();
+    const tutorialContext = useTutorial();
 
     // user input
     const [displayedSwapFlowRate, setDisplayedSwapFlowRate] =
@@ -54,6 +57,7 @@ const CreateStreamWidget = ({
     const [priceTimeout, setPriceTimeout] = useState<
         NodeJS.Timeout | undefined
     >(undefined);
+    const [priceImpact, setPriceImpact] = useState<number>(0);
 
     // stream vars
     const token0Flow = useRef(BigNumber.from(0));
@@ -101,16 +105,14 @@ const CreateStreamWidget = ({
             if (token) {
                 if (userToken0Flow.current.gt(0)) {
                     // update stream
-                    const createFlowOperation = superfluid.cfaV1.updateFlow({
+                    const updateFlowOperation = superfluid.cfaV1.updateFlow({
                         receiver: pool,
                         flowRate: swapFlowRate,
                         superToken: token,
                         sender,
                     });
-                    const result = await createFlowOperation.exec(signer);
+                    const result = await updateFlowOperation.exec(signer);
                     await result.wait();
-
-                    console.log("Stream created: ", result);
                 } else {
                     // create stream
                     const createFlowOperation = superfluid.cfaV1.createFlow({
@@ -122,7 +124,10 @@ const CreateStreamWidget = ({
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
 
-                    // console.log("Stream created: ", result);
+                    // mark item completed, setTimeout fixes problem related to component reset
+                    setTimeout(() => {
+                        tutorialContext?.setStartedSwap(TutorialItemState.Complete);
+                    }, 0);
                 }
 
                 showToast(ToastType.Success);
@@ -161,21 +166,30 @@ const CreateStreamWidget = ({
             if (token1Flow.current.gt(0)) {
                 setToken0Price(
                     parseFloat(calculatedToken0Flow.toString()) /
-                        parseFloat(token1Flow.current.toString())
+                    parseFloat(token1Flow.current.toString())
                 );
             } else {
                 setToken0Price(0);
             }
 
-            // calculate price multiple
             if (calculatedToken0Flow.gt(0)) {
+                // calculate price multiple
                 setPriceMultiple(
                     token1Flow.current
                         .mul(BigNumber.from(2).pow(128))
                         .div(calculatedToken0Flow)
                 );
+
+                // calculate price impact
+                setPriceImpact(
+                    1 - (
+                        parseFloat(token0Flow.current.toString()) /
+                        parseFloat(calculatedToken0Flow.toString())
+                    )
+                )
             } else {
                 setPriceMultiple(BigNumber.from(0));
+                setPriceImpact(0);
             }
 
             // calculate deposit
@@ -228,6 +242,9 @@ const CreateStreamWidget = ({
                     )
                 );
             }
+
+            // turn off reverse pricing
+            isReversePricing.current = false;
         }
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,38 +256,38 @@ const CreateStreamWidget = ({
             const token0Address = store.outboundToken.address;
             const token1Address = store.inboundToken.address;
 
-            const poolABI = [
-                "function getFlowIn(address token) external view returns (uint128 flowIn)",
-            ];
-
             try {
                 const poolAddress = getPoolAddress(
                     store.inboundToken.value,
                     store.outboundToken.value
                 );
                 setPoolExists(true);
-                const poolContract = new ethers.Contract(
-                    poolAddress,
-                    poolABI,
-                    provider
-                );
+
+                // init sf framework
+                const chainId = chain?.id;
+                const sf = await Framework.create({
+                    chainId: Number(chainId),
+                    provider,
+                });
 
                 // get flows
-                token0Flow.current = await poolContract.getFlowIn(
-                    token0Address
+                token0Flow.current = BigNumber.from(
+                    await sf.cfaV1.getNetFlow({
+                        superToken: token0Address,
+                        account: poolAddress,
+                        providerOrSigner: provider
+                    })
                 );
-                token1Flow.current = await poolContract.getFlowIn(
-                    token1Address
+                token1Flow.current = BigNumber.from(
+                    await sf.cfaV1.getNetFlow({
+                        superToken: token1Address,
+                        account: poolAddress,
+                        providerOrSigner: provider
+                    })
                 );
 
                 // get existing user flows
                 if (address) {
-                    const chainId = chain?.id;
-                    const sf = await Framework.create({
-                        chainId: Number(chainId),
-                        provider,
-                    });
-
                     userToken0Flow.current = BigNumber.from(
                         (
                             await sf.cfaV1.getFlow({
@@ -309,13 +326,10 @@ const CreateStreamWidget = ({
     useEffect(() => {
         const refresh = async () => {
             await refreshPrice();
-
-            if (isReversePricing.current === true) {
-                isReversePricing.current = false;
-            }
         };
 
         refresh();
+
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate]);
@@ -364,23 +378,31 @@ const CreateStreamWidget = ({
             />
             <WidgetContainer title="Swap">
                 <div className="flex flex-col items-center justify-center">
-                    <div className="w-full py-1">
-                        <TokenFlowField
-                            // TODO: assess props
-                            // title="Flow Rate"
-                            displayedValue={displayedSwapFlowRate}
-                            setDisplayedValue={setDisplayedSwapFlowRate}
-                            // formattedValue={swapFlowRate}
-                            setFormattedValue={setSwapFlowRate}
-                            dropdownItems={flowrates}
-                            dropdownValue={store.flowrateUnit}
-                            setDropdownValue={store.setFlowrateUnit}
-                            isEther
-                            shouldReformat
-                            currentBalance={outboundTokenBalance}
-                            token={store.outboundToken}
-                            setToken={store.setOutboundToken}
-                        />
+                    <div className="w-full py-1 ">
+                        <div className={
+                            tutorialContext?.startedSwap === TutorialItemState.ShowHint
+                                ?
+                                "after:rounded-2xl relative after:pointer-events-none after:animate-border after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                                :
+                                ""
+                        }>
+                            <TokenFlowField
+                                // TODO: assess props
+                                // title="Flow Rate"
+                                displayedValue={displayedSwapFlowRate}
+                                setDisplayedValue={setDisplayedSwapFlowRate}
+                                // formattedValue={swapFlowRate}
+                                setFormattedValue={setSwapFlowRate}
+                                dropdownItems={flowrates}
+                                dropdownValue={store.flowrateUnit}
+                                setDropdownValue={store.setFlowrateUnit}
+                                isEther
+                                shouldReformat
+                                currentBalance={outboundTokenBalance}
+                                token={store.outboundToken}
+                                setToken={store.setOutboundToken}
+                            />
+                        </div>
                     </div>
                     <button
                         type="button"
@@ -410,21 +432,28 @@ const CreateStreamWidget = ({
                         />
                     </div>
                 </div>
-                <PricingField
-                    refreshingPrice={refreshingPrice}
-                    token0Price={token0Price}
-                    poolExists={poolExists}
-                />
-                {poolExists && swapFlowRate && (
-                    <BufferWarning
-                        minBalance={minBalance}
-                        outboundTokenBalance={outboundTokenBalance}
-                        outboundToken={store.outboundToken}
-                        buffer={deposit}
-                        acceptedBuffer={acceptedBuffer}
-                        setAcceptedBuffer={setAcceptedBuffer}
+                <div>
+                    <PricingField
+                        refreshingPrice={refreshingPrice}
+                        token0Price={token0Price}
+                        poolExists={poolExists}
                     />
-                )}
+                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(priceImpact > 0.5) ? ' max-h-64 pt-6 -mb-2 ' : ' max-h-0 '}`}>
+                        <PriceImpactWarning
+                            priceImpact={priceImpact}
+                        />
+                    </div>
+                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
+                        <BufferWarning
+                            minBalance={minBalance}
+                            outboundTokenBalance={outboundTokenBalance}
+                            outboundToken={store.outboundToken}
+                            buffer={deposit}
+                            acceptedBuffer={acceptedBuffer}
+                            setAcceptedBuffer={setAcceptedBuffer}
+                        />
+                    </div>
+                </div>
                 <TransactionButton
                     title={
                         userToken0Flow.current.gt(0) ? "Update Swap" : "Swap"
@@ -434,21 +463,24 @@ const CreateStreamWidget = ({
                     errorMessage={
                         // TODO: do not use nested ternary statements
                         // eslint-disable-next-line no-nested-ternary
-                        !poolExists
-                            ? "Select valid token pair"
+                        !signer
+                            ? "Connect wallet"
                             : // eslint-disable-next-line no-nested-ternary
-                            !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
-                            ? "Enter flow rate"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !acceptedBuffer
-                            ? userToken0Flow.current.gt(0)
-                                ? "Update Swap"
-                                : "Swap"
-                            : undefined
+                            !poolExists
+                                ? "Select valid token pair"
+                                : // eslint-disable-next-line no-nested-ternary
+                                !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
+                                    ? "Enter flow rate"
+                                    : // eslint-disable-next-line no-nested-ternary
+                                    !acceptedBuffer
+                                        ? userToken0Flow.current.gt(0)
+                                            ? "Update Swap"
+                                            : "Swap"
+                                        : undefined
                     }
                 />
             </WidgetContainer>
-        </section>
+        </section >
     );
 };
 
