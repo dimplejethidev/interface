@@ -7,6 +7,7 @@ import daiLogo from "../../public/dai-logo.png";
 import usdcLogo from "../../public/usdc-logo.png";
 
 const tokens: TokenOption[] = [
+    /*
     {
         label: "ETHxp",
         value: Token.ETHxp,
@@ -21,6 +22,7 @@ const tokens: TokenOption[] = [
         },
         colorHex: "#00ABEE",
     },
+    */
     {
         label: "fDAIxp",
         value: Token.fDAIxp,
