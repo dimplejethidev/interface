@@ -1,3 +1,8 @@
+// /////////////////////////////////////////////////////////////////////////////////
+// WARNING: THIS FILE HAS BEEN DEPRECATED AS IT IS NO LONGER USED IN THE CODEBASE //
+//             REVISIT AND DELETE IF WE NO LONGER REQUIRE THIS LOGIC              //
+// /////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
 import Select, {
     components,
@@ -5,8 +10,8 @@ import Select, {
     OptionProps,
     StylesConfig,
 } from "react-select";
-import { TokenOption } from "../types/TokenOption";
-import tokens from "../utils/tokens";
+import { TokenOption } from "../../types/TokenOption";
+import tokens from "../../utils/tokens";
 
 type IsMulti = false;
 const customStyles: StylesConfig<TokenOption, IsMulti> = {
@@ -136,6 +141,7 @@ interface TokenDropdownProps {
     setToken: (token: TokenOption) => void;
 }
 
+// Used in TokenSelectField.tsx which is also deprecated
 const TokenDropdown = ({ selectTokenOption, setToken }: TokenDropdownProps) => {
     const onChange = (option: TokenOption | null) => {
         if (option) {

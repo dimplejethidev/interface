@@ -1,9 +1,13 @@
-import { IoArrowDown } from "react-icons/io5";
-import { useStore } from "../store";
-import TokenDropdown from "./TokenDropdown";
-import { TokenOption } from "../types/TokenOption";
+// /////////////////////////////////////////////////////////////////////////////////
+// WARNING: THIS FILE HAS BEEN DEPRECATED AS IT IS NO LONGER USED IN THE CODEBASE //
+//             REVISIT AND DELETE IF WE NO LONGER REQUIRE THIS LOGIC              //
+// /////////////////////////////////////////////////////////////////////////////////
 
-// TODO: Remove
+import { IoArrowDown } from "react-icons/io5";
+import { useStore } from "../../store";
+import TokenDropdown from "./TokenDropdown";
+import { TokenOption } from "../../types/TokenOption";
+
 const TokenSelectField = () => {
     const store = useStore();
 

@@ -1,10 +1,15 @@
+// /////////////////////////////////////////////////////////////////////////////////
+// WARNING: THIS FILE HAS BEEN DEPRECATED AS IT IS NO LONGER USED IN THE CODEBASE //
+//             REVISIT AND DELETE IF WE NO LONGER REQUIRE THIS LOGIC              //
+// /////////////////////////////////////////////////////////////////////////////////
+
 import Select, {
     components,
     ControlProps,
     OptionProps,
     StylesConfig,
 } from "react-select";
-import { GenericDropdownOption } from "../types/GenericDropdownOption";
+import { GenericDropdownOption } from "../../types/GenericDropdownOption";
 
 type IsMulti = false;
 export const customStyles: StylesConfig<GenericDropdownOption, IsMulti> = {
@@ -141,6 +146,7 @@ interface GenericDropdownProps {
     setDropdownValue: (value: GenericDropdownOption) => void;
 }
 
+// Used in NumberEntryField.tsx which is also deprecated
 const GenericDropdown = ({
     options,
     dropdownValue,

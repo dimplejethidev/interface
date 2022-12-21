@@ -1,8 +1,13 @@
+// /////////////////////////////////////////////////////////////////////////////////
+// WARNING: THIS FILE HAS BEEN DEPRECATED AS IT IS NO LONGER USED IN THE CODEBASE //
+//             REVISIT AND DELETE IF WE NO LONGER REQUIRE THIS LOGIC              //
+// /////////////////////////////////////////////////////////////////////////////////
+
 /* eslint-disable react/require-default-props */
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useStore } from "../store";
-import { GenericDropdownOption } from "../types/GenericDropdownOption";
+import { useStore } from "../../store";
+import { GenericDropdownOption } from "../../types/GenericDropdownOption";
 import GenericDropdown from "./GenericDropdown";
 
 interface NumberEntryFieldProps {
