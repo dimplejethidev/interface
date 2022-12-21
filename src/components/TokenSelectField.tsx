@@ -3,6 +3,7 @@ import { useStore } from "../store";
 import TokenDropdown from "./TokenDropdown";
 import { TokenOption } from "../types/TokenOption";
 
+// TODO: Remove
 const TokenSelectField = () => {
     const store = useStore();
 

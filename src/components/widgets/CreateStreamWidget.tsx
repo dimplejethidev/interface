@@ -23,6 +23,7 @@ interface CreateStreamWidgetProps {
     setKeyNum: Dispatch<SetStateAction<number>>;
 }
 
+// TODO: Why do we have two CreateStreamWidget's? See UpgradeDowngradeWidget.ts
 const CreateStreamWidget = ({
     showToast,
     setKeyNum,
@@ -126,7 +127,9 @@ const CreateStreamWidget = ({
 
                     // mark item completed, setTimeout fixes problem related to component reset
                     setTimeout(() => {
-                        tutorialContext?.setStartedSwap(TutorialItemState.Complete);
+                        tutorialContext?.setStartedSwap(
+                            TutorialItemState.Complete
+                        );
                     }, 0);
                 }
 
@@ -166,7 +169,7 @@ const CreateStreamWidget = ({
             if (token1Flow.current.gt(0)) {
                 setToken0Price(
                     parseFloat(calculatedToken0Flow.toString()) /
-                    parseFloat(token1Flow.current.toString())
+                        parseFloat(token1Flow.current.toString())
                 );
             } else {
                 setToken0Price(0);
@@ -182,11 +185,10 @@ const CreateStreamWidget = ({
 
                 // calculate price impact
                 setPriceImpact(
-                    1 - (
+                    1 -
                         parseFloat(token0Flow.current.toString()) /
-                        parseFloat(calculatedToken0Flow.toString())
-                    )
-                )
+                            parseFloat(calculatedToken0Flow.toString())
+                );
             } else {
                 setPriceMultiple(BigNumber.from(0));
                 setPriceImpact(0);
@@ -275,14 +277,14 @@ const CreateStreamWidget = ({
                     await sf.cfaV1.getNetFlow({
                         superToken: token0Address,
                         account: poolAddress,
-                        providerOrSigner: provider
+                        providerOrSigner: provider,
                     })
                 );
                 token1Flow.current = BigNumber.from(
                     await sf.cfaV1.getNetFlow({
                         superToken: token1Address,
                         account: poolAddress,
-                        providerOrSigner: provider
+                        providerOrSigner: provider,
                     })
                 );
 
@@ -379,13 +381,14 @@ const CreateStreamWidget = ({
             <WidgetContainer title="Swap">
                 <div className="flex flex-col items-center justify-center">
                     <div className="w-full py-1 ">
-                        <div className={
-                            tutorialContext?.startedSwap === TutorialItemState.ShowHint
-                                ?
-                                "after:rounded-2xl relative after:pointer-events-none after:animate-border after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
-                                :
-                                ""
-                        }>
+                        <div
+                            className={
+                                tutorialContext?.startedSwap ===
+                                TutorialItemState.ShowHint
+                                    ? "after:rounded-2xl relative after:pointer-events-none after:animate-border after:border-2 after:border-aqueductBlue after:top-0 after:absolute after:bottom-0 after:left-0 after:right-0"
+                                    : ""
+                            }
+                        >
                             <TokenFlowField
                                 // TODO: assess props
                                 // title="Flow Rate"
@@ -438,12 +441,22 @@ const CreateStreamWidget = ({
                         token0Price={token0Price}
                         poolExists={poolExists}
                     />
-                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(priceImpact > 0.5) ? ' max-h-64 pt-6 -mb-2 ' : ' max-h-0 '}`}>
-                        <PriceImpactWarning
-                            priceImpact={priceImpact}
-                        />
+                    <div
+                        className={`transition-all duration-700 overflow-hidden rounded-2xl ${
+                            priceImpact > 0.5
+                                ? " max-h-64 pt-6 -mb-2 "
+                                : " max-h-0 "
+                        }`}
+                    >
+                        <PriceImpactWarning priceImpact={priceImpact} />
                     </div>
-                    <div className={`transition-all duration-700 overflow-hidden rounded-2xl ${(poolExists && swapFlowRate) ? ' max-h-64 pt-6 ' : ' max-h-0 '}`}>
+                    <div
+                        className={`transition-all duration-700 overflow-hidden rounded-2xl ${
+                            poolExists && swapFlowRate
+                                ? " max-h-64 pt-6 "
+                                : " max-h-0 "
+                        }`}
+                    >
                         <BufferWarning
                             minBalance={minBalance}
                             outboundTokenBalance={outboundTokenBalance}
@@ -467,20 +480,20 @@ const CreateStreamWidget = ({
                             ? "Connect wallet"
                             : // eslint-disable-next-line no-nested-ternary
                             !poolExists
-                                ? "Select valid token pair"
-                                : // eslint-disable-next-line no-nested-ternary
-                                !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
-                                    ? "Enter flow rate"
-                                    : // eslint-disable-next-line no-nested-ternary
-                                    !acceptedBuffer
-                                        ? userToken0Flow.current.gt(0)
-                                            ? "Update Swap"
-                                            : "Swap"
-                                        : undefined
+                            ? "Select valid token pair"
+                            : // eslint-disable-next-line no-nested-ternary
+                            !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
+                            ? "Enter flow rate"
+                            : // eslint-disable-next-line no-nested-ternary
+                            !acceptedBuffer
+                            ? userToken0Flow.current.gt(0)
+                                ? "Update Swap"
+                                : "Swap"
+                            : undefined
                     }
                 />
             </WidgetContainer>
-        </section >
+        </section>
     );
 };
 

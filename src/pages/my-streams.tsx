@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import StreamsTable from "../components/widgets/StreamsTable";
+import StreamsTable from "../components/table/StreamsTable";
 
 const MyStreams: NextPage = () => <StreamsTable />;
 

@@ -38,6 +38,8 @@
                 "unnamedComponents": "arrow-function"
             }
         ]
+        // Once we have refactored the codebase and written tests, activate this to reduce code complexity
+        // "react/jsx-max-depth": ["error", { "max": 4 }]
     },
     "overrides": [
         {

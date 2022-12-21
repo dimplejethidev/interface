@@ -14,6 +14,7 @@ interface NumberEntryFieldProps {
     isEther: boolean;
 }
 
+// TODO: Remove
 const NumberEntryField = ({
     title,
     setNumber,

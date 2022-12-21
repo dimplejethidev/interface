@@ -141,7 +141,7 @@ interface GenericDropdownProps {
     setDropdownValue: (value: GenericDropdownOption) => void;
 }
 
-const TokenDropdown = ({
+const GenericDropdown = ({
     options,
     dropdownValue,
     setDropdownValue,
@@ -190,4 +190,4 @@ const TokenDropdown = ({
     );
 };
 
-export default TokenDropdown;
+export default GenericDropdown;
