@@ -58,12 +58,12 @@ const CustomWalletConnectButton = () => (
                                 <button
                                     onClick={openChainModal}
                                     type="button"
-                                    className="flex justify-start items-center space-x-2 w-full rounded-xl bg-warningYellow p-4 md:p-2 text-white "
+                                    className="flex justify-start items-center space-x-2 w-full rounded-xl bg-warningYellow/90 p-4 md:p-2 text-white "
                                 >
                                     <div className="p-2 rounded-lg bg-white/10">
                                         <TbRefresh size={20} />
                                     </div>
-                                    <p className="text-sm">Switch to Goerli</p>
+                                    <p className="text-sm font-medium">Switch to Goerli</p>
                                 </button>
                             );
                         }
