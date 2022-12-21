@@ -13,7 +13,7 @@ import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
-import { fDAIxp, fDAIxpDistributor } from "../utils/constants";
+import { fDAIxp, fTokenDistributor, fUSDCxp } from "../utils/constants";
 import ToastType from "../types/ToastType";
 import getToastErrorType from "../utils/getToastErrorType";
 import LoadingSpinner from "./LoadingSpinner";
@@ -152,16 +152,24 @@ const Sidebar = ({
                 chainId: Number(chainId),
                 provider,
             });
-            const flow = (
+            const flow0 = (
                 await sf.cfaV1.getFlow({
                     superToken: fDAIxp,
-                    sender: fDAIxpDistributor,
+                    sender: fTokenDistributor,
+                    receiver: address,
+                    providerOrSigner: provider,
+                })
+            ).flowRate;
+            const flow1 = (
+                await sf.cfaV1.getFlow({
+                    superToken: fUSDCxp,
+                    sender: fTokenDistributor,
                     receiver: address,
                     providerOrSigner: provider,
                 })
             ).flowRate;
 
-            setShowRequestFunds(BigNumber.from(flow).eq(0));
+            setShowRequestFunds(BigNumber.from(flow0).eq(0) && BigNumber.from(flow1).eq(0));
         }
 
         checkFundFlow();
@@ -255,7 +263,7 @@ const Sidebar = ({
                                         "function requestTokens() external",
                                     ];
                                     const distributorContract = new ethers.Contract(
-                                        fDAIxpDistributor,
+                                        fTokenDistributor,
                                         distributorABI,
                                         signer
                                     );

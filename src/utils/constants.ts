@@ -16,4 +16,4 @@ export const fDAIxp: string = "0x220aF5894e183168E3E3f9dA9cde9Ae812c551Db";
 
 export const fUSDCxp: string = "0xa3404180C8D154EF80B564ffeC6F02739473BFDE";
 
-export const fDAIxpDistributor: string = "0x841fd5cCC3DF35D91B8340c5395a6A42d69255a5";
+export const fTokenDistributor: string = "0x03c58f1f1335a6895e65c8faD6B88f51e82139AC";
