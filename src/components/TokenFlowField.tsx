@@ -106,7 +106,7 @@ const TokenFlowField = ({
                 <div className="flex justify-end2 pt-3 pb-2 px-2 text-xs space-x-2">
                     <p>Balance:</p>
                     <p className="monospace-font tracking-wider">
-                        {parseFloat(ethers.utils.formatEther(currentBalance)) == 0 ? '0.0' : parseFloat(ethers.utils.formatEther(currentBalance)).toFixed(5)}
+                        {parseFloat(ethers.utils.formatEther(currentBalance)) === 0 ? '0.0' : parseFloat(ethers.utils.formatEther(currentBalance)).toFixed(5)}
                     </p>
                 </div>
             </div>
