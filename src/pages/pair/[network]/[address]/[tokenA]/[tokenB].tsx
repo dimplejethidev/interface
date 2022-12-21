@@ -11,6 +11,7 @@ import { BigNumber, ethers } from "ethers";
 import { useAccount, useNetwork, useProvider, useSigner } from "wagmi";
 import { Framework } from "@superfluid-finance/sdk-core";
 import Operation from "@superfluid-finance/sdk-core/dist/module/Operation";
+
 import { TokenOption } from "../../../../../types/TokenOption";
 import getPoolAddress from "../../../../../helpers/getPool";
 import WidgetContainer from "../../../../../components/widgets/WidgetContainer";
@@ -24,165 +25,12 @@ import ToastType from "../../../../../types/ToastType";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
 import getToastErrorType from "../../../../../utils/getToastErrorType";
 import SwapData from "../../../../../types/SwapData";
+import PriceWidget from "../../../../../components/widgets/PriceWidget";
+import BalanceField from "../../../../../components/BalanceField";
+import RewardWidget from "../../../../../components/widgets/RewardWidget";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
-
-interface BalanceFieldProps {
-    currentBalance: BigNumber;
-    isTwap: boolean;
-    token: TokenOption;
-    numDecimals: number;
-    isLoading: boolean;
-}
-
-interface PriceWidgetProps {
-    isLoading: boolean;
-    title: string;
-    token0: TokenOption;
-    token1: TokenOption;
-    price: number;
-}
-
-interface RewardWidgetProps {
-    isLoading: boolean;
-    // eslint-disable-next-line react/require-default-props
-    title?: string;
-    token0: TokenOption;
-    token1: TokenOption;
-    reward0: BigNumber;
-    reward1: BigNumber;
-    numDecimals0: number;
-    numDecimals1: number;
-}
-
-const BalanceField = ({
-    currentBalance,
-    isTwap,
-    token,
-    numDecimals,
-    isLoading,
-}: BalanceFieldProps) => {
-    if (isLoading) {
-        return (
-            <div className="bg-gray-200 dark:bg-gray-800 h-10 rounded-2xl animate-pulse" />
-        );
-    }
-
-    return (
-        <div
-            className={`flex space-x-4 items-end rounded-2xl tracking-wider monospace-font font-bold ${
-                // + (isTwap ? ('bg-[' + token.colorHex + '30] text-[' + token.colorHex + ']') : 'text-gray-300 text-5xl')
-                isTwap
-                    ? "text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl"
-                    : "text-gray-300 dark:text-slate-500/80 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold"
-                }`}
-        >
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <img
-                src={token.logo}
-                className={isTwap ? "h-12 mb-3 hidden" : "h-12 hidden"}
-            />
-            <p>
-                {(isTwap ? "+" : "-") +
-                    parseFloat(
-                        ethers.utils.formatEther(currentBalance)
-                    ).toLocaleString(undefined, {
-                        minimumFractionDigits: numDecimals,
-                    })}
-            </p>
-            <div className="flex space-x-1 md:space-x-2">
-                {/* TODO: translate responsive width to be used with Image */}
-                {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                <img src={token.logo} className="h-4 md:h-6 xl:h-7 xl:mb-2" />
-                <p
-                    className="text-sm md:text-lg xl:text-2xl poppins-font font-bold tracking-normal"
-                    style={{ color: token.colorHex }}
-                >
-                    {token.label}
-                </p>
-            </div>
-        </div>
-    );
-};
-
-// TODO: linting errors
-const PriceWidget = ({
-    isLoading,
-    title,
-    token0,
-    token1,
-    price,
-}: PriceWidgetProps) => (
-    <WidgetContainer smallTitle={title} isUnbounded>
-        {isLoading ? (
-            <div className="space-y-2">
-                <div className="bg-gray-200 dark:bg-gray-800 h-10 w-1/2 rounded-2xl animate-pulse" />
-                <div className="bg-gray-200 dark:bg-gray-800 h-10 w-4/5 rounded-2xl animate-pulse" />
-            </div>
-        ) : (
-            <div className="px-4 space-y-2">
-                <div className="flex items-end space-x-2">
-                    <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800 dark:text-white">
-                        1
-                    </p>
-                    <p className="text-xl md:text-2xl font-bold">
-                        {token0.label}
-                    </p>
-                </div>
-                <div className="flex items-end space-x-2">
-                    <p className="text-2xl md:text-3xl lg:text-4xl font-bold monospace-font text-gray-800 dark:text-white">
-                        {`= ${price}`}
-                    </p>
-                    <p className="text-xl md:text-2xl font-bold">
-                        {token1.label}
-                    </p>
-                </div>
-            </div>
-        )}
-    </WidgetContainer>
-);
-
-const RewardWidget = ({
-    isLoading,
-    title,
-    token0,
-    token1,
-    reward0,
-    reward1,
-    numDecimals0,
-    numDecimals1,
-}: RewardWidgetProps) => (
-    <WidgetContainer smallTitle={title} isUnbounded>
-        {isLoading ? (
-            <div className="space-y-2">
-                <div className="bg-gray-200 dark:bg-gray-800 h-10 w-1/2 rounded-2xl animate-pulse" />
-                <div className="bg-gray-200 dark:bg-gray-800 h-10 w-4/5 rounded-2xl animate-pulse" />
-            </div>
-        ) : (
-            <div className="space-y-2">
-                {reward0.gt(0) && (
-                    <BalanceField
-                        currentBalance={reward0}
-                        isTwap
-                        token={token0}
-                        numDecimals={numDecimals0}
-                        isLoading={isLoading}
-                    />
-                )}
-                {reward1.gt(0) && (
-                    <BalanceField
-                        currentBalance={reward1}
-                        isTwap
-                        token={token1}
-                        numDecimals={numDecimals1}
-                        isLoading={isLoading}
-                    />
-                )}
-            </div>
-        )}
-    </WidgetContainer>
-);
 
 interface PoolInteractionVisualizationProps {
     showToast: (type: ToastType) => {};
@@ -370,7 +218,7 @@ const PoolInteractionVisualization: NextPage<
                         .div(1000)
                         .add(
                             (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) /
-                            1000
+                                1000
                         )
                 );
             }
@@ -381,42 +229,79 @@ const PoolInteractionVisualization: NextPage<
                 currentTimestampBigNumber
                     .div(1000)
                     .add(
-                        (REFRESH_INTERVAL *
-                            ANIMATION_MINIMUM_STEP_TIME) /
-                        1000
+                        (REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000
                     );
 
             // calculate twap balances
-            const swapData: SwapData = await poolContract.getUserSwapData(tokenAddress, userAddress, currentTimestampBigNumber.div(1000).toString());
-            const initialTwapBalance: BigNumber = swapData.units.mul(swapData.realTimeCumulative.sub(swapData.initialCumulative)).div(decodeConst);
-            const futureSwapData: SwapData = await poolContract.getUserSwapData(tokenAddress, userAddress, futureTimestampBigNumber.toString());
-            const futureTwapBalance: BigNumber = futureSwapData.units.mul(futureSwapData.realTimeCumulative.sub(futureSwapData.initialCumulative)).div(decodeConst);
+            const swapData: SwapData = await poolContract.getUserSwapData(
+                tokenAddress,
+                userAddress,
+                currentTimestampBigNumber.div(1000).toString()
+            );
+            const initialTwapBalance: BigNumber = swapData.units
+                .mul(
+                    swapData.realTimeCumulative.sub(swapData.initialCumulative)
+                )
+                .div(decodeConst);
+            const futureSwapData: SwapData = await poolContract.getUserSwapData(
+                tokenAddress,
+                userAddress,
+                futureTimestampBigNumber.toString()
+            );
+            const futureTwapBalance: BigNumber = futureSwapData.units
+                .mul(
+                    futureSwapData.realTimeCumulative.sub(
+                        futureSwapData.initialCumulative
+                    )
+                )
+                .div(decodeConst);
 
             // calculate reward balances
-            const rewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, currentTimestampBigNumber.div(1000).toString());
-            const initialRewardBalance: BigNumber = rewardData.units.mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative)).div(decodeConst).sub(initialBalance.div(100));
-            const futureRewardData: SwapData = await poolContract.getUserRewardData(tokenAddress, userAddress, futureTimestampBigNumber.toString());
-            const futureRewardBalance: BigNumber = futureRewardData.units.mul(futureRewardData.realTimeCumulative.sub(futureRewardData.initialCumulative)).div(decodeConst).sub(futureBalance.div(100));
+            const rewardData: SwapData = await poolContract.getUserRewardData(
+                tokenAddress,
+                userAddress,
+                currentTimestampBigNumber.div(1000).toString()
+            );
+            const initialRewardBalance: BigNumber = rewardData.units
+                .mul(
+                    rewardData.realTimeCumulative.sub(
+                        rewardData.initialCumulative
+                    )
+                )
+                .div(decodeConst)
+                .sub(initialBalance.div(100));
+            const futureRewardData: SwapData =
+                await poolContract.getUserRewardData(
+                    tokenAddress,
+                    userAddress,
+                    futureTimestampBigNumber.toString()
+                );
+            const futureRewardBalance: BigNumber = futureRewardData.units
+                .mul(
+                    futureRewardData.realTimeCumulative.sub(
+                        futureRewardData.initialCumulative
+                    )
+                )
+                .div(decodeConst)
+                .sub(futureBalance.div(100));
 
             return {
                 initialBalance,
                 initialTwapBalance,
-                initialRewardBalance:
-                    initialRewardBalance.gt(0) ? initialRewardBalance : BigNumber.from(0),
+                initialRewardBalance: initialRewardBalance.gt(0)
+                    ? initialRewardBalance
+                    : BigNumber.from(0),
                 flowRate: futureBalance
                     .sub(initialBalance)
                     .div(REFRESH_INTERVAL),
                 twapFlowRate: futureTwapBalance
                     .sub(initialTwapBalance)
                     .div(REFRESH_INTERVAL),
-                rewardFlowRate:
-                    futureRewardBalance.gt(0) ?
-                        (
-                            futureRewardBalance
-                                .sub(initialRewardBalance)
-                                .div(REFRESH_INTERVAL)
-                        ) :
-                        BigNumber.from(0),
+                rewardFlowRate: futureRewardBalance.gt(0)
+                    ? futureRewardBalance
+                          .sub(initialRewardBalance)
+                          .div(REFRESH_INTERVAL)
+                    : BigNumber.from(0),
                 startDate: flowInfo.timestamp,
             };
         }
@@ -476,12 +361,12 @@ const PoolInteractionVisualization: NextPage<
         if (twapFlowRate.gt(0) && initialTwapBalance.gt(0)) {
             setAveragePrice(
                 initialBalance0.mul(1000).div(initialTwapBalance).toNumber() /
-                1000
+                    1000
             );
         } else if (initialTwapBalance0.gt(0)) {
             setAveragePrice(
                 initialBalance.mul(1000).div(initialTwapBalance0).toNumber() /
-                1000
+                    1000
             );
         }
 
@@ -500,14 +385,14 @@ const PoolInteractionVisualization: NextPage<
             await sf.cfaV1.getNetFlow({
                 superToken: token0.address,
                 account: poolAddress,
-                providerOrSigner: provider
+                providerOrSigner: provider,
             })
         );
         const token1Flow: BigNumber = BigNumber.from(
             await sf.cfaV1.getNetFlow({
                 superToken: token1.address,
                 account: poolAddress,
-                providerOrSigner: provider
+                providerOrSigner: provider,
             })
         );
 
@@ -570,8 +455,9 @@ const PoolInteractionVisualization: NextPage<
         <div className="flex justify-center w-full">
             {isLoading || (!isLoading && positionFound) ? (
                 <div
-                    className={`w-full max-w-4xl space-y-4 mx-4 md:mx-8 ${isLoading ? "opacity-" : ""
-                        }`}
+                    className={`w-full max-w-4xl space-y-4 mx-4 md:mx-8 ${
+                        isLoading ? "opacity-" : ""
+                    }`}
                 >
                     <div className="flex w-full max-w-4xl space-x-2 pt-4 md:pt-0">
                         <Link href="/my-streams">
@@ -906,13 +792,13 @@ const PoolInteractionVisualization: NextPage<
                                             href={
                                                 address
                                                     ? getTweetTemplate(
-                                                        getSharedLink(
-                                                            "goerli",
-                                                            address,
-                                                            token0.address,
-                                                            token1.address
-                                                        )
-                                                    )
+                                                          getSharedLink(
+                                                              "goerli",
+                                                              address,
+                                                              token0.address,
+                                                              token1.address
+                                                          )
+                                                      )
                                                     : ""
                                             }
                                             target="_blank"
