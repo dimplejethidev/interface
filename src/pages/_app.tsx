@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
@@ -19,7 +20,6 @@ import IToast from "../types/Toast";
 import Sidebar from "../components/Sidebar";
 import DarkModeProvider from "../utils/DarkModeProvider";
 import TutorialChecklistPopup from "../components/TutorialChecklistPopup";
-import TutorialProvider from "../utils/TutorialProvider";
 
 const { chains, provider } = configureChains(
     [chain.goerli],
@@ -36,6 +36,12 @@ const wagmiClient = createClient({
     connectors,
     provider,
 });
+
+// This prevents an error when hydrating. As the component it dynamically rendered on the client side. The initial UI does not match what was rendered on the server.
+const DynamicTutorialProvider = dynamic(
+    () => import("../utils/TutorialProvider"),
+    { ssr: false }
+);
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
     const [toastList, setToastList] = useState<IToast[]>([]);
@@ -121,17 +127,20 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         setIsDark(dark);
 
         if (dark) {
-            document.body.style.background = '#000000'
+            document.body.style.background = "#000000";
         }
     }, [setIsDark]);
 
     // route to welcome message if first time user
     useEffect(() => {
-        if (router.pathname.substring(0, 5) !== '/pair' && !localStorage.getItem('hide-welcome-message')) {
-            router.push('/welcome');
-            localStorage.setItem('hide-welcome-message', 'true');
+        if (
+            router.pathname.substring(0, 5) !== "/pair" &&
+            !localStorage.getItem("hide-welcome-message")
+        ) {
+            router.push("/welcome");
+            localStorage.setItem("hide-welcome-message", "true");
         }
-    }, [router])
+    }, [router]);
 
     return (
         <div>
@@ -150,7 +159,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                             }
                             avatar={CustomAvatar}
                         >
-                            <TutorialProvider>
+                            <DynamicTutorialProvider>
                                 <div className="w-full h-screen text-slate-500 poppins-font bg-white dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blueBlack dark:to-black">
                                     <div className="flex flex-col md:flex-row h-full items-center md:items-stretch">
                                         <div className="w-full md:w-auto md:p-4">
@@ -161,8 +170,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                             />
                                         </div>
                                         <main
-                                            className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${isShown && " hidden md:flex "
-                                                }`}
+                                            className={`flex flex-col items-center space-y-4 md:space-y-16 px-4 w-full overflow-y-scroll ${
+                                                isShown && " hidden md:flex "
+                                            }`}
                                         >
                                             <div className="md:h-[50%]" />
                                             <Component
@@ -179,7 +189,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                     />
                                     <TutorialChecklistPopup />
                                 </div>
-                            </TutorialProvider>
+                            </DynamicTutorialProvider>
                         </RainbowKitProvider>
                     </DarkModeProvider>
                 </WagmiConfig>
