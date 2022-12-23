@@ -56,7 +56,7 @@ const Select = ({
                     leaveFrom="transform scale-100 opacity-100"
                     leaveTo="transform scale-95 opacity-0"
                 >
-                    <Listbox.Options className="absolute z-10 mt-2 flex flex-col flex-shrink-0 overflow-auto rounded-lg bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm dark:bg-white/10 dark:backdrop-blur-lg dark:border-red-500">
+                    <Listbox.Options className="absolute z-50 mt-2 flex flex-col flex-shrink-0 overflow-auto rounded-lg bg-white py-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none text-sm dark:bg-white/10 dark:backdrop-blur-lg dark:border-red-500">
                         {options.map((option) => (
                             <Listbox.Option
                                 key={option.value}
