@@ -37,7 +37,7 @@ const wagmiClient = createClient({
     provider,
 });
 
-// This prevents an error when hydrating. As the component it dynamically rendered on the client side. The initial UI does not match what was rendered on the server.
+// This prevents an error when hydrating. As the component is dynamically rendered on the client side. The initial UI does not match what was rendered on the server.
 const DynamicTutorialProvider = dynamic(
     () => import("../utils/TutorialProvider"),
     { ssr: false }

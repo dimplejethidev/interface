@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import Image from "next/image";
+import Image from "next/future/image";
 import { useEffect, useState } from "react";
 import { useAccount, useProvider } from "wagmi";
 import { TokenOption } from "../../types/TokenOption";
@@ -126,19 +126,24 @@ const BalancesField = ({ token0, token1 }: BalancesFieldProps) => {
     }, [address]);
 
     return (
-        <div className="flex items-center space-x-2 monospace-font text-sm">
+        <div className="flex items-center space-x-2 monospace-font text-sm mr-8">
             <p className="tracking-widest font-semibold">
                 {parseFloat(
                     ethers.utils.formatEther(currentBalance0)
                 ).toLocaleString(undefined, { minimumFractionDigits: 6 })}
             </p>
-            <Image src={token0.logo} className="pr-4" width="20" height="20" />
+            <Image
+                src={token0.logo}
+                className="ml-1 mr-2"
+                width="20"
+                height="20"
+            />
             <p className="tracking-widest font-semibold">
                 {parseFloat(
                     ethers.utils.formatEther(currentBalance1)
                 ).toLocaleString(undefined, { minimumFractionDigits: 6 })}
             </p>
-            <Image src={token1.logo} width="20" height="20" />
+            <Image src={token1.logo} className="ml-1" width="20" height="20" />
         </div>
     );
 };

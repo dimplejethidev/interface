@@ -1,4 +1,5 @@
 import { BigNumber, ethers } from "ethers";
+import Image from "next/image";
 import { TokenOption } from "../types/TokenOption";
 
 interface BalanceFieldProps {
@@ -31,11 +32,6 @@ const BalanceField = ({
                     : "text-gray-300 dark:text-slate-500/80 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold"
             }`}
         >
-            {/* eslint-disable-next-line jsx-a11y/alt-text */}
-            <img
-                src={token.logo}
-                className={isTwap ? "h-12 mb-3 hidden" : "h-12 hidden"}
-            />
             <p>
                 {(isTwap ? "+" : "-") +
                     parseFloat(
@@ -45,9 +41,9 @@ const BalanceField = ({
                     })}
             </p>
             <div className="flex space-x-1 md:space-x-2">
-                {/* TODO: translate responsive width to be used with Image */}
-                {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                <img src={token.logo} className="h-4 md:h-6 xl:h-7 xl:mb-2" />
+                <div className="relative h-4 w-4 md:h-6 md:w-6 xl:h-7 xl:w-7 xl:mb-2">
+                    <Image src={token.logo} layout="fill" />
+                </div>
                 <p
                     className="text-sm md:text-lg xl:text-2xl poppins-font font-bold tracking-normal"
                     style={{ color: token.colorHex }}
