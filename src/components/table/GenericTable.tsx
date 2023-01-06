@@ -28,7 +28,7 @@ const GenericTable = ({
                 </div>
             ))}
         </div>
-        {isLoading ? (
+        {isLoading && (
             <div className="flex flex-col space-y-4">
                 {[0, 1, 2].map((i) => (
                     <div
@@ -39,21 +39,24 @@ const GenericTable = ({
                     </div>
                 ))}
             </div>
-        ) : (
+        )}
+
+        {data && data.length > 0 ? (
             <div className="flex flex-col space-y-4">
-                {data &&
-                    data.map((d, i) => (
-                        <TableRow
-                            columnProps={columnProps}
-                            columnComponents={columnComponents}
-                            link={rowLinks ? rowLinks[i] : ""}
-                            data={d}
-                            // TODO: don't use index as key
-                            // eslint-disable-next-line react/no-array-index-key
-                            key={`column-${i}`}
-                        />
-                    ))}
+                {data.map((d, i) => (
+                    <TableRow
+                        columnProps={columnProps}
+                        columnComponents={columnComponents}
+                        link={rowLinks ? rowLinks[i] : ""}
+                        data={d}
+                        // TODO: don't use index as key
+                        // eslint-disable-next-line react/no-array-index-key
+                        key={`column-${i}`}
+                    />
+                ))}
             </div>
+        ) : (
+            <p className="ml-4">You currently don&apos;t have any streams</p>
         )}
     </WidgetContainer>
 );

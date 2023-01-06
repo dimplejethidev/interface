@@ -583,14 +583,15 @@ const PoolInteractionVisualization: NextPage<
                                                         await result.wait();
                                                         setIsDeleting(false);
 
-                                                        // console.log("Stream deleted: ", result);
                                                         showToast(
                                                             ToastType.Success
+                                                        );
+                                                        router.push(
+                                                            "/my-streams"
                                                         );
                                                     }
                                                 }
                                             } catch (error) {
-                                                // console.log("Error: ", error);
                                                 showToast(
                                                     getToastErrorType(error)
                                                 );
