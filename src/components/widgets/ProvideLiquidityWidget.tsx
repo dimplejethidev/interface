@@ -127,7 +127,8 @@ const ProvideLiquidityWidget = ({
         }
 
         let operation1: Operation;
-        if (userToken0Flow.current.gt(0)) {
+        if (userToken1Flow.current.gt(0)) {
+          // update flow
           operation1 = superfluid.cfaV1.updateFlow({
             receiver: pool,
             flowRate: swapFlowRate1,
