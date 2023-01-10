@@ -460,7 +460,7 @@ const ProvideLiquidityWidget = ({
         </div>
         <TransactionButton
           title={
-            userToken0Flow.current.gt(0) || userToken1Flow.current.gt(0)
+            userToken0Flow.current.gt(0) && userToken1Flow.current.gt(0)
               ? "Update Position"
               : "Provide Liquidity"
           }
@@ -482,7 +482,7 @@ const ProvideLiquidityWidget = ({
               ? "Enter flow rates"
               : // eslint-disable-next-line no-nested-ternary
               !acceptedBuffer
-              ? userToken0Flow.current.gt(0) || userToken1Flow.current.gt(0)
+              ? userToken0Flow.current.gt(0) && userToken1Flow.current.gt(0)
                 ? "Update Position"
                 : "Provide Liquidity"
               : undefined
