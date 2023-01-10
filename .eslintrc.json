@@ -2,21 +2,17 @@
     "env": {
         "browser": true,
         "es2021": true
-        // "node": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        // "plugin:@typescript-eslint/recommended",
-
+        "plugin:@typescript-eslint/recommended",
         "airbnb",
         "airbnb/hooks",
         "airbnb-typescript",
-        // "plugin:react/jsx-runtime",
         "plugin:@next/next/recommended",
         "prettier"
     ],
-    // "parser": "@babel/eslint-parser",
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -38,6 +34,8 @@
                 "unnamedComponents": "arrow-function"
             }
         ]
+        // Once we have removed all occurrences of any, this rule should be enabled
+        // "@typescript-eslint/no-explicit-any": "error"
         // Once we have refactored the codebase and written tests, activate this to reduce code complexity
         // "react/jsx-max-depth": ["error", { "max": 4 }]
     },
