@@ -24,7 +24,7 @@ export const useStore = create<StoreState>()((set) => ({
   inboundToken: tokens.find((t) => t.value === Token.fUSDCxp)!,
   upgradeDowngradeToken: tokens.find((t) => t.value === Token.fDAIxp)!,
   selectedToken: Token.fDAIxp,
-  flowrateUnit: flowrates[4],
+  flowrateUnit: flowrates[5],
   setOutboundToken: (outboundToken: TokenOption) =>
     set((state) => ({ ...state, outboundToken })),
   setInboundToken: (inboundToken: TokenOption) =>
