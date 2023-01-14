@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props, react/jsx-no-useless-fragment */
 import WidgetContainer from "../widgets/WidgetContainer";
 import TableRow from "./TableRow";
 
@@ -58,14 +59,13 @@ const GenericTable = ({
                 ))}
             </div>
         ) : (
-            <>
                 {
                     !isLoading &&
                     <p className="ml-4">
                         {noDataMessage}
                     </p>
                 }
-            </>
+            
         )}
     </WidgetContainer>
 );
