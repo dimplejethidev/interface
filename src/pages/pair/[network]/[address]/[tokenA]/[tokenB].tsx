@@ -248,7 +248,7 @@ const PoolInteractionVisualization: NextPage<
             userAddress,
             currentTimestampBigNumber.div(1000).toString()
         );
-        var initialRewardBalance: BigNumber = rewardData.units
+        const initialRewardBalanceUnadjusted: BigNumber = rewardData.units
             .mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative))
             .div(decodeConst);
         const futureRewardData: SwapData = await poolContract.getUserRewardData(
@@ -256,7 +256,7 @@ const PoolInteractionVisualization: NextPage<
             userAddress,
             futureTimestampBigNumber.toString()
         );
-        var futureRewardBalance: BigNumber = futureRewardData.units
+        const futureRewardBalanceUnadjusted: BigNumber = futureRewardData.units
             .mul(
                 futureRewardData.realTimeCumulative.sub(
                     futureRewardData.initialCumulative
@@ -264,10 +264,10 @@ const PoolInteractionVisualization: NextPage<
             )
             .div(decodeConst);
 
-        const initialTwapBalance: BigNumber = initialTwapBalanceUnadjusted.add(initialRewardBalance);
-        const futureTwapBalance: BigNumber = futureTwapBalanceUnadjusted.add(futureRewardBalance);
-        initialRewardBalance = initialRewardBalance.sub(initialTwapBalanceUnadjusted.div(99));
-        futureRewardBalance = futureRewardBalance.sub(futureTwapBalanceUnadjusted.div(99));
+        const initialTwapBalance: BigNumber = initialTwapBalanceUnadjusted.add(initialRewardBalanceUnadjusted);
+        const futureTwapBalance: BigNumber = futureTwapBalanceUnadjusted.add(futureRewardBalanceUnadjusted);
+        const initialRewardBalance: BigNumber = initialRewardBalanceUnadjusted.sub(initialTwapBalanceUnadjusted.div(99));
+        const futureRewardBalance: BigNumber = futureRewardBalanceUnadjusted.sub(futureTwapBalanceUnadjusted.div(99));
 
         return {
             initialBalance,
