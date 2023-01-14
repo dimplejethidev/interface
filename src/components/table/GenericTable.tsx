@@ -59,13 +59,14 @@ const GenericTable = ({
                 ))}
             </div>
         ) : (
+            <>
                 {
                     !isLoading &&
                     <p className="ml-4">
                         {noDataMessage}
                     </p>
                 }
-            
+            </>
         )}
     </WidgetContainer>
 );
