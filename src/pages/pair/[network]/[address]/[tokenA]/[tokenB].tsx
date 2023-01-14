@@ -188,99 +188,102 @@ const PoolInteractionVisualization: NextPage<
       rewardFlowRate: BigNumber;
       startDate: Date;
     }> {
-      // get regular sf stream params
-      const flowInfo = await sf.cfaV1.getFlow({
-        superToken: tokenAddress,
-        sender: userAddress || "",
-        receiver: poolAddress,
-        providerOrSigner: provider,
-      });
+        // get regular sf stream params
+        const flowInfo = await sf.cfaV1.getFlow({
+            superToken: tokenAddress,
+            sender: userAddress || "",
+            receiver: poolAddress,
+            providerOrSigner: provider,
+        });
 
-      // calculate regular streaming balances
-      let initialBalance: BigNumber = BigNumber.from(0);
-      let futureBalance: BigNumber = BigNumber.from(0);
-      if (BigNumber.from(flowInfo.flowRate).gt(0)) {
-        // use regular sf stream params
-        initialBalance = BigNumber.from(flowInfo.flowRate).mul(
-          currentTimestampBigNumber
-            .sub(ethers.BigNumber.from(flowInfo.timestamp.valueOf()))
+        // calculate regular streaming balances
+        let initialBalance: BigNumber = BigNumber.from(0);
+        let futureBalance: BigNumber = BigNumber.from(0);
+        if (BigNumber.from(flowInfo.flowRate).gt(0)) {
+            // use regular sf stream params
+            initialBalance = BigNumber.from(flowInfo.flowRate).mul(
+                currentTimestampBigNumber
+                    .sub(ethers.BigNumber.from(flowInfo.timestamp.valueOf()))
+                    .div(1000)
+            );
+            futureBalance = BigNumber.from(flowInfo.flowRate).mul(
+                currentTimestampBigNumber
+                    .sub(ethers.BigNumber.from(flowInfo.timestamp.valueOf()))
+                    .div(1000)
+                    .add((REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000)
+            );
+        }
+
+        // new consts
+        const decodeConst = BigNumber.from(2).pow(128);
+        const futureTimestampBigNumber: BigNumber = currentTimestampBigNumber
             .div(1000)
+            .add((REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000);
+
+        // calculate twap balances
+        const swapData: SwapData = await poolContract.getUserSwapData(
+            tokenAddress,
+            userAddress,
+            currentTimestampBigNumber.div(1000).toString()
         );
-        futureBalance = BigNumber.from(flowInfo.flowRate).mul(
-          currentTimestampBigNumber
-            .sub(ethers.BigNumber.from(flowInfo.timestamp.valueOf()))
-            .div(1000)
-            .add((REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000)
+        const initialTwapBalanceUnadjusted: BigNumber = swapData.units
+            .mul(swapData.realTimeCumulative.sub(swapData.initialCumulative))
+            .div(decodeConst);
+        const futureSwapData: SwapData = await poolContract.getUserSwapData(
+            tokenAddress,
+            userAddress,
+            futureTimestampBigNumber.toString()
         );
-      }
+        const futureTwapBalanceUnadjusted: BigNumber = futureSwapData.units
+            .mul(
+                futureSwapData.realTimeCumulative.sub(
+                    futureSwapData.initialCumulative
+                )
+            )
+            .div(decodeConst);
 
-      // new consts
-      const decodeConst = BigNumber.from(2).pow(128);
-      const futureTimestampBigNumber: BigNumber = currentTimestampBigNumber
-        .div(1000)
-        .add((REFRESH_INTERVAL * ANIMATION_MINIMUM_STEP_TIME) / 1000);
+        // calculate reward balances
+        const rewardData: SwapData = await poolContract.getUserRewardData(
+            tokenAddress,
+            userAddress,
+            currentTimestampBigNumber.div(1000).toString()
+        );
+        var initialRewardBalance: BigNumber = rewardData.units
+            .mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative))
+            .div(decodeConst);
+        const futureRewardData: SwapData = await poolContract.getUserRewardData(
+            tokenAddress,
+            userAddress,
+            futureTimestampBigNumber.toString()
+        );
+        var futureRewardBalance: BigNumber = futureRewardData.units
+            .mul(
+                futureRewardData.realTimeCumulative.sub(
+                    futureRewardData.initialCumulative
+                )
+            )
+            .div(decodeConst);
 
-      // calculate twap balances
-      const swapData: SwapData = await poolContract.getUserSwapData(
-        tokenAddress,
-        userAddress,
-        currentTimestampBigNumber.div(1000).toString()
-      );
-      const initialTwapBalance: BigNumber = swapData.units
-        .mul(swapData.realTimeCumulative.sub(swapData.initialCumulative))
-        .div(decodeConst);
-      const futureSwapData: SwapData = await poolContract.getUserSwapData(
-        tokenAddress,
-        userAddress,
-        futureTimestampBigNumber.toString()
-      );
-      const futureTwapBalance: BigNumber = futureSwapData.units
-        .mul(
-          futureSwapData.realTimeCumulative.sub(
-            futureSwapData.initialCumulative
-          )
-        )
-        .div(decodeConst);
+        const initialTwapBalance: BigNumber = initialTwapBalanceUnadjusted.add(initialRewardBalance);
+        const futureTwapBalance: BigNumber = futureTwapBalanceUnadjusted.add(futureRewardBalance);
+        initialRewardBalance = initialRewardBalance.sub(initialTwapBalanceUnadjusted.div(99));
+        futureRewardBalance = futureRewardBalance.sub(futureTwapBalanceUnadjusted.div(99));
 
-      // calculate reward balances
-      const rewardData: SwapData = await poolContract.getUserRewardData(
-        tokenAddress,
-        userAddress,
-        currentTimestampBigNumber.div(1000).toString()
-      );
-      const initialRewardBalance: BigNumber = rewardData.units
-        .mul(rewardData.realTimeCumulative.sub(rewardData.initialCumulative))
-        .div(decodeConst)
-        .sub(initialBalance.div(100));
-      const futureRewardData: SwapData = await poolContract.getUserRewardData(
-        tokenAddress,
-        userAddress,
-        futureTimestampBigNumber.toString()
-      );
-      const futureRewardBalance: BigNumber = futureRewardData.units
-        .mul(
-          futureRewardData.realTimeCumulative.sub(
-            futureRewardData.initialCumulative
-          )
-        )
-        .div(decodeConst)
-        .sub(futureBalance.div(100));
-
-      return {
-        initialBalance,
-        initialTwapBalance,
-        initialRewardBalance: initialRewardBalance.gt(0)
-          ? initialRewardBalance
-          : BigNumber.from(0),
-        flowRate: futureBalance.sub(initialBalance).div(REFRESH_INTERVAL),
-        twapFlowRate: futureTwapBalance
-          .sub(initialTwapBalance)
-          .div(REFRESH_INTERVAL),
-        rewardFlowRate: futureRewardBalance.gt(0)
-          ? futureRewardBalance.sub(initialRewardBalance).div(REFRESH_INTERVAL)
-          : BigNumber.from(0),
-        startDate: flowInfo.timestamp,
-      };
+        return {
+            initialBalance,
+            initialTwapBalance,
+            initialRewardBalance: initialRewardBalance.gt(0)
+                ? initialRewardBalance
+                : BigNumber.from(0),
+            flowRate: futureBalance.sub(initialBalance).div(REFRESH_INTERVAL),
+            twapFlowRate: futureTwapBalance
+                .sub(initialTwapBalance)
+                .div(REFRESH_INTERVAL),
+            rewardFlowRate: futureRewardBalance.gt(0)
+                ? futureRewardBalance.sub(initialRewardBalance).div(REFRESH_INTERVAL)
+                : BigNumber.from(0),
+            startDate: flowInfo.timestamp,
+        };
     }
 
     // set token0 state

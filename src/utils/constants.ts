@@ -4,7 +4,7 @@ export const ETHxpfDAIxpPool: string = "0x1";
 
 export const fDAIxpETHxpPool: string = "0x2";
 
-export const fDAIxpfUSDCxpPool: string = "0xe83c323016149023ac96738dB1cCa403894D79Bd";
+export const fDAIxpfUSDCxpPool: string = "0xe2D50684eDf95DD493F31023d4f48C8C75b293CD";
 
 export const fDAI: string = "0x88271d333C72e51516B67f5567c728E702b3eeE8";
 
@@ -12,8 +12,8 @@ export const fUSDC: string = "0xc94dd466416A7dFE166aB2cF916D3875C049EBB7";
 
 export const ETHxp: string = "0x1";
 
-export const fDAIxp: string = "0x220aF5894e183168E3E3f9dA9cde9Ae812c551Db";
+export const fDAIxp: string = "0xB133415Ae49150bCd8cDB7f515c30EbA2b42F2fe";
 
-export const fUSDCxp: string = "0xa3404180C8D154EF80B564ffeC6F02739473BFDE";
+export const fUSDCxp: string = "0x3a36cD6D55e260E0a3448cd8905c51517bb7EbA8";
 
-export const fTokenDistributor: string = "0x03c58f1f1335a6895e65c8faD6B88f51e82139AC";
+export const fTokenDistributor: string = "0x422230026b1f13487Ce8e52Ee5da8db815F5F95C";

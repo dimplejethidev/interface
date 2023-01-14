@@ -15,7 +15,8 @@ interface TokenFlowFieldProps {
     dropdownValue?: GenericDropdownOption;
     setDropdownValue?: (value: GenericDropdownOption) => void;
     isEther: boolean;
-    shouldReformat: boolean;
+    isDiscreteAmount?: boolean;
+    shouldReformat?: boolean;
     currentBalance: BigNumber;
     token: TokenOption;
     setToken: (token: TokenOption) => void;
@@ -30,6 +31,7 @@ const TokenFlowField = ({
     dropdownValue,
     setDropdownValue,
     isEther,
+    isDiscreteAmount,
     shouldReformat,
     currentBalance,
     token,
@@ -48,7 +50,11 @@ const TokenFlowField = ({
             let formattedValue = isEther
                 ? ethers.utils.parseUnits(newValue, "ether")
                 : BigNumber.from(newValue);
-            formattedValue = formattedValue.div(store.flowrateUnit.value);
+
+            if (!isDiscreteAmount) {
+                formattedValue = formattedValue.div(store.flowrateUnit.value);
+            }
+            
             setFormattedValue(formattedValue.toString());
         }
     }

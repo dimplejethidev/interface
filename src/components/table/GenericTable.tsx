@@ -9,6 +9,7 @@ interface GenericTableProps {
     rowLinks: string[] | undefined;
     data: any[][] | undefined;
     isLoading: boolean;
+    noDataMessage?: string;
 }
 
 const GenericTable = ({
@@ -19,6 +20,7 @@ const GenericTable = ({
     rowLinks,
     data,
     isLoading,
+    noDataMessage,
 }: GenericTableProps) => (
     <WidgetContainer title={title} isUnbounded>
         <div className="flex px-4">
@@ -56,7 +58,14 @@ const GenericTable = ({
                 ))}
             </div>
         ) : (
-            <p className="ml-4">You currently don&apos;t have any streams</p>
+            <>
+                {
+                    !isLoading &&
+                    <p className="ml-4">
+                        {noDataMessage}
+                    </p>
+                }
+            </>
         )}
     </WidgetContainer>
 );

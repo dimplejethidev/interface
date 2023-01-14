@@ -114,6 +114,7 @@ const StreamsTable = () => {
                     rowLinks={links}
                     data={data}
                     isLoading={isLoading}
+                    noDataMessage={"You currently don't have any streams"}
                 />
             </div>
         </section>

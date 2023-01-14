@@ -180,7 +180,7 @@ const CreateStreamWidget = ({
                 // formattedValue={amount}
                 setFormattedValue={setAmount}
                 isEther
-                shouldReformat
+                isDiscreteAmount
                 currentBalance={
                   !isWrapping ? superTokenBalance : underlyingTokenBalance
                 }
