@@ -28,8 +28,8 @@ const BalanceField = ({
       className={`flex space-x-4 items-end rounded-2xl tracking-wider monospace-font font-bold ${
         // + (isTwap ? ('bg-[' + token.colorHex + '30] text-[' + token.colorHex + ']') : 'text-gray-300 text-5xl')
         isTwap
-          ? "text-gray-800 dark:text-white/90 text-3xl md:text-4xl lg:text-5xl xl:text-7xl"
-          : "text-gray-300 dark:text-slate-500/80 text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold"
+          ? `text-gray-800 dark:text-white/90 ${currentBalance.gt('1000000000000000000000000') ? "text-3xl lg:text-4xl xl:text-5xl" : "text-3xl md:text-4xl lg:text-5xl xl:text-7xl"}`
+          : `text-gray-300 dark:text-slate-500/80 ${currentBalance.gt('1000000000000000000000000') ? "text-xl lg:text-3xl xl:text-4xl" : "text-xl md:text-2xl lg:text-3xl xl:text-5xl font-semibold"}`
       }`}
     >
       <p>
