@@ -16,6 +16,7 @@ import TokenFlowField from "../TokenFlowField";
 import BufferWarning from "../BufferWarning";
 import ReadOnlyFlowOutput from "../ReadOnlyFlowOutput";
 import getToastErrorType from "../../utils/getToastErrorType";
+import { goerliChainId } from "../../utils/constants";
 
 interface ProvideLiquidityWidgetProps {
   showToast: (type: ToastType) => void;
@@ -90,9 +91,8 @@ const ProvideLiquidityWidget = ({
         return;
       }
 
-      const chainId = chain?.id;
       const superfluid = await Framework.create({
-        chainId: Number(chainId),
+        chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
         provider,
       });
 
@@ -298,9 +298,8 @@ const ProvideLiquidityWidget = ({
         setPoolExists(true);
 
         // init sf framework
-        const chainId = chain?.id;
         const sf = await Framework.create({
-          chainId: Number(chainId),
+          chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
           provider,
         });
 

@@ -28,6 +28,7 @@ import SwapData from "../../../../../types/SwapData";
 import PriceWidget from "../../../../../components/widgets/PriceWidget";
 import BalanceField from "../../../../../components/BalanceField";
 import RewardWidget from "../../../../../components/widgets/RewardWidget";
+import { goerliChainId } from "../../../../../utils/constants";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -131,12 +132,12 @@ const PoolInteractionVisualization: NextPage<
         const tokenA = await getToken({
           tokenAddress: router.query.tokenA,
           provider,
-          chainId: Number(chain?.id),
+          chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
         });
         const tokenB = await getToken({
           tokenAddress: router.query.tokenB,
           provider,
-          chainId: Number(chain?.id),
+          chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
         });
 
         if (!tokenA || !tokenB) {
@@ -160,13 +161,12 @@ const PoolInteractionVisualization: NextPage<
       "function getUserSwapData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
       "function getUserRewardData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
     ];
-    if (!userAddress || !chain || !provider || !token0 || !token1) {
+    if (!userAddress || !provider || !token0 || !token1) {
       return;
     }
 
-    const chainId = chain?.id;
     const sf = await Framework.create({
-      chainId: Number(chainId),
+      chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
       provider,
     });
     const poolAddress = getPoolAddress(token0.value, token1.value);
@@ -482,9 +482,8 @@ const PoolInteractionVisualization: NextPage<
                           userAddress &&
                           address === userAddress
                         ) {
-                          const chainId = chain?.id;
                           const superfluid = await Framework.create({
-                            chainId: Number(chainId),
+                            chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
                             provider,
                           });
 

@@ -17,6 +17,7 @@ import BufferWarning from "../BufferWarning";
 import getToastErrorType from "../../utils/getToastErrorType";
 import { TutorialItemState, useTutorial } from "../../utils/TutorialProvider";
 import PriceImpactWarning from "../PriceImpactWarning";
+import { goerliChainId } from "../../utils/constants";
 
 interface CreateStreamWidgetProps {
   showToast: (type: ToastType) => void;
@@ -89,9 +90,8 @@ const CreateStreamWidget = ({
         return;
       }
 
-      const chainId = chain?.id;
       const superfluid = await Framework.create({
-        chainId: Number(chainId),
+        chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
         provider,
       });
 
@@ -261,9 +261,8 @@ const CreateStreamWidget = ({
         setPoolExists(true);
 
         // init sf framework
-        const chainId = chain?.id;
         const sf = await Framework.create({
-          chainId: Number(chainId),
+          chainId: (provider && provider.chains && provider.chains[0].id) ?? goerliChainId,
           provider,
         });
 
@@ -308,7 +307,8 @@ const CreateStreamWidget = ({
         }
 
         await refreshPrice();
-      } catch {
+      } catch (err) {
+        console.log(err)
         setRefreshingPrice(false);
         setPoolExists(false);
       }

@@ -17,3 +17,5 @@ export const fDAIxp: string = "0xB133415Ae49150bCd8cDB7f515c30EbA2b42F2fe";
 export const fUSDCxp: string = "0x3a36cD6D55e260E0a3448cd8905c51517bb7EbA8";
 
 export const fTokenDistributor: string = "0x422230026b1f13487Ce8e52Ee5da8db815F5F95C";
+
+export const goerliChainId: number = 5;
