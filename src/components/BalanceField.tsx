@@ -37,7 +37,7 @@ const BalanceField = ({
           parseFloat(ethers.utils.formatEther(currentBalance)).toLocaleString(
             undefined,
             {
-              minimumFractionDigits: numDecimals,
+              minimumFractionDigits: numDecimals >= 0 ? numDecimals : 0,
             }
           )}
       </p>
