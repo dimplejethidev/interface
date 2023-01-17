@@ -70,10 +70,11 @@ const StreamsTable = () => {
                     } else {
                         const s2 = await sf.cfaV1.getFlow({
                             superToken: p.token1,
-                            sender: p.address,
-                            receiver: address,
+                            sender: address,
+                            receiver: p.address,
                             providerOrSigner: provider,
                         });
+
                         if (s2.flowRate !== "0" && token0 && token1) {
                             const date = new Date(s2.timestamp);
                             newData.push([
