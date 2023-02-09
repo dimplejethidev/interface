@@ -22,7 +22,7 @@
         "sourceType": "module",
         "project": "./tsconfig.eslint.json"
     },
-    "plugins": ["react", "@typescript-eslint"],
+    "plugins": ["react", "@typescript-eslint", "prettier"],
     "rules": {
         // Next.js does this for us so no need to add the import
         "react/react-in-jsx-scope": "off",
