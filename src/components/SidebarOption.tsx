@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 
 interface SideBarTabProps {
-    icon: any;
+    icon: JSX.Element;
     label: string;
     page?: string;
     setSidebarIsShown?: Dispatch<SetStateAction<boolean>>;

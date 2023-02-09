@@ -22,7 +22,7 @@ import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { useDarkMode } from "../utils/DarkModeProvider";
 import SidebarOption from "./SidebarOption";
 
-const navItems: { icon: any; label: string; page: string }[] = [
+const navItems: { icon: JSX.Element; label: string; page: string }[] = [
     {
         icon: <AiOutlineLineChart size={18} />,
         label: "My Streams",

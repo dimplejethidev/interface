@@ -1,4 +1,5 @@
 /* eslint-disable react/require-default-props, react/jsx-no-useless-fragment */
+import { ExplicitAny } from "../../types/ExplicitAny";
 import WidgetContainer from "../widgets/WidgetContainer";
 import TableRow from "./TableRow";
 
@@ -6,9 +7,9 @@ interface GenericTableProps {
     title: string;
     labels: string[];
     columnProps: string[];
-    columnComponents: ((...args: any) => JSX.Element)[];
+    columnComponents: ((...args: ExplicitAny) => JSX.Element)[];
     rowLinks: string[] | undefined;
-    data: any[][] | undefined;
+    data: ExplicitAny[][] | undefined;
     isLoading: boolean;
     noDataMessage?: string;
 }
@@ -59,14 +60,7 @@ const GenericTable = ({
                 ))}
             </div>
         ) : (
-            <>
-                {
-                    !isLoading &&
-                    <p className="ml-4">
-                        {noDataMessage}
-                    </p>
-                }
-            </>
+            <>{!isLoading && <p className="ml-4">{noDataMessage}</p>}</>
         )}
     </WidgetContainer>
 );

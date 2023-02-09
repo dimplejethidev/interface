@@ -1,12 +1,13 @@
 import { IconContext } from "react-icons";
 import { CgArrowsExpandRight } from "react-icons/cg";
 import Link from "next/link";
+import { ExplicitAny } from "../../types/ExplicitAny";
 
 interface TableRowProps {
     columnProps: string[];
-    columnComponents: ((...args: any) => JSX.Element)[];
+    columnComponents: ((...args: ExplicitAny) => JSX.Element)[];
     link: string;
-    data: any[];
+    data: ExplicitAny[];
 }
 
 const TableRow = ({

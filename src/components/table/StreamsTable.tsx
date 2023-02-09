@@ -7,13 +7,14 @@ import { fDAIxp, fDAIxpfUSDCxpPool, fUSDCxp } from "../../utils/constants";
 import getToken from "../../utils/getToken";
 import TextField from "./TextField";
 import PoolField from "./PoolField";
+import { ExplicitAny } from "../../types/ExplicitAny";
 
 const StreamsTable = () => {
     const provider = useProvider();
     const { chain } = useNetwork();
     const { address } = useAccount();
 
-    const [data, setData] = useState<any[][]>();
+    const [data, setData] = useState<ExplicitAny[][]>();
     const [links, setLinks] = useState<string[]>();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -35,8 +36,8 @@ const StreamsTable = () => {
                 provider,
             });
 
-            const newData: any[][] = [];
-            const newLinks: any[] = [];
+            const newData: ExplicitAny[][] = [];
+            const newLinks: ExplicitAny[] = [];
             await Promise.all(
                 pools.map(async (p) => {
                     const s = await sf.cfaV1.getFlow({
