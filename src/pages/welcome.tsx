@@ -57,7 +57,10 @@ const Slide = ({ slideItem }: { slideItem: SlideItem }) => (
         <div className="flex items-center justify-center pt-6 pb-14 text-aqueductBlue glow-blue-xs z-50">
             {slideItem.icon}
         </div>
-        <p className="text-black dark:text-white text-2xl font-semibold leading-relaxed">
+        <p
+            className="text-black dark:text-white text-2xl font-semibold leading-relaxed"
+            data-testid={`welcome-tutorial-section-${slideItem.title}`}
+        >
             {slideItem.title}
         </p>
         <p className="leading-relaxed">{slideItem.text}</p>
@@ -113,6 +116,7 @@ const Welcome: NextPage = () => {
                                     setSlideIndex((i) => i + 1);
                                 }
                             }}
+                            aria-label="welcome-tutorial-next-button"
                         >
                             {slideIndex >= slideItems.length - 1 ? (
                                 <IoCheckmark size={24} />

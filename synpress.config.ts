@@ -1,6 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from "cypress";
 
+const getSynpressPath = () => "./node_modules/@synthetixio/synpress";
+// eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
+const importedSetupNodeEvents = require(`${getSynpressPath()}/plugins/index`);
+
 export default defineConfig({
     userAgent: "synpress",
     retries: {
@@ -22,11 +26,11 @@ export default defineConfig({
     pageLoadTimeout: 30000,
     requestTimeout: 30000,
     e2e: {
-        // setupNodeEvents(on, config) {
-        //     cypressLocalStoragePlugin(on, config);
-        //     synpressPlugins(on, config);
-        //     return config;
-        // },
+        setupNodeEvents(on, config) {
+            // cypressLocalStoragePlugin(on, config);
+            importedSetupNodeEvents(on, config);
+            return config;
+        },
         baseUrl: "http://localhost:3000",
         specPattern: "tests/e2e/specs/**/*.cy.{js,jsx,ts,tsx}",
         supportFile: "tests/e2e/support.ts",

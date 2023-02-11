@@ -43,12 +43,15 @@ const CustomWalletConnectButton = () => (
                                 <button
                                     onClick={openConnectModal}
                                     type="button"
-                                    className="flex justify-start items-center space-x-2 w-full rounded-xl bg-aqueductBlue p-4 md:p-2 text-white "
+                                    className="flex justify-start items-center space-x-2 w-full rounded-xl bg-aqueductBlue p-4 md:p-2 text-white"
                                 >
                                     <div className="p-2 rounded-lg bg-white/10">
                                         <IoMdWallet size={20} />
                                     </div>
-                                    <p className="text-sm font-medium">
+                                    <p
+                                        className="text-sm font-medium"
+                                        aria-label="connect-wallet"
+                                    >
                                         Connect Wallet
                                     </p>
                                 </button>
