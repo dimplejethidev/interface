@@ -48,7 +48,9 @@ const CustomWalletConnectButton = () => (
                                     <div className="p-2 rounded-lg bg-white/10">
                                         <IoMdWallet size={20} />
                                     </div>
-                                    <p className="text-sm font-medium">Connect Wallet</p>
+                                    <p className="text-sm font-medium">
+                                        Connect Wallet
+                                    </p>
                                 </button>
                             );
                         }
@@ -63,7 +65,9 @@ const CustomWalletConnectButton = () => (
                                     <div className="p-2 rounded-lg bg-white/10">
                                         <TbRefresh size={20} />
                                     </div>
-                                    <p className="text-sm font-medium">Switch to Goerli</p>
+                                    <p className="text-sm font-medium">
+                                        Switch to Goerli
+                                    </p>
                                 </button>
                             );
                         }

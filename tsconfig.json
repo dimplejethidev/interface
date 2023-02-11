@@ -15,6 +15,12 @@
         "jsx": "preserve",
         "incremental": true
     },
-    "include": ["next-env.d.ts", "global-types.d.ts", "**/*.ts", "**/*.tsx"],
+    "include": [
+        "next-env.d.ts",
+        "global-types.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        "tests/e2e/specs/tsconfig.json"
+    ],
     "exclude": ["node_modules"]
 }

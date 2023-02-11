@@ -23,6 +23,9 @@
         "project": "./tsconfig.eslint.json"
     },
     "plugins": ["react", "@typescript-eslint", "prettier"],
+    // ***IMPORTANT*** We've chosen to follow the these rules to provider a reasonable set of base rules.
+    // We may decide to disable rules that we don't think are vaulable. If so, ensure you leave a comment
+    // above the rule for your reasoning, in order to explain to future readers why that decision was made.
     "rules": {
         // Next.js does this for us so no need to add the import
         "react/react-in-jsx-scope": "off",
@@ -34,7 +37,7 @@
                 "unnamedComponents": "arrow-function"
             }
         ],
-        // Once we have removed all occurrences of any, this rule should be enabled
+        // TODO: Assess use of ExplicitAny
         "@typescript-eslint/no-explicit-any": "error"
         // Once we have refactored the codebase and written tests, activate this to reduce code complexity
         // "react/jsx-max-depth": ["error", { "max": 4 }]
