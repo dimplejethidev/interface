@@ -5,6 +5,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.Toastify__toast-container--bottom-right {
+    margin-bottom: 5rem;
+}
+
+.Toastify__toast-icon {
+    margin-bottom: 0.8rem;
+    margin-top: 0.2rem;
+}
+
 @layer components {
     .centered-shadow {
         box-shadow: 0px 0px 15px rgba(225, 225, 225);
@@ -43,7 +52,7 @@
     }
 
     .blob {
-        background-image: url('/background.gif');
+        background-image: url("/background.gif");
     }
 
     .bg-50 {
@@ -51,22 +60,22 @@
     }
 
     .glow-pink-xs {
-        filter:
-            drop-shadow(0px 0px 5px #E7018AAA) drop-shadow(0px 0px 50px #E7018A);
+        filter: drop-shadow(0px 0px 5px #e7018aaa)
+            drop-shadow(0px 0px 50px #e7018a);
     }
 
     .glow-yellow-xs {
-        filter:
-            drop-shadow(0px 0px 5px #F5AC37AA) drop-shadow(0px 0px 50px #F5AC37);
+        filter: drop-shadow(0px 0px 5px #f5ac37aa)
+            drop-shadow(0px 0px 50px #f5ac37);
     }
 
     .glow-blue-xs {
-        filter:
-            drop-shadow(0px 0px 5px #0460CE88) drop-shadow(0px 0px 50px #0460CEDD);
+        filter: drop-shadow(0px 0px 5px #0460ce88)
+            drop-shadow(0px 0px 50px #0460cedd);
     }
 
     .textbox-outline {
-        box-shadow: 0 0 0 1px #0460CE;
+        box-shadow: 0 0 0 1px #0460ce;
     }
 
     .rotate-y-md {
@@ -102,7 +111,6 @@
 }
 
 @keyframes clippath {
-
     0%,
     100% {
         clip-path: inset(0 0 95% 0);

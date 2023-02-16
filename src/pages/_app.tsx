@@ -11,12 +11,11 @@ import {
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import "../styles/globals.css";
 import CustomAvatar from "../components/CustomAvatar";
-import ToastType from "../types/ToastType";
-import ToastMessage from "../components/ToastMessage";
-import IToast from "../types/Toast";
 import Sidebar from "../components/Sidebar";
 import DarkModeProvider from "../utils/DarkModeProvider";
 import TutorialChecklistPopup from "../components/TutorialChecklistPopup";
@@ -44,79 +43,6 @@ const DynamicTutorialProvider = dynamic(
 );
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-    const [toastList, setToastList] = useState<IToast[]>([]);
-    let toast: IToast;
-
-    const showToast = (type: ToastType) => {
-        switch (type) {
-            case ToastType.Success:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Success",
-                    description: "Transaction Confirmed",
-                    backgroundColor: "#5cb85c",
-                };
-                break;
-            case ToastType.Error:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Error",
-                    description: "An unexpected error has occured",
-                    backgroundColor: "#d9534f",
-                };
-                break;
-            case ToastType.Warning:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Warning",
-                    description: "This is a warning toast component",
-                    backgroundColor: "#f0ed4e",
-                };
-                break;
-            case ToastType.Info:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Info",
-                    description: "This is a info toast component",
-                    backgroundColor: "#5bc0de",
-                };
-                break;
-            case ToastType.ConnectWallet:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Error",
-                    description: "Please connect a wallet.",
-                    backgroundColor: "#FDB833",
-                };
-                break;
-            case ToastType.NotEnoughEthForGas:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Error",
-                    description: "ETH balance doesn't cover gas cost",
-                    backgroundColor: "#d9534f",
-                };
-                break;
-            case ToastType.RejectedTransaction:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "Error",
-                    description: "You rejected the transaction",
-                    backgroundColor: "#d9534f",
-                };
-                break;
-            default:
-                toast = {
-                    id: toastList.length + 1,
-                    title: "IToast message error",
-                    description: "An unexpected error has occured",
-                    backgroundColor: "#d9534f",
-                };
-        }
-
-        setToastList([...toastList, toast]);
-    };
-
     const [isShown, setIsShown] = useState(false);
     const router = useRouter();
 
@@ -166,7 +92,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                             <Sidebar
                                                 isShown={isShown}
                                                 setIsShown={setIsShown}
-                                                showToast={showToast}
                                             />
                                         </div>
                                         <main
@@ -178,15 +103,18 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                             <Component
                                                 // eslint-disable-next-line react/jsx-props-no-spreading
                                                 {...pageProps}
-                                                showToast={showToast}
                                             />
                                             <div className="md:h-[50%]" />
+                                            <ToastContainer
+                                                toastClassName="relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer"
+                                                bodyClassName={() =>
+                                                    "text-lg font-white font-med block p-4"
+                                                }
+                                                position="bottom-right"
+                                                autoClose={3000}
+                                            />
                                         </main>
                                     </div>
-                                    <ToastMessage
-                                        toastList={toastList}
-                                        setToastList={setToastList}
-                                    />
                                     <TutorialChecklistPopup />
                                 </div>
                             </DynamicTutorialProvider>

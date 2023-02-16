@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
@@ -9,19 +10,6 @@ module.exports = {
     ],
     theme: {
         extend: {
-            keyframes: {
-                toastInRight: {
-                    from: {
-                        transform: "translateX(100%)",
-                    },
-                    to: {
-                        transform: "translateX(0)",
-                    },
-                },
-            },
-            animation: {
-                "toast-in-right": "toastInRight 0.7s",
-            },
             colors: {
                 aqueductBlue: "#0460CE",
                 warningYellow: "#FDB833",

@@ -13,14 +13,14 @@ import { BigNumber, ethers } from "ethers";
 import { Framework } from "@superfluid-finance/sdk-core";
 
 import { fDAIxp, fTokenDistributor, fUSDCxp } from "../utils/constants";
-import ToastType from "../types/ToastType";
-import getToastErrorType from "../utils/getToastErrorType";
 import LoadingSpinner from "./LoadingSpinner";
 import { TutorialItemState, useTutorial } from "../utils/TutorialProvider";
 import logo from "../../public/aq-logo-11-22.png";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { useDarkMode } from "../utils/DarkModeProvider";
 import SidebarOption from "./SidebarOption";
+import { showTransactionConfirmedToast } from "../utils/Toasts";
+import getErrorToast from "../utils/getErrorToast";
 
 const navItems: { icon: JSX.Element; label: string; page: string }[] = [
     {
@@ -48,11 +48,9 @@ const navItems: { icon: JSX.Element; label: string; page: string }[] = [
 const Sidebar = ({
     isShown,
     setIsShown,
-    showToast,
 }: {
     isShown: boolean;
     setIsShown: Dispatch<SetStateAction<boolean>>;
-    showToast: (type: ToastType) => void;
 }) => {
     const darkContext = useDarkMode();
     const { data: rainbowSigner } = useSigner();
@@ -223,9 +221,9 @@ const Sidebar = ({
                                         tutorialContext?.setRequestedPay(
                                             TutorialItemState.Complete
                                         );
-                                        showToast(ToastType.Success);
+                                        showTransactionConfirmedToast();
                                     } catch (error) {
-                                        showToast(getToastErrorType(error));
+                                        getErrorToast(error);
                                     }
                                     setIsRequestingFunds(false);
                                 }}

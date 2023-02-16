@@ -1,5 +1,5 @@
 import { SFError } from "@superfluid-finance/sdk-core";
-import ToastType from "../types/ToastType";
+import { showRejectedTransactionToast, showGenericErrorToast } from "./Toasts";
 
 interface ErrorWithCode {
     code: string;
@@ -18,15 +18,11 @@ function hasError(errorObject: unknown): errorObject is ErrorWithError {
     return !!errorObject && !!(errorObject as ErrorWithError).error;
 }
 
-// TODO: refactor this as appears the type definition has changed with the sdk update
-const getToastErrorType = (error: unknown): ToastType => {
-    // check if error is superfluid error
+const getErrorToast = (error: unknown) => {
     if (error instanceof SFError) {
-        // check if error has an associated error code
         if (hasErrorCode(error.type)) {
-            // user rejected transaction
             if (error.type === "UNSUPPORTED_OPERATION") {
-                return ToastType.RejectedTransaction;
+                showRejectedTransactionToast();
             }
 
             // Old code. ACTION_REJECTED no longer exists as an error type
@@ -52,8 +48,7 @@ const getToastErrorType = (error: unknown): ToastType => {
         // }
     }
 
-    // if didn't find a specific error code, return generic error
-    return ToastType.Error;
+    showGenericErrorToast();
 };
 
-export default getToastErrorType;
+export default getErrorToast;
