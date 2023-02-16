@@ -82,7 +82,8 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
 
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
             const upgradedTransaction = await wrappedTokenContract.upgrade(
-                amount
+                amount,
+                { gasLimit: "1000000" }
             );
             await upgradedTransaction.wait();
             showTransactionConfirmedToast(
