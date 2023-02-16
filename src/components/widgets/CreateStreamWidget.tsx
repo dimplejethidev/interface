@@ -116,6 +116,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     });
                     const result = await updateFlowOperation.exec(signer);
                     await result.wait();
+                    showTransactionConfirmedToast("Swap updated");
                 } else {
                     // create stream
                     const createFlowOperation = superfluid.cfaV1.createFlow({
@@ -126,6 +127,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     });
                     const result = await createFlowOperation.exec(signer);
                     await result.wait();
+                    showTransactionConfirmedToast("Swap started");
 
                     // mark item completed, setTimeout fixes problem related to component reset
                     setTimeout(() => {
@@ -135,9 +137,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     }, 0);
                 }
 
-                showTransactionConfirmedToast();
                 setLoading(false);
-
                 // clear state after successful transaction
                 setKeyNum((k) => k + 1);
             }

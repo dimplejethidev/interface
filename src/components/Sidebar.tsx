@@ -221,7 +221,9 @@ const Sidebar = ({
                                         tutorialContext?.setRequestedPay(
                                             TutorialItemState.Complete
                                         );
-                                        showTransactionConfirmedToast();
+                                        showTransactionConfirmedToast(
+                                            "Tokens received"
+                                        );
                                     } catch (error) {
                                         getErrorToast(error);
                                     }

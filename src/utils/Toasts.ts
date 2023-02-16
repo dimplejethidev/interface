@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
-export const showTransactionConfirmedToast = () =>
-    toast.success("Transaction confirmed");
+export const showTransactionConfirmedToast = (message?: string) =>
+    toast.success(message ?? "Transaction confirmed");
 
 export const showTransactionFailedToast = () =>
     toast.error("Transaction failed");

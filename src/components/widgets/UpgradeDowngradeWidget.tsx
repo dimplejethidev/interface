@@ -78,13 +78,18 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                 amount
             );
             await approvedTransaction.wait();
+            showTransactionConfirmedToast("Token spend approved");
 
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
             const upgradedTransaction = await wrappedTokenContract.upgrade(
                 amount
             );
             await upgradedTransaction.wait();
-            showTransactionConfirmedToast();
+            showTransactionConfirmedToast(
+                `Wrapped ${ethers.utils.formatUnits(amount)} ${
+                    store.upgradeDowngradeToken.underlyingToken?.label
+                }`
+            );
             setLoading(false);
 
             // clear state after successful transaction
@@ -117,7 +122,11 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                 amount
             );
             await downgradedTransaction.wait();
-            showTransactionConfirmedToast();
+            showTransactionConfirmedToast(
+                `Unwrapped ${ethers.utils.formatUnits(amount)} ${
+                    store.upgradeDowngradeToken.label
+                }`
+            );
             setLoading(false);
 
             // clear state after successful transaction

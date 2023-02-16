@@ -605,7 +605,9 @@ const PoolInteractionVisualization: NextPage = () => {
                                                         await result.wait();
                                                         setIsDeleting(false);
 
-                                                        showTransactionConfirmedToast();
+                                                        showTransactionConfirmedToast(
+                                                            "Deleted stream"
+                                                        );
                                                         router.push(
                                                             "/my-streams"
                                                         );

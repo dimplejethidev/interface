@@ -154,7 +154,9 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                     const result = await batchCall.exec(signer);
                     await result.wait();
 
-                    showTransactionConfirmedToast();
+                    showTransactionConfirmedToast(
+                        `Providing liquidity with ${store.outboundToken.label} and ${store.inboundToken.label}`
+                    );
 
                     // clear state after successful transaction
                     setKeyNum((k) => k + 1);
