@@ -111,7 +111,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                                                     "text-lg font-white font-med block p-4"
                                                 }
                                                 position="bottom-right"
-                                                autoClose={3000}
+                                                autoClose={5000}
                                             />
                                         </main>
                                     </div>

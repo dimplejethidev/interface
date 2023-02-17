@@ -1,5 +1,8 @@
 import { SFError } from "@superfluid-finance/sdk-core";
-import { showRejectedTransactionToast, showGenericErrorToast } from "./Toasts";
+import {
+    showRejectedTransactionToast,
+    showGenericErrorToast,
+} from "../components/Toasts";
 
 interface ErrorWithCode {
     code: string;

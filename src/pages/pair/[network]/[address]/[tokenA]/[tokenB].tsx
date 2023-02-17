@@ -27,7 +27,7 @@ import PriceWidget from "../../../../../components/widgets/PriceWidget";
 import BalanceField from "../../../../../components/BalanceField";
 import RewardWidget from "../../../../../components/widgets/RewardWidget";
 import { goerliChainId } from "../../../../../utils/constants";
-import { showTransactionConfirmedToast } from "../../../../../utils/Toasts";
+import { showTransactionConfirmedToast } from "../../../../../components/Toasts";
 import getErrorToast from "../../../../../utils/getErrorToast";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
@@ -602,11 +602,13 @@ const PoolInteractionVisualization: NextPage = () => {
                                                             await batchCall.exec(
                                                                 signer
                                                             );
-                                                        await result.wait();
+                                                        const transactionReceipt =
+                                                            await result.wait();
                                                         setIsDeleting(false);
 
                                                         showTransactionConfirmedToast(
-                                                            "Deleted stream"
+                                                            "Deleted stream",
+                                                            transactionReceipt.transactionHash
                                                         );
                                                         router.push(
                                                             "/my-streams"

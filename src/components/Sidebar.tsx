@@ -19,7 +19,7 @@ import logo from "../../public/aq-logo-11-22.png";
 import CustomWalletConnectButton from "./CustomWalletConnectButton";
 import { useDarkMode } from "../utils/DarkModeProvider";
 import SidebarOption from "./SidebarOption";
-import { showTransactionConfirmedToast } from "../utils/Toasts";
+import { showTransactionConfirmedToast } from "./Toasts";
 import getErrorToast from "../utils/getErrorToast";
 
 const navItems: { icon: JSX.Element; label: string; page: string }[] = [
@@ -217,12 +217,14 @@ const Sidebar = ({
                                     try {
                                         const result =
                                             await distributorContract.requestTokens();
-                                        await result.wait();
+                                        const transactionReceipt =
+                                            await result.wait();
                                         tutorialContext?.setRequestedPay(
                                             TutorialItemState.Complete
                                         );
                                         showTransactionConfirmedToast(
-                                            "Tokens received"
+                                            "Tokens received",
+                                            transactionReceipt.transactionHash
                                         );
                                     } catch (error) {
                                         getErrorToast(error);

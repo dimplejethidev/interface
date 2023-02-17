@@ -14,7 +14,7 @@ import {
     showConnectWalletToast,
     showGenericErrorToast,
     showTransactionConfirmedToast,
-} from "../../utils/Toasts";
+} from "../Toasts";
 import getErrorToast from "../../utils/getErrorToast";
 
 const DAI_ABI = DAIABI.abi;
@@ -77,19 +77,23 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                 upgradeTokenAddress,
                 amount
             );
-            await approvedTransaction.wait();
-            showTransactionConfirmedToast("Token spend approved");
+            const approvedTransactionReceipt = await approvedTransaction.wait();
+            showTransactionConfirmedToast(
+                "Token spend approved",
+                approvedTransactionReceipt.transactionHash
+            );
 
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
             const upgradedTransaction = await wrappedTokenContract.upgrade(
                 amount,
                 { gasLimit: "1000000" }
             );
-            await upgradedTransaction.wait();
+            const upgradeTransactionReceipt = await upgradedTransaction.wait();
             showTransactionConfirmedToast(
                 `Wrapped ${ethers.utils.formatUnits(amount)} ${
                     store.upgradeDowngradeToken.underlyingToken?.label
-                }`
+                }`,
+                upgradeTransactionReceipt.transactionHash
             );
             setLoading(false);
 
@@ -122,11 +126,12 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
             const downgradedTransaction = await wrappedTokenContract.downgrade(
                 amount
             );
-            await downgradedTransaction.wait();
+            const transactionReceipt = await downgradedTransaction.wait();
             showTransactionConfirmedToast(
                 `Unwrapped ${ethers.utils.formatUnits(amount)} ${
                     store.upgradeDowngradeToken.label
-                }`
+                }`,
+                transactionReceipt.transactionHash
             );
             setLoading(false);
 

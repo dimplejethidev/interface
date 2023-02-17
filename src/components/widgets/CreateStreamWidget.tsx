@@ -20,7 +20,7 @@ import { goerliChainId } from "../../utils/constants";
 import {
     showConnectWalletToast,
     showTransactionConfirmedToast,
-} from "../../utils/Toasts";
+} from "../Toasts";
 import getErrorToast from "../../utils/getErrorToast";
 
 interface CreateStreamWidgetProps {
@@ -115,8 +115,11 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                         sender,
                     });
                     const result = await updateFlowOperation.exec(signer);
-                    await result.wait();
-                    showTransactionConfirmedToast("Swap updated");
+                    const transactionReceipt = await result.wait();
+                    showTransactionConfirmedToast(
+                        "Swap updated",
+                        transactionReceipt.transactionHash
+                    );
                 } else {
                     // create stream
                     const createFlowOperation = superfluid.cfaV1.createFlow({
@@ -126,8 +129,11 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                         sender,
                     });
                     const result = await createFlowOperation.exec(signer);
-                    await result.wait();
-                    showTransactionConfirmedToast("Swap started");
+                    const transactionReceipt = await result.wait();
+                    showTransactionConfirmedToast(
+                        "Swap started",
+                        transactionReceipt.transactionHash
+                    );
 
                     // mark item completed, setTimeout fixes problem related to component reset
                     setTimeout(() => {

@@ -18,7 +18,7 @@ import { goerliChainId } from "../../utils/constants";
 import {
     showConnectWalletToast,
     showTransactionConfirmedToast,
-} from "../../utils/Toasts";
+} from "../Toasts";
 import getErrorToast from "../../utils/getErrorToast";
 
 interface ProvideLiquidityWidgetProps {
@@ -152,10 +152,11 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                         operation1,
                     ]);
                     const result = await batchCall.exec(signer);
-                    await result.wait();
+                    const transactionReceipt = await result.wait();
 
                     showTransactionConfirmedToast(
-                        `Providing liquidity with ${store.outboundToken.label} and ${store.inboundToken.label}`
+                        `Providing liquidity with ${store.outboundToken.label} and ${store.inboundToken.label}`,
+                        transactionReceipt.transactionHash
                     );
 
                     // clear state after successful transaction
