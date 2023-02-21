@@ -16,8 +16,11 @@ const TableRow = ({
     link,
     data,
 }: TableRowProps) => (
-    <Link href={link}>
-        <div className="relative flex p-4 items-center rounded-xl dark:text-white border-[1px] border-gray-200 dark:border-gray-700 cursor-pointer hover:centered-shadow dark:hover:centered-shadow-md-dark transition-all duration-300">
+    <Link href={link} data-test-id="table-row-link">
+        <div
+            className="relative flex p-4 items-center rounded-xl dark:text-white border-[1px] border-gray-200 dark:border-gray-700 cursor-pointer hover:centered-shadow dark:hover:centered-shadow-md-dark transition-all duration-300"
+            aria-label="Table row"
+        >
             {data.map((d, i) => (
                 // TODO: don't use index as key
                 // eslint-disable-next-line react/no-array-index-key

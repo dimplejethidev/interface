@@ -21,6 +21,7 @@ interface TokenFlowFieldProps {
     token: TokenOption;
     setToken: (token: TokenOption) => void;
     isNonSuperToken?: boolean;
+    fieldLabel: string;
 }
 
 const TokenFlowField = ({
@@ -37,6 +38,7 @@ const TokenFlowField = ({
     token,
     setToken,
     isNonSuperToken,
+    fieldLabel,
 }: TokenFlowFieldProps) => {
     const store = useStore();
 
@@ -54,7 +56,7 @@ const TokenFlowField = ({
             if (!isDiscreteAmount) {
                 formattedValue = formattedValue.div(store.flowrateUnit.value);
             }
-            
+
             setFormattedValue(formattedValue.toString());
         }
     }
@@ -94,6 +96,7 @@ const TokenFlowField = ({
                             // set formatted number
                             setFormattedNumber(e.target.value);
                         }}
+                        aria-label={`${fieldLabel} input field`}
                     />
                     {dropdownItems && dropdownValue && setDropdownValue && (
                         <Select
@@ -112,7 +115,13 @@ const TokenFlowField = ({
                 <div className="flex justify-end2 pt-3 pb-2 px-2 text-xs space-x-2">
                     <p>Balance:</p>
                     <p className="monospace-font tracking-wider">
-                        {parseFloat(ethers.utils.formatEther(currentBalance)) === 0 ? '0.0' : parseFloat(ethers.utils.formatEther(currentBalance)).toFixed(5)}
+                        {parseFloat(
+                            ethers.utils.formatEther(currentBalance)
+                        ) === 0
+                            ? "0.0"
+                            : parseFloat(
+                                  ethers.utils.formatEther(currentBalance)
+                              ).toFixed(5)}
                     </p>
                 </div>
             </div>

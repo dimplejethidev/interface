@@ -23,6 +23,7 @@ const TransactionButton = ({
         }${!errorMessage && !loading && " hover:outline2 "}`}
         onClick={onClickFunction}
         disabled={loading || errorMessage !== undefined}
+        aria-label={`${title} button`}
     >
         {loading ? (
             <LoadingSpinner size={30} />

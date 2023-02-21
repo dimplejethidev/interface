@@ -218,6 +218,9 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                                 }
                                 setToken={store.setUpgradeDowngradeToken}
                                 isNonSuperToken={isWrapping}
+                                fieldLabel={
+                                    isWrapping ? "Wrap amount" : "Unwrap amount"
+                                }
                             />
                         )}
                     </div>

@@ -5,7 +5,11 @@ interface LoadingSpinnerProps {
 }
 
 const LoadingSpinner = ({ size }: LoadingSpinnerProps) => (
-    <AiOutlineLoading size={size} className="animate-spin" />
+    <AiOutlineLoading
+        size={size}
+        className="animate-spin"
+        data-test-id="loading-spinner"
+    />
 );
 
 export default LoadingSpinner;

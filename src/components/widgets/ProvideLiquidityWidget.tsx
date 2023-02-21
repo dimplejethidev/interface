@@ -405,6 +405,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                         currentBalance={outboundTokenBalance}
                         token={store.outboundToken}
                         setToken={store.setOutboundToken}
+                        fieldLabel={`${store.outboundToken.label} liquidity flow-rate`}
                     />
                     <div className="w-full">
                         <ReadOnlyFlowOutput
@@ -429,6 +430,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                         currentBalance={inboundTokenBalance}
                         token={store.inboundToken}
                         setToken={store.setInboundToken}
+                        fieldLabel={`${store.inboundToken.label} liquidity flow-rate`}
                     />
                     <div className="w-full">
                         <ReadOnlyFlowOutput

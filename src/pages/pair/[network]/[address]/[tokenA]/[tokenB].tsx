@@ -622,6 +622,7 @@ const PoolInteractionVisualization: NextPage = () => {
                                         }}
                                         className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
                                         disabled={isLoading || isDeleting}
+                                        aria-label="Delete stream button"
                                     >
                                         {isDeleting ? (
                                             <div className="scale-90">

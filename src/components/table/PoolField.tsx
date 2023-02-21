@@ -8,7 +8,10 @@ const PoolField = ({
     token0: TokenOption;
     token1: TokenOption;
 }) => (
-    <div className="flex items-center h-6 relative">
+    <div
+        className="flex items-center h-6 relative"
+        aria-label="Table pool label"
+    >
         <div className="-mr-2 rounded drop-shadow-lg">
             <Image src={token0.logo} className="z-10 " width="28" height="28" />
         </div>

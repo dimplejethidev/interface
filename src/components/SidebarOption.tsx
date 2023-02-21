@@ -41,6 +41,7 @@ const SidebarOption = ({
                     setSidebarIsShown(false);
                 }
             }}
+            aria-label={`${label} page link`}
         >
             <div
                 className={`bg-gray-100 p-2 rounded-lg ${

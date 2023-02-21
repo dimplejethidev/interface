@@ -414,6 +414,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                                 currentBalance={outboundTokenBalance}
                                 token={store.outboundToken}
                                 setToken={store.setOutboundToken}
+                                fieldLabel={`${store.outboundToken.label} swap flow-rate`}
                             />
                         </div>
                     </div>
@@ -442,6 +443,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                             currentBalance={inboundTokenBalance}
                             token={store.inboundToken}
                             setToken={store.setInboundToken}
+                            fieldLabel={`${store.inboundToken.label} swap flow-rate`}
                         />
                     </div>
                 </div>
