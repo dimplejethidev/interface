@@ -1,6 +1,6 @@
 /* eslint-disable react/require-default-props */
 import { BigNumber, ethers } from "ethers";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useStore } from "../store";
 import { GenericDropdownOption } from "../types/GenericDropdownOption";
 import { TokenOption } from "../types/TokenOption";
@@ -42,32 +42,42 @@ const TokenFlowField = ({
 }: TokenFlowFieldProps) => {
     const store = useStore();
 
-    function setFormattedNumber(newValue: string) {
-        if (newValue === "") {
-            setFormattedValue("");
-            return;
-        }
+    const setFormattedNumberCallback = useCallback(
+        async (newValue: string) => {
+            function setFormattedNumber() {
+                if (newValue === "") {
+                    setFormattedValue("");
+                    return;
+                }
 
-        if (newValue.match("^[0-9]*[.]?[0-9]*$") != null && newValue !== ".") {
-            let formattedValue = isEther
-                ? ethers.utils.parseUnits(newValue, "ether")
-                : BigNumber.from(newValue);
+                if (
+                    newValue.match("^[0-9]*[.]?[0-9]*$") != null &&
+                    newValue !== "."
+                ) {
+                    let formattedValue = isEther
+                        ? ethers.utils.parseUnits(newValue, "ether")
+                        : BigNumber.from(newValue);
 
-            if (!isDiscreteAmount) {
-                formattedValue = formattedValue.div(store.flowrateUnit.value);
+                    if (!isDiscreteAmount) {
+                        formattedValue = formattedValue.div(
+                            store.flowrateUnit.value
+                        );
+                    }
+
+                    setFormattedValue(formattedValue.toString());
+                }
             }
 
-            setFormattedValue(formattedValue.toString());
-        }
-    }
+            setFormattedNumber();
+        },
+        [isDiscreteAmount, isEther, setFormattedValue, store.flowrateUnit.value]
+    );
 
     useEffect(() => {
         if (shouldReformat) {
-            setFormattedNumber(displayedValue);
+            setFormattedNumberCallback(displayedValue);
         }
-        // TODO: Assess missing dependency array values
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [store.flowrateUnit]);
+    }, [displayedValue, setFormattedNumberCallback, shouldReformat]);
 
     return (
         <div>
@@ -94,7 +104,7 @@ const TokenFlowField = ({
                             }
 
                             // set formatted number
-                            setFormattedNumber(e.target.value);
+                            setFormattedNumberCallback(e.target.value);
                         }}
                         aria-label={`${fieldLabel} input field`}
                     />

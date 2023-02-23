@@ -21,9 +21,6 @@ const StreamsTable = () => {
 
     // get streams from pool contract
     // TODO: router/factory contract to track current streams so we don't have to manually check here
-    const pools = [
-        { token0: fDAIxp, token1: fUSDCxp, address: fDAIxpfUSDCxpPool },
-    ];
     useEffect(() => {
         async function updateData() {
             if (!address || !chain || !provider) {
@@ -35,6 +32,10 @@ const StreamsTable = () => {
                 chainId: Number(chainId),
                 provider,
             });
+
+            const pools = [
+                { token0: fDAIxp, token1: fUSDCxp, address: fDAIxpfUSDCxpPool },
+            ];
 
             const newData: ExplicitAny[][] = [];
             const newLinks: ExplicitAny[] = [];
@@ -97,9 +98,7 @@ const StreamsTable = () => {
         }
 
         updateData();
-        // TODO: Assess missing dependency array values
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [address, chain]);
+    }, [address, chain, provider]);
 
     return (
         <section className="flex flex-col items-center w-full">

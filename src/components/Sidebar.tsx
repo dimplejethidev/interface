@@ -64,7 +64,6 @@ const Sidebar = ({
         } else {
             document.documentElement.classList.remove("dark");
         }
-        // TODO: Assess missing dependency array values
     }, []);
 
     const [isDefinitelyConnected, setIsDefinitelyConnected] = useState(false);

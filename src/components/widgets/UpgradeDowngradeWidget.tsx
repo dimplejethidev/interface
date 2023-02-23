@@ -165,9 +165,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
         }
 
         getBalance();
-        // TODO: Assess missing dependency array values
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [store.upgradeDowngradeToken]);
+    }, [address, provider, store.upgradeDowngradeToken]);
 
     return (
         <section className="flex flex-col items-center w-full">

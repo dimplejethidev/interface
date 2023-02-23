@@ -261,7 +261,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
 
     // update vars when tokens change
     useEffect(() => {
-        const refresh = async () => {
+        const updateFlowVars = async () => {
             const token0Address = store.outboundToken.address;
             const token1Address = store.inboundToken.address;
 
@@ -329,18 +329,18 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
             }
         };
 
-        refresh();
+        updateFlowVars();
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [store.inboundToken, store.outboundToken, address, chain]);
 
     // refresh spot pricing upon user input
     useEffect(() => {
-        const refresh = async () => {
+        const updatePrice = async () => {
             await refreshPrice();
         };
 
-        refresh();
+        updatePrice();
 
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -348,7 +348,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
 
     // calculate reverse pricing if user edits expected outgoing flow
     useEffect(() => {
-        const refresh = async () => {
+        const calculateReversePricing = async () => {
             isReversePricing.current = true;
 
             // calculate swap flow rate
@@ -374,8 +374,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
             }
         };
 
-        refresh();
-        // TODO: Assess missing dependency array values
+        calculateReversePricing();
     }, [expectedFlowRate]);
 
     return (
@@ -400,11 +399,8 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                             }
                         >
                             <TokenFlowField
-                                // TODO: assess props
-                                // title="Flow Rate"
                                 displayedValue={displayedSwapFlowRate}
                                 setDisplayedValue={setDisplayedSwapFlowRate}
-                                // formattedValue={swapFlowRate}
                                 setFormattedValue={setSwapFlowRate}
                                 dropdownItems={flowrates}
                                 dropdownValue={store.flowrateUnit}
@@ -432,11 +428,8 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     </button>
                     <div className="w-full py-1">
                         <TokenFlowField
-                            // TODO: assess props
-                            // title="Flow Rate"
                             displayedValue={displayedExpectedFlowRate}
                             setDisplayedValue={setDisplayedExpectedFlowRate}
-                            // formattedValue={expectedFlowRate}
                             setFormattedValue={setExpectedFlowRate}
                             isEther
                             shouldReformat={false}

@@ -68,9 +68,7 @@ const AnimatedDigit = ({
                 );
             }
         }
-        // TODO: Assess missing dependency array values
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [digit]);
+    }, [digit, currentTimeout, tapePosition, isIncreasing, previousDigit]);
 
     return (
         <div

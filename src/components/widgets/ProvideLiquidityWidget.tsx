@@ -291,7 +291,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
 
     // update vars when tokens change
     useEffect(() => {
-        const refresh = async () => {
+        const updateFlowsAndPrice = async () => {
             setRefreshingPrice(true);
 
             const token0Address = store.outboundToken.address;
@@ -362,18 +362,18 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
             }
         };
 
-        refresh();
+        updateFlowsAndPrice();
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [store.inboundToken, store.outboundToken, address, chain]);
 
     // refresh spot pricing upon user input
     useEffect(() => {
-        const refresh = async () => {
+        const updatePrice = async () => {
             await refreshPrice();
         };
 
-        refresh();
+        updatePrice();
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate0, swapFlowRate1]);

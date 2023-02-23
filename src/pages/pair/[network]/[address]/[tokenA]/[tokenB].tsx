@@ -156,7 +156,8 @@ const PoolInteractionVisualization: NextPage = () => {
     }, [router.query]);
 
     // Refresh function called on interval
-    async function refresh() {
+    // TODO: break this up into smaller functions
+    async function updateVars() {
         const poolABI = [
             "function getUserSwapData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
             "function getUserRewardData(address token, address account, uint256 time) external view returns (uint256 initialCumulative, uint256 realTimeCumulative, uint128 units)",
@@ -443,7 +444,7 @@ const PoolInteractionVisualization: NextPage = () => {
             setTime(time + 1);
             if (time >= REFRESH_INTERVAL) {
                 setTime(0);
-                refresh();
+                updateVars();
             }
 
             // animate frame
@@ -464,7 +465,7 @@ const PoolInteractionVisualization: NextPage = () => {
     // Reload info if any parameter changes
     useEffect(() => {
         setIsLoading(true);
-        refresh();
+        updateVars();
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userAddress, chain, provider, token0, token1]);
