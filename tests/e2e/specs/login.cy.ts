@@ -67,15 +67,11 @@ describe("Test User Login", () => {
             });
         };
 
-        // const getTableRowLink = () => {
-        //     return cy.findByTestId("table-row-link");
-        // };
-
-        // const getDeleteStreamButton = () => {
-        //     return cy.findByRole("button", {
-        //         name: "Delete stream button",
-        //     });
-        // };
+        const getDeleteStreamButton = () => {
+            return cy.findByRole("button", {
+                name: "Delete stream button",
+            });
+        };
 
         cy.visit(`/`);
 
@@ -123,12 +119,14 @@ describe("Test User Login", () => {
         getWrapButton().click();
 
         cy.confirmMetamaskPermissionToSpend();
-        // TODO: await transactions instead of manually waiting
-        // eslint-disable-next-line cypress/no-unnecessary-waiting, ui-testing/no-hard-wait, testing-library/await-async-utils
-        cy.wait(25000);
+        cy.findByText("Token spend approved", { timeout: 60000 }).should(
+            "exist"
+        );
+
         cy.confirmMetamaskTransaction();
-        // eslint-disable-next-line cypress/no-unnecessary-waiting, ui-testing/no-hard-wait, testing-library/await-async-utils
-        cy.wait(40000);
+        cy.findByText("Wrapped 10.0 fDAI", {
+            timeout: 60000,
+        }).should("exist");
 
         // Start swap
         getSwapPageButton().click();
@@ -142,22 +140,24 @@ describe("Test User Login", () => {
         getSwapButton().click();
 
         cy.confirmMetamaskTransaction({ timeout: 60000 });
-        // eslint-disable-next-line cypress/no-unnecessary-waiting, ui-testing/no-hard-wait, testing-library/await-async-utils
-        cy.wait(25000);
+        cy.findByText("Swap started", {
+            timeout: 60000,
+        }).should("exist");
 
         // View swap
         getMyStreamsPageButton().click();
-        // TODO: finish below
-        // getTableRowLink().should("exist");
-        // getTableRowLink().click();
+        cy.findByText("fDAIxp").should("exist");
+        cy.findByText("/").should("exist");
+        cy.findByText("fUSDCxp").should("exist");
+        cy.findByText("fUSDCxp").click();
 
         // Cancel swap
-        // getDeleteStreamButton().click();
-        // cy.confirmMetamaskTransaction();
+        getDeleteStreamButton().click();
 
-        // eslint-disable-next-line cypress/no-unnecessary-waiting, ui-testing/no-hard-wait, testing-library/await-async-utils
-        // cy.wait(25000);
-        // getTableRowLink().should("not.exist");
+        cy.confirmMetamaskTransaction();
+        cy.findByText("Deleted stream", {
+            timeout: 60000,
+        }).should("exist");
     });
 });
 
