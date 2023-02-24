@@ -167,6 +167,22 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
         getBalance();
     }, [address, provider, store.upgradeDowngradeToken]);
 
+    function getTransactionButtonDisabledMessage() {
+        if (!signer) {
+            return "Connect wallet";
+        }
+        if (!amount || BigNumber.from(amount).lte(0)) {
+            return "Enter Amount";
+        }
+        if (
+            (isWrapping && underlyingTokenBalance.lt(amount)) ||
+            (!isWrapping && superTokenBalance.lt(amount))
+        ) {
+            return "Insufficient Balance";
+        }
+        return undefined;
+    }
+
     return (
         <section className="flex flex-col items-center w-full">
             <RealTimeBalance
@@ -195,11 +211,8 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     <div className="w-full py-1">
                         {store.upgradeDowngradeToken.underlyingToken && (
                             <TokenFlowField
-                                // TODO: assess props
-                                // title="Flow Rate"
                                 displayedValue={displayedAmount}
                                 setDisplayedValue={setDisplayedAmount}
-                                // formattedValue={amount}
                                 setFormattedValue={setAmount}
                                 isEther
                                 isDiscreteAmount
@@ -249,20 +262,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     title={isWrapping ? "Wrap" : "Unwrap"}
                     loading={loading}
                     onClickFunction={isWrapping ? upgrade : downgrade}
-                    errorMessage={
-                        // {/* TODO: do not use nested ternary statements */}
-                        // eslint-disable-next-line no-nested-ternary
-                        !signer
-                            ? "Connect wallet"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !amount || BigNumber.from(amount).lte(0)
-                            ? "Enter Amount"
-                            : (isWrapping &&
-                                  underlyingTokenBalance.lt(amount)) ||
-                              (!isWrapping && superTokenBalance.lt(amount))
-                            ? "Insufficient Balance"
-                            : undefined
-                    }
+                    transactionButtonDisabledMessage={getTransactionButtonDisabledMessage()}
                 />
             </WidgetContainer>
         </section>

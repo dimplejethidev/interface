@@ -378,6 +378,30 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [swapFlowRate0, swapFlowRate1]);
 
+    function getTransactionButtonDisabledMessage() {
+        if (!signer) {
+            return "Connect wallet";
+        }
+        if (!poolExists) {
+            return "Select valid token pair";
+        }
+        if (
+            !swapFlowRate0 ||
+            BigNumber.from(swapFlowRate0).lte(0) ||
+            !swapFlowRate1 ||
+            BigNumber.from(swapFlowRate1).lte(0)
+        ) {
+            return "Enter flow rates";
+        }
+        if (!acceptedBuffer) {
+            if (userToken0Flow.current.gt(0) && userToken1Flow.current.gt(0)) {
+                return "Update Position";
+            }
+            return "Provide Liquidity";
+        }
+        return undefined;
+    }
+
     return (
         <section className="flex flex-col items-center w-full">
             <RealTimeBalance
@@ -391,11 +415,8 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
             <WidgetContainer title="Provide Liquidity">
                 <div className="flex flex-col items-center space-y-2 py-1">
                     <TokenFlowField
-                        // TODO: assess props
-                        // title="Flow Rate"
                         displayedValue={displayedSwapFlowRate0}
                         setDisplayedValue={setDisplayedSwapFlowRate0}
-                        // formattedValue={swapFlowRate0}
                         setFormattedValue={setSwapFlowRate0}
                         dropdownItems={flowrates}
                         dropdownValue={store.flowrateUnit}
@@ -419,11 +440,8 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                         </div>
                     </div>
                     <TokenFlowField
-                        // TODO: assess props
-                        // title="Flow Rate"
                         displayedValue={displayedSwapFlowRate1}
                         setDisplayedValue={setDisplayedSwapFlowRate1}
-                        // formattedValue={swapFlowRate1}
                         setFormattedValue={setSwapFlowRate1}
                         isEther
                         shouldReformat
@@ -481,28 +499,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                     }
                     loading={loading}
                     onClickFunction={provideLiquidity}
-                    errorMessage={
-                        // TODO: do not use nested ternary statements
-                        // eslint-disable-next-line no-nested-ternary
-                        !signer
-                            ? "Connect wallet"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !poolExists
-                            ? "Select valid token pair"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !swapFlowRate0 ||
-                              BigNumber.from(swapFlowRate0).lte(0) ||
-                              !swapFlowRate1 ||
-                              BigNumber.from(swapFlowRate1).lte(0)
-                            ? "Enter flow rates"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !acceptedBuffer
-                            ? userToken0Flow.current.gt(0) &&
-                              userToken1Flow.current.gt(0)
-                                ? "Update Position"
-                                : "Provide Liquidity"
-                            : undefined
-                    }
+                    transactionButtonDisabledMessage={getTransactionButtonDisabledMessage()}
                 />
             </WidgetContainer>
         </section>

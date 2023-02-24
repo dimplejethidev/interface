@@ -1,31 +1,44 @@
-import { createContext, useContext, Dispatch, SetStateAction } from "react";
+import {
+    createContext,
+    useContext,
+    Dispatch,
+    SetStateAction,
+    useMemo,
+} from "react";
 
 interface DarkModeContextInterface {
-  isDark: boolean;
-  setIsDark: Dispatch<SetStateAction<boolean>>;
-  // setIsDark: (isDark: boolean) => void;
+    isDark: boolean;
+    setIsDark: Dispatch<SetStateAction<boolean>>;
 }
 
 const DarkModeContext = createContext<DarkModeContextInterface | null>(null);
 
 export function useDarkMode() {
-  return useContext(DarkModeContext);
+    return useContext(DarkModeContext);
 }
 
 const DarkModeProvider = ({
-  isDark,
-  setIsDark,
-  children,
+    isDark,
+    setIsDark,
+    children,
 }: {
-  isDark: boolean;
-  setIsDark: Dispatch<SetStateAction<boolean>>;
-  children: JSX.Element;
-}) => (
-  // TODO: Assess whether we should add useMemo here
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
-  <DarkModeContext.Provider value={{ isDark, setIsDark }}>
-    {children}
-  </DarkModeContext.Provider>
-);
+    isDark: boolean;
+    setIsDark: Dispatch<SetStateAction<boolean>>;
+    children: JSX.Element;
+}) => {
+    const DarkModeContextProviderProps = useMemo(
+        () => ({
+            isDark,
+            setIsDark,
+        }),
+        [isDark, setIsDark]
+    );
+
+    return (
+        <DarkModeContext.Provider value={DarkModeContextProviderProps}>
+            {children}
+        </DarkModeContext.Provider>
+    );
+};
 
 export default DarkModeProvider;

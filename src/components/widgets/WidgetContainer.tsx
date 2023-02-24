@@ -21,32 +21,33 @@ const WidgetContainer = ({
     isUnbounded,
 }: WidgetContainerProps) => (
     <div
-        className={`flex flex-col w-full md:p-8 space-y-6 rounded-3xl md:bg-white dark:md:border-2 dark:md:border-gray-800/60 dark:md:bg-gray-900/60 md:centered-shadow dark:md:centered-shadow-dark transition ${!isUnbounded && "  max-w-xl "
-            }`}
+        className={`flex flex-col w-full md:p-8 space-y-6 rounded-3xl md:bg-white dark:md:border-2 dark:md:border-gray-800/60 dark:md:bg-gray-900/60 md:centered-shadow dark:md:centered-shadow-dark transition ${
+            !isUnbounded && "  max-w-xl "
+        }`}
     >
         {(title || smallTitle || buttons) && (
             <div className="flex font-semibold space-x-4 text-lg whitespace-nowrap">
-                {/* TODO: do not use nested ternary statements */}
-                {/* eslint-disable-next-line no-nested-ternary */}
-                {title ? (
+                {title && (
                     <div className="px-4 py-2 rounded-xl bg-aqueductBlue/10 w-min text-aqueductBlue">
                         {title}
                     </div>
-                ) : buttons ? (
+                )}
+                {buttons &&
                     buttons.map((b) => (
                         <button
                             type="button"
                             onClick={b.action}
-                            className={`px-4 py-2 rounded-xl w-min transition-all ${b.isSelected
-                                ? "bg-aqueductBlue/10 text-aqueductBlue"
-                                : "bg-gray-500/10 text-gray-500/60 opacity-50 hover:opacity-100"
-                                }`}
+                            className={`px-4 py-2 rounded-xl w-min transition-all ${
+                                b.isSelected
+                                    ? "bg-aqueductBlue/10 text-aqueductBlue"
+                                    : "bg-gray-500/10 text-gray-500/60 opacity-50 hover:opacity-100"
+                            }`}
                             key={b.title}
                         >
                             {b.title}
                         </button>
-                    ))
-                ) : (
+                    ))}
+                {!title && !buttons && (
                     <div className="px-4 py-2 rounded-xl text-sm bg-gray-100 dark:bg-gray-700/60 w-min text-gray-400 dark:text-white/80">
                         {smallTitle}
                     </div>

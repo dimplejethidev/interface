@@ -48,16 +48,7 @@ const AnimatedDigit = ({
                 setOffset(wrapperPos - digitPos);
             }
             setPreviousDigit(digit);
-            // TODO: can these two variables be deleted?
-            // const wrapperPos2 = ref.current.getBoundingClientRect().y;
-            // const digitPos2 = ref.current.children
-            //     .item(0)
-            //     ?.getBoundingClientRect().y;
 
-            if (currentTimeout) {
-                // TODO: is this important?
-                // clearTimeout(currentTimeout);
-            }
             if (updatedTapePosition > tapeLength) {
                 setCurrentTimeout(
                     setTimeout(() => {

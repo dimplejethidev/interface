@@ -49,10 +49,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
     const [priceMultiple, setPriceMultiple] = useState<BigNumber>(
         BigNumber.from(0)
     );
-    // TODO: assess this variable
-    // const [reversePriceMultiple, setReversePriceMultiple] = useState<BigNumber>(
-    //     BigNumber.from(0)
-    // );
+
     const [refreshingPrice, setRefreshingPrice] = useState(false);
     const [poolExists, setPoolExists] = useState(true);
     const isReversePricing = useRef(false);
@@ -240,8 +237,6 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
             }
         } else {
             // calculate needed swap flowrate
-            // TODO: Assess if blocks
-            // eslint-disable-next-line no-lonely-if
             if (swapFlowRate !== "") {
                 setDisplayedSwapFlowRate(
                     ethers.utils.formatEther(
@@ -377,6 +372,25 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
         calculateReversePricing();
     }, [expectedFlowRate]);
 
+    const getTransactionButtonDisabledMessage = () => {
+        if (!signer) {
+            return "Connect wallet";
+        }
+        if (!poolExists) {
+            return "Select valid token pair";
+        }
+        if (!swapFlowRate || BigNumber.from(swapFlowRate).lte(0)) {
+            return "Enter flow rate";
+        }
+        if (!acceptedBuffer) {
+            if (userToken0Flow.current.gt(0)) {
+                return "Update Swap";
+            }
+            return "Swap";
+        }
+        return undefined;
+    };
+
     return (
         <section className="flex flex-col items-center w-full">
             <RealTimeBalance
@@ -478,24 +492,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     }
                     loading={loading}
                     onClickFunction={swap}
-                    errorMessage={
-                        // TODO: do not use nested ternary statements
-                        // eslint-disable-next-line no-nested-ternary
-                        !signer
-                            ? "Connect wallet"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !poolExists
-                            ? "Select valid token pair"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !swapFlowRate || BigNumber.from(swapFlowRate).lte(0)
-                            ? "Enter flow rate"
-                            : // eslint-disable-next-line no-nested-ternary
-                            !acceptedBuffer
-                            ? userToken0Flow.current.gt(0)
-                                ? "Update Swap"
-                                : "Swap"
-                            : undefined
-                    }
+                    transactionButtonDisabledMessage={getTransactionButtonDisabledMessage()}
                 />
             </WidgetContainer>
         </section>

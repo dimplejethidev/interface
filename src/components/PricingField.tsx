@@ -3,9 +3,7 @@ import { useStore } from "../store";
 import LoadingSpinner from "./LoadingSpinner";
 
 const maxDecimals = 10;
-// TODO: Assess use of Math.pow
-// eslint-disable-next-line prefer-exponentiation-operator, no-restricted-properties
-const minValue = Math.pow(10, -1 * maxDecimals);
+const minValue = 10 ** (-1 * maxDecimals);
 
 interface PricingFieldProps {
     refreshingPrice: boolean;
