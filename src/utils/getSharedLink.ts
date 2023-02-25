@@ -4,6 +4,6 @@ const getSharedLink = (
     token0Address: string,
     token1Address: string
 ) =>
-    `aqueductfinance-app.vercel.app/pair/${network}/${userAddress}/${token0Address}/${token1Address}`;
+    `demo.aqueduct.fi/pair/${network}/${userAddress}/${token0Address}/${token1Address}`;
 
 export default getSharedLink;
