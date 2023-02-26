@@ -533,6 +533,7 @@ const PoolInteractionVisualization: NextPage = () => {
                                     <button
                                         type="button"
                                         onClick={async () => {
+                                            let transactionHash;
                                             try {
                                                 if (
                                                     token0 &&
@@ -603,6 +604,8 @@ const PoolInteractionVisualization: NextPage = () => {
                                                             await batchCall.exec(
                                                                 signer
                                                             );
+                                                        transactionHash =
+                                                            result.hash;
                                                         const transactionReceipt =
                                                             await result.wait();
                                                         setIsDeleting(false);
@@ -617,7 +620,10 @@ const PoolInteractionVisualization: NextPage = () => {
                                                     }
                                                 }
                                             } catch (error) {
-                                                getErrorToast(error);
+                                                getErrorToast(
+                                                    error,
+                                                    transactionHash
+                                                );
                                                 setIsDeleting(false);
                                             }
                                         }}

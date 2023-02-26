@@ -2,12 +2,12 @@
 import { BiLinkExternal } from "react-icons/bi";
 
 interface ToastProps {
-    message?: string;
+    message: string;
     transactionHash?: string;
 }
 
 const ToastMessage = ({ message, transactionHash }: ToastProps) => {
-    if (message && transactionHash) {
+    if (transactionHash) {
         return (
             <p className="flex row items-start justify-between mr-2">
                 {message}
@@ -25,11 +25,7 @@ const ToastMessage = ({ message, transactionHash }: ToastProps) => {
         );
     }
 
-    if (message && !transactionHash) {
-        return <p>{message}</p>;
-    }
-
-    return <p>Transaction confirmed</p>;
+    return <p>{message}</p>;
 };
 
 export default ToastMessage;

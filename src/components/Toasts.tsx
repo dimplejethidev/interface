@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import ToastMessage from "./ToastMessage";
 
 export const showTransactionConfirmedToast = (
-    message?: string,
+    message: string,
     transactionHash?: string
 ) => {
     toast.success(
@@ -10,11 +10,20 @@ export const showTransactionConfirmedToast = (
     );
 };
 
-export const showTransactionFailedToast = () =>
-    toast.error("Transaction failed");
+export const showTransactionFailedToast = (
+    message: string,
+    transactionHash?: string
+) => {
+    toast.error(
+        <ToastMessage message={message} transactionHash={transactionHash} />
+    );
+};
 
-export const showGenericErrorToast = () =>
-    toast.error("An unexpected error has occured");
+export const showGenericErrorToast = (
+    message = "An unexpected error has occured"
+) => {
+    toast.error(<ToastMessage message={message} />);
+};
 
 export const showConnectWalletToast = () =>
     toast.warning("Please connect a wallet");

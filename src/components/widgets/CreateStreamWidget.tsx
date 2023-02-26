@@ -78,15 +78,22 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
     );
 
     const swap = async () => {
+        setLoading(true);
+
+        if (signer === null || signer === undefined) {
+            showConnectWalletToast();
+            setLoading(false);
+            return;
+        }
+
+        const pool = getPoolAddress(
+            store.inboundToken.value,
+            store.outboundToken.value
+        );
+        const token = store.outboundToken.address;
+
+        let transactionHash;
         try {
-            setLoading(true);
-
-            if (signer === null || signer === undefined) {
-                showConnectWalletToast();
-                setLoading(false);
-                return;
-            }
-
             const superfluid = await Framework.create({
                 chainId:
                     (provider && provider.chains && provider.chains[0].id) ??
@@ -94,12 +101,6 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                 provider,
             });
 
-            const pool = getPoolAddress(
-                store.inboundToken.value,
-                store.outboundToken.value
-            );
-
-            const token = store.outboundToken.address;
             const sender = await signer.getAddress();
 
             if (token) {
@@ -112,6 +113,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                         sender,
                     });
                     const result = await updateFlowOperation.exec(signer);
+                    transactionHash = result.hash;
                     const transactionReceipt = await result.wait();
                     showTransactionConfirmedToast(
                         "Swap updated",
@@ -126,6 +128,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                         sender,
                     });
                     const result = await createFlowOperation.exec(signer);
+                    transactionHash = result.hash;
                     const transactionReceipt = await result.wait();
                     showTransactionConfirmedToast(
                         "Swap started",
@@ -145,7 +148,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                 setKeyNum((k) => k + 1);
             }
         } catch (error) {
-            getErrorToast(error);
+            getErrorToast(error, transactionHash);
             setLoading(false);
         }
     };

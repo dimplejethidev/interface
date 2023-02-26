@@ -213,9 +213,11 @@ const Sidebar = ({
                                             signer
                                         );
                                     setIsRequestingFunds(true);
+                                    let transactionHash;
                                     try {
                                         const result =
                                             await distributorContract.requestTokens();
+                                        transactionHash = result.hash;
                                         const transactionReceipt =
                                             await result.wait();
                                         tutorialContext?.setRequestedPay(
@@ -226,7 +228,7 @@ const Sidebar = ({
                                             transactionReceipt.transactionHash
                                         );
                                     } catch (error) {
-                                        getErrorToast(error);
+                                        getErrorToast(error, transactionHash);
                                     }
                                     setIsRequestingFunds(false);
                                 }}

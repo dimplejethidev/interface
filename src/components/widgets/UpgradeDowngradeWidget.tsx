@@ -12,7 +12,6 @@ import AqueductTokenABI from "../../utils/AqueductTokenABI.json";
 import ReadOnlyFlowOutput from "../ReadOnlyFlowOutput";
 import {
     showConnectWalletToast,
-    showGenericErrorToast,
     showTransactionConfirmedToast,
 } from "../Toasts";
 import getErrorToast from "../../utils/getErrorToast";
@@ -48,84 +47,96 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
     const [isWrapping, setIsWrapping] = useState(true);
 
     const upgrade = async () => {
+        setLoading(true);
+        if (signer === null || signer === undefined) {
+            showConnectWalletToast();
+            setLoading(false);
+            return;
+        }
+
+        const underlyingTokenAddress =
+            store.upgradeDowngradeToken.underlyingToken?.address;
+        const underlyingTokenContract = new ethers.Contract(
+            underlyingTokenAddress || "",
+            DAI_ABI,
+            signer
+        );
+
+        const upgradeTokenAddress = store.upgradeDowngradeToken.address;
+        const wrappedTokenContract = new ethers.Contract(
+            upgradeTokenAddress,
+            AQUEDUCT_TOKEN_ABI,
+            signer
+        );
+
+        let transactionHash;
         try {
-            setLoading(true);
-
-            if (signer === null || signer === undefined) {
-                showConnectWalletToast();
-                setLoading(false);
-                return;
-            }
-
             // TODO: Could we use the Superfluid SDK here to get the underlying token?
-            const underlyingTokenAddress =
-                store.upgradeDowngradeToken.underlyingToken?.address;
-            const underlyingTokenContract = new ethers.Contract(
-                underlyingTokenAddress || "",
-                DAI_ABI,
-                signer
-            );
-
-            const upgradeTokenAddress = store.upgradeDowngradeToken.address;
-            const wrappedTokenContract = new ethers.Contract(
-                upgradeTokenAddress,
-                AQUEDUCT_TOKEN_ABI,
-                signer
-            );
-
             const approvedTransaction = await underlyingTokenContract.approve(
                 upgradeTokenAddress,
                 amount
             );
-            const approvedTransactionReceipt = await approvedTransaction.wait();
+            transactionHash = approvedTransaction.hash;
+
+            const transactionReceipt = await approvedTransaction.wait();
+
             showTransactionConfirmedToast(
                 "Token spend approved",
-                approvedTransactionReceipt.transactionHash
+                transactionReceipt.transactionHash
             );
+        } catch (error) {
+            getErrorToast(error, transactionHash);
+            setLoading(false);
+        }
 
+        try {
             // TODO: Could we use the Superfluid SDK here to upgrade the underlying token?
             const upgradedTransaction = await wrappedTokenContract.upgrade(
                 amount,
                 { gasLimit: "1000000" }
             );
-            const upgradeTransactionReceipt = await upgradedTransaction.wait();
+            transactionHash = upgradedTransaction.hash;
+            const transactionReceipt = await upgradedTransaction.wait();
+
             showTransactionConfirmedToast(
                 `Wrapped ${ethers.utils.formatUnits(amount)} ${
                     store.upgradeDowngradeToken.underlyingToken?.label
                 }`,
-                upgradeTransactionReceipt.transactionHash
+                transactionReceipt.transactionHash
             );
             setLoading(false);
 
             // clear state after successful transaction
             setKeyNum((k) => k + 1);
         } catch (error) {
-            getErrorToast(error);
+            getErrorToast(error, transactionHash);
             setLoading(false);
         }
     };
 
     const downgrade = async () => {
+        setLoading(true);
+
+        if (signer === null || signer === undefined) {
+            showConnectWalletToast();
+            setLoading(false);
+            return;
+        }
+
+        const downgradeTokenAddress = store.upgradeDowngradeToken.address;
+
+        const wrappedTokenContract = new ethers.Contract(
+            downgradeTokenAddress,
+            AQUEDUCT_TOKEN_ABI,
+            signer
+        );
+
+        let transactionHash;
         try {
-            setLoading(true);
-
-            if (signer === null || signer === undefined) {
-                showConnectWalletToast();
-                setLoading(false);
-                return;
-            }
-
-            const downgradeTokenAddress = store.upgradeDowngradeToken.address;
-
-            const wrappedTokenContract = new ethers.Contract(
-                downgradeTokenAddress,
-                AQUEDUCT_TOKEN_ABI,
-                signer
-            );
-
             const downgradedTransaction = await wrappedTokenContract.downgrade(
                 amount
             );
+            transactionHash = downgradedTransaction.hash;
             const transactionReceipt = await downgradedTransaction.wait();
             showTransactionConfirmedToast(
                 `Unwrapped ${ethers.utils.formatUnits(amount)} ${
@@ -138,7 +149,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
             // clear state after successful transaction
             setKeyNum((k) => k + 1);
         } catch (error) {
-            showGenericErrorToast();
+            getErrorToast(error, transactionHash);
             setLoading(false);
         }
     };

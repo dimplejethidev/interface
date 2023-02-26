@@ -81,31 +81,31 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
     );
 
     const provideLiquidity = async () => {
+        setLoading(true);
+
+        if (signer === null || signer === undefined) {
+            showConnectWalletToast();
+            setLoading(false);
+            return;
+        }
+
+        const pool = getPoolAddress(
+            store.inboundToken.value,
+            store.outboundToken.value
+        );
+
+        const token0 = store.outboundToken.address;
+        const token1 = store.inboundToken.address;
+        const sender = await signer.getAddress();
+
+        let transactionHash;
         try {
-            setLoading(true);
-
-            if (signer === null || signer === undefined) {
-                showConnectWalletToast();
-                setLoading(false);
-                return;
-            }
-
             const superfluid = await Framework.create({
                 chainId:
                     (provider && provider.chains && provider.chains[0].id) ??
                     goerliChainId,
                 provider,
             });
-
-            const pool = getPoolAddress(
-                store.inboundToken.value,
-                store.outboundToken.value
-            );
-
-            const token0 = store.outboundToken.address;
-            const token1 = store.inboundToken.address;
-
-            const sender = await signer.getAddress();
 
             if (token0 && token1 && pool) {
                 let operation0: Operation;
@@ -152,6 +152,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                         operation1,
                     ]);
                     const result = await batchCall.exec(signer);
+                    transactionHash = result.hash;
                     const transactionReceipt = await result.wait();
 
                     showTransactionConfirmedToast(
@@ -166,7 +167,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
                 setLoading(false);
             }
         } catch (error) {
-            getErrorToast(error);
+            getErrorToast(error, transactionHash);
             setLoading(false);
         }
     };
