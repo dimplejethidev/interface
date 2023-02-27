@@ -117,6 +117,46 @@ const Sidebar = ({
         checkFundFlow();
     }, [address, tutorialContext?.requestedPay, chain?.id, provider]);
 
+    const requestFunds = async () => {
+        // give user funds
+        const distributorABI = ["function requestTokens() external"];
+        const distributorContract = new ethers.Contract(
+            fTokenDistributor,
+            distributorABI,
+            signer
+        );
+
+        setIsRequestingFunds(true);
+        let transactionHash;
+        try {
+            const result = await distributorContract.requestTokens();
+            transactionHash = result.hash;
+            const transactionReceipt = await result.wait();
+
+            tutorialContext?.setRequestedPay(TutorialItemState.Complete);
+            showTransactionConfirmedToast(
+                "Tokens received",
+                transactionReceipt.transactionHash
+            );
+        } catch (error) {
+            getErrorToast(error, transactionHash);
+        }
+        setIsRequestingFunds(false);
+    };
+
+    const enableDarkMode = () => {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("color-theme", "light");
+        darkContext?.setIsDark(true);
+        document.body.style.background = "#000000";
+    };
+    const enableLightMode = () => {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("color-theme", "dark");
+        darkContext?.setIsDark(false);
+        document.body.style.background = "#ffffff";
+    };
+
     return (
         <header className="flex flex-col p-4 w-full md:w-64 md:h-full space-y-8 bg-transparent border-r2 md:border-[1px] dark:md:border-2 dark:md:bg-gray-900/60 dark:md:border-gray-800/60 md:centered-shadow dark:md:centered-shadow-dark rounded-2xl dark:border-gray-800/60 flex-shrink-0 md:overflow-y-auto">
             <Head>
@@ -201,37 +241,7 @@ const Sidebar = ({
                                 }
                                 label="Request funds"
                                 key="Request funds"
-                                onClick={async () => {
-                                    // give user funds
-                                    const distributorABI = [
-                                        "function requestTokens() external",
-                                    ];
-                                    const distributorContract =
-                                        new ethers.Contract(
-                                            fTokenDistributor,
-                                            distributorABI,
-                                            signer
-                                        );
-                                    setIsRequestingFunds(true);
-                                    let transactionHash;
-                                    try {
-                                        const result =
-                                            await distributorContract.requestTokens();
-                                        transactionHash = result.hash;
-                                        const transactionReceipt =
-                                            await result.wait();
-                                        tutorialContext?.setRequestedPay(
-                                            TutorialItemState.Complete
-                                        );
-                                        showTransactionConfirmedToast(
-                                            "Tokens received",
-                                            transactionReceipt.transactionHash
-                                        );
-                                    } catch (error) {
-                                        getErrorToast(error, transactionHash);
-                                    }
-                                    setIsRequestingFunds(false);
-                                }}
+                                onClickFunction={() => requestFunds()}
                             />
                         </div>
                     )}
@@ -240,12 +250,7 @@ const Sidebar = ({
                             icon={<FiMoon size={18} />}
                             label="Dark mode"
                             key="Dark mode"
-                            onClick={() => {
-                                document.documentElement.classList.add("dark");
-                                localStorage.setItem("color-theme", "light");
-                                darkContext?.setIsDark(true);
-                                document.body.style.background = "#000000";
-                            }}
+                            onClickFunction={() => enableDarkMode()}
                         />
                     </div>
                     <div className="hidden dark:flex">
@@ -253,14 +258,7 @@ const Sidebar = ({
                             icon={<MdLightbulbOutline size={18} />}
                             label="Light mode"
                             key="Light mode"
-                            onClick={() => {
-                                document.documentElement.classList.remove(
-                                    "dark"
-                                );
-                                localStorage.setItem("color-theme", "dark");
-                                darkContext?.setIsDark(false);
-                                document.body.style.background = "#ffffff";
-                            }}
+                            onClickFunction={() => enableLightMode()}
                         />
                     </div>
                 </div>

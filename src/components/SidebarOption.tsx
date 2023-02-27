@@ -7,7 +7,7 @@ interface SideBarTabProps {
     label: string;
     page?: string;
     setSidebarIsShown?: Dispatch<SetStateAction<boolean>>;
-    onClick?: () => void;
+    onClickFunction?: () => void;
 }
 
 const SidebarOption = ({
@@ -15,9 +15,23 @@ const SidebarOption = ({
     label,
     page,
     setSidebarIsShown,
-    onClick,
+    onClickFunction,
 }: SideBarTabProps) => {
     const router = useRouter();
+
+    const handleSidebarClickOption = async () => {
+        if (page) {
+            router.push(page);
+        } else if (onClickFunction) {
+            onClickFunction();
+        }
+
+        if (setSidebarIsShown) {
+            // eslint-disable-next-line no-promise-executor-return
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            setSidebarIsShown(false);
+        }
+    };
 
     return (
         <button
@@ -28,19 +42,7 @@ const SidebarOption = ({
                                 ? "bg-aqueductBlue/5 dark:bg-aqueductBlue/20 hover:bg-aqueductBlue/10"
                                 : "hover:bg-gray-100 dark:hover:bg-gray-800/60"
                         } `}
-            onClick={async () => {
-                if (page) {
-                    router.push(page);
-                } else if (onClick) {
-                    onClick();
-                }
-
-                if (setSidebarIsShown) {
-                    // eslint-disable-next-line no-promise-executor-return
-                    await new Promise((resolve) => setTimeout(resolve, 100));
-                    setSidebarIsShown(false);
-                }
-            }}
+            onClick={() => handleSidebarClickOption()}
             aria-label={`${label} page link`}
         >
             <div

@@ -33,18 +33,18 @@ const WidgetContainer = ({
                     </div>
                 )}
                 {buttons &&
-                    buttons.map((b) => (
+                    buttons.map((button) => (
                         <button
                             type="button"
-                            onClick={b.action}
+                            onClick={button.action}
                             className={`px-4 py-2 rounded-xl w-min transition-all ${
-                                b.isSelected
+                                button.isSelected
                                     ? "bg-aqueductBlue/10 text-aqueductBlue"
                                     : "bg-gray-500/10 text-gray-500/60 opacity-50 hover:opacity-100"
                             }`}
-                            key={b.title}
+                            key={button.title}
                         >
-                            {b.title}
+                            {button.title}
                         </button>
                     ))}
                 {!title && !buttons && (

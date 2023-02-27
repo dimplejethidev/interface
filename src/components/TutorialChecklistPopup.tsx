@@ -26,9 +26,7 @@ const TutorialChecklistPopup = () => {
                     className={`transition-all duration-500 ${
                         isCollapsed ? " rotate-180 " : " rotate-0 "
                     }`}
-                    onClick={() => {
-                        setIsCollapsed(!isCollapsed);
-                    }}
+                    onClick={() => setIsCollapsed(!isCollapsed)}
                 >
                     <IoChevronDownOutline size={18} />
                 </button>

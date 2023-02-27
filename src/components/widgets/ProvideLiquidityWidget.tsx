@@ -272,6 +272,7 @@ const ProvideLiquidityWidget = ({ setKeyNum }: ProvideLiquidityWidgetProps) => {
         // TODO: Assess missing dependency array values
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [priceMultiple0]);
+
     useEffect(() => {
         // calculate expected outgoing flowrate
         if (swapFlowRate1 !== "") {

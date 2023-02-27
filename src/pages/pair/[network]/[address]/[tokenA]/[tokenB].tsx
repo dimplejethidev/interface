@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable radix */
 import type { NextPage } from "next";
@@ -24,11 +25,11 @@ import getToken from "../../../../../utils/getToken";
 import LoadingSpinner from "../../../../../components/LoadingSpinner";
 import SwapData from "../../../../../types/SwapData";
 import PriceWidget from "../../../../../components/widgets/PriceWidget";
-import BalanceField from "../../../../../components/BalanceField";
 import RewardWidget from "../../../../../components/widgets/RewardWidget";
 import { goerliChainId } from "../../../../../utils/constants";
 import { showTransactionConfirmedToast } from "../../../../../components/Toasts";
 import getErrorToast from "../../../../../utils/getErrorToast";
+import TotalAmountsStreamedWidget from "../../../../../components/widgets/TotalAmountsStreamedWidget";
 
 const ANIMATION_MINIMUM_STEP_TIME = 10;
 const REFRESH_INTERVAL = 3000; // 300 * 100 = 30000 ms = 30 s
@@ -470,6 +471,159 @@ const PoolInteractionVisualization: NextPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userAddress, chain, provider, token0, token1]);
 
+    const cancelStream = async () => {
+        let transactionHash;
+        try {
+            if (
+                token0 &&
+                token1 &&
+                address &&
+                userAddress &&
+                address === userAddress
+            ) {
+                const superfluid = await Framework.create({
+                    chainId:
+                        (provider &&
+                            provider.chains &&
+                            provider.chains[0].id) ??
+                        goerliChainId,
+                    provider,
+                });
+
+                // different operation if providing liquidity or not
+                const operations: Operation[] = [];
+                if (isTwap0) {
+                    const operation = superfluid.cfaV1.deleteFlow({
+                        sender: address,
+                        receiver: getPoolAddress(token0.value, token1.value),
+                        superToken: token1.address,
+                    });
+                    operations.push(operation);
+                }
+                if (isTwap1) {
+                    const operation = superfluid.cfaV1.deleteFlow({
+                        sender: address,
+                        receiver: getPoolAddress(token0.value, token1.value),
+                        superToken: token0.address,
+                    });
+                    operations.push(operation);
+                }
+
+                if (operations.length > 0) {
+                    const batchCall = superfluid.batchCall(operations);
+                    setIsDeleting(true);
+                    const result = await batchCall.exec(signer);
+                    transactionHash = result.hash;
+                    const transactionReceipt = await result.wait();
+                    setIsDeleting(false);
+
+                    showTransactionConfirmedToast(
+                        "Deleted stream",
+                        transactionReceipt.transactionHash
+                    );
+                    router.push("/my-streams");
+                }
+            }
+        } catch (error) {
+            getErrorToast(error, transactionHash);
+            setIsDeleting(false);
+        }
+    };
+
+    const setOutboundAndInboundTokens = () => {
+        if (token0 && token1) {
+            // set swap tokens to this pool's tokens
+            if (isTwap1) {
+                store.setOutboundToken(token0);
+                store.setInboundToken(token1);
+            } else {
+                store.setOutboundToken(token1);
+                store.setInboundToken(token0);
+            }
+        }
+    };
+
+    const editStreamButton = (
+        <Link href={isTwap0 && isTwap1 ? "/provide-liquidity" : "/"}>
+            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */}
+            <a
+                onClick={() => setOutboundAndInboundTokens()}
+                className="bg-aqueductBlue/5 dark:bg-aqueductBlue/20 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 dark:hover:bg-aqueductBlue/30 transition-all duration-300"
+            >
+                <RiPencilFill size={25} />
+            </a>
+        </Link>
+    );
+
+    const cancelStreamButton = (
+        <button
+            type="button"
+            onClick={() => cancelStream()}
+            className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
+            disabled={isLoading || isDeleting}
+            aria-label="Delete stream button"
+        >
+            {isDeleting ? (
+                <div className="scale-90">
+                    <LoadingSpinner size={25} />
+                </div>
+            ) : (
+                <RiCloseCircleFill size={25} />
+            )}
+        </button>
+    );
+
+    const getNumerOfDecimals = (flowRate: BigNumber) => {
+        const flowRateDigitCount = flowRate.add(1000).toString().length;
+        const firstDigit = parseInt(flowRate.toString()[0]);
+        const oneOrZero = firstDigit > 5 ? 1 : 0;
+
+        return 19 - flowRateDigitCount - oneOrZero;
+    };
+
+    const copyLinkButton = (
+        <button
+            type="button"
+            className="p-2 bg-aqueductBlue rounded-xl text-white"
+            onClick={() => {
+                if (address) {
+                    navigator.clipboard.writeText(
+                        getSharedLink(
+                            "goerli",
+                            address,
+                            token0!.address,
+                            token1!.address
+                        )
+                    );
+                }
+            }}
+        >
+            <BiLink size={22} />
+        </button>
+    );
+
+    const shareOnTwitterButton = (
+        <a
+            className="p-2 bg-[#1DA1F2] rounded-xl text-white"
+            href={
+                address
+                    ? getTweetTemplate(
+                          getSharedLink(
+                              "goerli",
+                              address,
+                              token0!.address,
+                              token1!.address
+                          )
+                      )
+                    : ""
+            }
+            target="_blank"
+            rel="noreferrer"
+        >
+            <IoLogoTwitter size={22} />
+        </a>
+    );
+
     return (
         <div className="flex justify-center w-full">
             {isLoading || (!isLoading && positionFound) ? (
@@ -488,158 +642,13 @@ const PoolInteractionVisualization: NextPage = () => {
                         {userAddress && address && userAddress === address && (
                             <ButtonWithInfoPopup
                                 message="Edit stream"
-                                button={
-                                    <Link
-                                        href={
-                                            isTwap0 && isTwap1
-                                                ? "/provide-liquidity"
-                                                : "/"
-                                        }
-                                    >
-                                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */}
-                                        <a
-                                            onClick={() => {
-                                                if (token0 && token1) {
-                                                    // set swap tokens to this pool's tokens
-                                                    if (isTwap1) {
-                                                        store.setOutboundToken(
-                                                            token0
-                                                        );
-                                                        store.setInboundToken(
-                                                            token1
-                                                        );
-                                                    } else {
-                                                        store.setOutboundToken(
-                                                            token1
-                                                        );
-                                                        store.setInboundToken(
-                                                            token0
-                                                        );
-                                                    }
-                                                }
-                                            }}
-                                            className="bg-aqueductBlue/5 dark:bg-aqueductBlue/20 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 dark:hover:bg-aqueductBlue/30 transition-all duration-300"
-                                        >
-                                            <RiPencilFill size={25} />
-                                        </a>
-                                    </Link>
-                                }
+                                button={editStreamButton}
                             />
                         )}
                         {userAddress && address && userAddress === address && (
                             <ButtonWithInfoPopup
                                 message="Cancel stream"
-                                button={
-                                    <button
-                                        type="button"
-                                        onClick={async () => {
-                                            let transactionHash;
-                                            try {
-                                                if (
-                                                    token0 &&
-                                                    token1 &&
-                                                    address &&
-                                                    userAddress &&
-                                                    address === userAddress
-                                                ) {
-                                                    const superfluid =
-                                                        await Framework.create({
-                                                            chainId:
-                                                                (provider &&
-                                                                    provider.chains &&
-                                                                    provider
-                                                                        .chains[0]
-                                                                        .id) ??
-                                                                goerliChainId,
-                                                            provider,
-                                                        });
-
-                                                    // different operation if providing liquidity or not
-                                                    const operations: Operation[] =
-                                                        [];
-                                                    if (isTwap0) {
-                                                        const operation =
-                                                            superfluid.cfaV1.deleteFlow(
-                                                                {
-                                                                    sender: address,
-                                                                    receiver:
-                                                                        getPoolAddress(
-                                                                            token0.value,
-                                                                            token1.value
-                                                                        ),
-                                                                    superToken:
-                                                                        token1.address,
-                                                                }
-                                                            );
-                                                        operations.push(
-                                                            operation
-                                                        );
-                                                    }
-                                                    if (isTwap1) {
-                                                        const operation =
-                                                            superfluid.cfaV1.deleteFlow(
-                                                                {
-                                                                    sender: address,
-                                                                    receiver:
-                                                                        getPoolAddress(
-                                                                            token0.value,
-                                                                            token1.value
-                                                                        ),
-                                                                    superToken:
-                                                                        token0.address,
-                                                                }
-                                                            );
-                                                        operations.push(
-                                                            operation
-                                                        );
-                                                    }
-
-                                                    if (operations.length > 0) {
-                                                        const batchCall =
-                                                            superfluid.batchCall(
-                                                                operations
-                                                            );
-                                                        setIsDeleting(true);
-                                                        const result =
-                                                            await batchCall.exec(
-                                                                signer
-                                                            );
-                                                        transactionHash =
-                                                            result.hash;
-                                                        const transactionReceipt =
-                                                            await result.wait();
-                                                        setIsDeleting(false);
-
-                                                        showTransactionConfirmedToast(
-                                                            "Deleted stream",
-                                                            transactionReceipt.transactionHash
-                                                        );
-                                                        router.push(
-                                                            "/my-streams"
-                                                        );
-                                                    }
-                                                }
-                                            } catch (error) {
-                                                getErrorToast(
-                                                    error,
-                                                    transactionHash
-                                                );
-                                                setIsDeleting(false);
-                                            }
-                                        }}
-                                        className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
-                                        disabled={isLoading || isDeleting}
-                                        aria-label="Delete stream button"
-                                    >
-                                        {isDeleting ? (
-                                            <div className="scale-90">
-                                                <LoadingSpinner size={25} />
-                                            </div>
-                                        ) : (
-                                            <RiCloseCircleFill size={25} />
-                                        )}
-                                    </button>
-                                }
+                                button={cancelStreamButton}
                             />
                         )}
                     </div>
@@ -649,88 +658,19 @@ const PoolInteractionVisualization: NextPage = () => {
                                 smallTitle="Total Amounts Streamed"
                                 isUnbounded
                             >
-                                <div className="md:space-y-3 lg:space-y-6 pb-2">
-                                    <div className="space-y-4">
-                                        {flowRate0.gt(0) && (
-                                            <BalanceField
-                                                currentBalance={currentBalance0}
-                                                isTwap={false}
-                                                token={token0}
-                                                numDecimals={
-                                                    19 -
-                                                    flowRate0.toString()
-                                                        .length -
-                                                    (parseInt(
-                                                        flowRate0.toString()[0]
-                                                    ) > 5
-                                                        ? 1
-                                                        : 0)
-                                                }
-                                                isLoading={isLoading}
-                                            />
-                                        )}
-                                        {flowRate1.gt(0) && (
-                                            <BalanceField
-                                                currentBalance={currentBalance1}
-                                                isTwap={false}
-                                                token={token1}
-                                                numDecimals={
-                                                    19 -
-                                                    flowRate1
-                                                        .add(1000)
-                                                        .toString().length -
-                                                    (parseInt(
-                                                        flowRate1.toString()[0]
-                                                    ) > 5
-                                                        ? 1
-                                                        : 0)
-                                                }
-                                                isLoading={isLoading}
-                                            />
-                                        )}
-                                        {twapFlowRate0.gt(0) && (
-                                            <BalanceField
-                                                currentBalance={
-                                                    currentTwapBalance0
-                                                }
-                                                isTwap
-                                                token={token0}
-                                                numDecimals={
-                                                    19 -
-                                                    twapFlowRate0.toString()
-                                                        .length -
-                                                    (parseInt(
-                                                        twapFlowRate0.toString()[0]
-                                                    ) > 5
-                                                        ? 1
-                                                        : 0)
-                                                }
-                                                isLoading={isLoading}
-                                            />
-                                        )}
-                                        {twapFlowRate1.gt(0) && (
-                                            <BalanceField
-                                                currentBalance={
-                                                    currentTwapBalance1
-                                                }
-                                                isTwap
-                                                token={token1}
-                                                numDecimals={
-                                                    19 -
-                                                    twapFlowRate1
-                                                        .add(1000)
-                                                        .toString().length -
-                                                    (parseInt(
-                                                        twapFlowRate1.toString()[0]
-                                                    ) > 5
-                                                        ? 1
-                                                        : 0)
-                                                }
-                                                isLoading={isLoading}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
+                                <TotalAmountsStreamedWidget
+                                    flowRate0={flowRate0}
+                                    flowRate1={flowRate1}
+                                    twapFlowRate0={twapFlowRate0}
+                                    twapFlowRate1={twapFlowRate1}
+                                    currentBalance0={currentBalance0}
+                                    currentBalance1={currentBalance1}
+                                    token0={token0}
+                                    token1={token1}
+                                    currentTwapBalance0={currentTwapBalance0}
+                                    currentTwapBalance1={currentTwapBalance1}
+                                    isLoading={false}
+                                />
                             </WidgetContainer>
                             {isTwap0 && isTwap1 ? (
                                 <div className="flex flex-col lg:flex-row space-y-12 md:space-y-4 lg:space-x-4 lg:space-y-0">
@@ -741,26 +681,12 @@ const PoolInteractionVisualization: NextPage = () => {
                                         token1={token1}
                                         reward0={currentRewardBalance0}
                                         reward1={currentRewardBalance1}
-                                        numDecimals0={
-                                            19 -
-                                            rewardFlowRate0.add(1000).toString()
-                                                .length -
-                                            (parseInt(
-                                                rewardFlowRate0.toString()[0]
-                                            ) > 5
-                                                ? 1
-                                                : 0)
-                                        }
-                                        numDecimals1={
-                                            19 -
-                                            rewardFlowRate1.add(1000).toString()
-                                                .length -
-                                            (parseInt(
-                                                rewardFlowRate1.toString()[0]
-                                            ) > 5
-                                                ? 1
-                                                : 0)
-                                        }
+                                        numDecimals0={getNumerOfDecimals(
+                                            rewardFlowRate0
+                                        )}
+                                        numDecimals1={getNumerOfDecimals(
+                                            rewardFlowRate1
+                                        )}
                                     />
                                 </div>
                             ) : (
@@ -794,50 +720,11 @@ const PoolInteractionVisualization: NextPage = () => {
                                 <p className="pr-2">Share:</p>
                                 <ButtonWithInfoPopup
                                     message="Copy link"
-                                    button={
-                                        <button
-                                            type="button"
-                                            className="p-2 bg-aqueductBlue rounded-xl text-white"
-                                            onClick={() => {
-                                                if (address) {
-                                                    navigator.clipboard.writeText(
-                                                        getSharedLink(
-                                                            "goerli",
-                                                            address,
-                                                            token0.address,
-                                                            token1.address
-                                                        )
-                                                    );
-                                                }
-                                            }}
-                                        >
-                                            <BiLink size={22} />
-                                        </button>
-                                    }
+                                    button={copyLinkButton}
                                 />
                                 <ButtonWithInfoPopup
                                     message="Share on Twitter"
-                                    button={
-                                        <a
-                                            className="p-2 bg-[#1DA1F2] rounded-xl text-white"
-                                            href={
-                                                address
-                                                    ? getTweetTemplate(
-                                                          getSharedLink(
-                                                              "goerli",
-                                                              address,
-                                                              token0.address,
-                                                              token1.address
-                                                          )
-                                                      )
-                                                    : ""
-                                            }
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            <IoLogoTwitter size={22} />
-                                        </a>
-                                    }
+                                    button={shareOnTwitterButton}
                                 />
                             </div>
                         </div>

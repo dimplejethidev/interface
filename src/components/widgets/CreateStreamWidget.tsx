@@ -375,6 +375,12 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
         calculateReversePricing();
     }, [expectedFlowRate]);
 
+    const swapInboundAndOutboundToken = () => {
+        const oldOutbound: TokenOption = store.outboundToken;
+        store.setOutboundToken(store.inboundToken);
+        store.setInboundToken(oldOutbound);
+    };
+
     const getTransactionButtonDisabledMessage = () => {
         if (!signer) {
             return "Connect wallet";
@@ -434,12 +440,7 @@ const CreateStreamWidget = ({ setKeyNum }: CreateStreamWidgetProps) => {
                     <button
                         type="button"
                         className="flex items-center justify-center w-10 h-10 -my-5 z-10 bg-white rounded-xl border-[1px] centered-shadow-sm dark:bg-gray-900 dark:text-white dark:border-gray-700 dark:centered-shadow-sm-dark"
-                        onClick={() => {
-                            const oldOutbound: TokenOption =
-                                store.outboundToken;
-                            store.setOutboundToken(store.inboundToken);
-                            store.setInboundToken(oldOutbound);
-                        }}
+                        onClick={() => swapInboundAndOutboundToken()}
                     >
                         <IoArrowDown size={20} />
                     </button>
