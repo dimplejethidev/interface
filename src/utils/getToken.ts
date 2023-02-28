@@ -1,12 +1,12 @@
 import { Framework } from "@superfluid-finance/sdk-core";
-import { Provider } from "@wagmi/core";
+import { ethers } from "ethers";
 import Token from "../types/Token";
 import { TokenOption } from "../types/TokenOption";
 import tokens from "./tokens";
 
 interface GetTokenArgs {
     tokenAddress: string;
-    provider: Provider;
+    provider: ethers.providers.Provider;
     chainId: number;
 }
 

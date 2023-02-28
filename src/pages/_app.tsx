@@ -8,7 +8,7 @@ import {
     lightTheme,
     darkTheme,
 } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { goerli, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
@@ -21,7 +21,7 @@ import DarkModeProvider from "../utils/DarkModeProvider";
 import TutorialChecklistPopup from "../components/TutorialChecklistPopup";
 
 const { chains, provider } = configureChains(
-    [chain.goerli],
+    [goerli],
     [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY ?? "" })]
 );
 
