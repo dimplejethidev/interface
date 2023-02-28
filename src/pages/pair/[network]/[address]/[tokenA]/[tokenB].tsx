@@ -543,36 +543,6 @@ const PoolInteractionVisualization: NextPage = () => {
         }
     };
 
-    const editStreamButton = (
-        <Link href={isTwap0 && isTwap1 ? "/provide-liquidity" : "/"}>
-            {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */}
-            <a
-                onClick={() => setOutboundAndInboundTokens()}
-                className="bg-aqueductBlue/5 dark:bg-aqueductBlue/20 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 dark:hover:bg-aqueductBlue/30 transition-all duration-300"
-            >
-                <RiPencilFill size={25} />
-            </a>
-        </Link>
-    );
-
-    const cancelStreamButton = (
-        <button
-            type="button"
-            onClick={() => cancelStream()}
-            className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
-            disabled={isLoading || isDeleting}
-            aria-label="Delete stream button"
-        >
-            {isDeleting ? (
-                <div className="scale-90">
-                    <LoadingSpinner size={25} />
-                </div>
-            ) : (
-                <RiCloseCircleFill size={25} />
-            )}
-        </button>
-    );
-
     const getNumerOfDecimals = (flowRate: BigNumber) => {
         const flowRateDigitCount = flowRate.add(1000).toString().length;
         const firstDigit = parseInt(flowRate.toString()[0]);
@@ -580,49 +550,6 @@ const PoolInteractionVisualization: NextPage = () => {
 
         return 19 - flowRateDigitCount - oneOrZero;
     };
-
-    const copyLinkButton = (
-        <button
-            type="button"
-            className="p-2 bg-aqueductBlue rounded-xl text-white"
-            onClick={() => {
-                if (address) {
-                    navigator.clipboard.writeText(
-                        getSharedLink(
-                            "goerli",
-                            address,
-                            token0!.address,
-                            token1!.address
-                        )
-                    );
-                }
-            }}
-        >
-            <BiLink size={22} />
-        </button>
-    );
-
-    const shareOnTwitterButton = (
-        <a
-            className="p-2 bg-[#1DA1F2] rounded-xl text-white"
-            href={
-                address
-                    ? getTweetTemplate(
-                          getSharedLink(
-                              "goerli",
-                              address,
-                              token0!.address,
-                              token1!.address
-                          )
-                      )
-                    : ""
-            }
-            target="_blank"
-            rel="noreferrer"
-        >
-            <IoLogoTwitter size={22} />
-        </a>
-    );
 
     return (
         <div className="flex justify-center w-full">
@@ -642,13 +569,47 @@ const PoolInteractionVisualization: NextPage = () => {
                         {userAddress && address && userAddress === address && (
                             <ButtonWithInfoPopup
                                 message="Edit stream"
-                                button={editStreamButton}
+                                button={
+                                    <Link
+                                        href={
+                                            isTwap0 && isTwap1
+                                                ? "/provide-liquidity"
+                                                : "/"
+                                        }
+                                    >
+                                        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions, jsx-a11y/anchor-is-valid */}
+                                        <a
+                                            onClick={() =>
+                                                setOutboundAndInboundTokens()
+                                            }
+                                            className="bg-aqueductBlue/5 dark:bg-aqueductBlue/20 text-aqueductBlue p-2 rounded-xl hover:bg-aqueductBlue/10 dark:hover:bg-aqueductBlue/30 transition-all duration-300"
+                                        >
+                                            <RiPencilFill size={25} />
+                                        </a>
+                                    </Link>
+                                }
                             />
                         )}
                         {userAddress && address && userAddress === address && (
                             <ButtonWithInfoPopup
                                 message="Cancel stream"
-                                button={cancelStreamButton}
+                                button={
+                                    <button
+                                        type="button"
+                                        onClick={() => cancelStream()}
+                                        className="bg-red-100/50 dark:bg-red-500/20 text-red-600 p-2 rounded-xl hover:bg-red-200/50 dark:hover:bg-red-500/30 transition-all duration-300"
+                                        disabled={isLoading || isDeleting}
+                                        aria-label="Delete stream button"
+                                    >
+                                        {isDeleting ? (
+                                            <div className="scale-90">
+                                                <LoadingSpinner size={25} />
+                                            </div>
+                                        ) : (
+                                            <RiCloseCircleFill size={25} />
+                                        )}
+                                    </button>
+                                }
                             />
                         )}
                     </div>
@@ -720,11 +681,50 @@ const PoolInteractionVisualization: NextPage = () => {
                                 <p className="pr-2">Share:</p>
                                 <ButtonWithInfoPopup
                                     message="Copy link"
-                                    button={copyLinkButton}
+                                    button={
+                                        <button
+                                            type="button"
+                                            className="p-2 bg-aqueductBlue rounded-xl text-white"
+                                            onClick={() => {
+                                                if (address) {
+                                                    navigator.clipboard.writeText(
+                                                        getSharedLink(
+                                                            "goerli",
+                                                            address,
+                                                            token0!.address,
+                                                            token1!.address
+                                                        )
+                                                    );
+                                                }
+                                            }}
+                                        >
+                                            <BiLink size={22} />
+                                        </button>
+                                    }
                                 />
                                 <ButtonWithInfoPopup
                                     message="Share on Twitter"
-                                    button={shareOnTwitterButton}
+                                    button={
+                                        <a
+                                            className="p-2 bg-[#1DA1F2] rounded-xl text-white"
+                                            href={
+                                                address
+                                                    ? getTweetTemplate(
+                                                          getSharedLink(
+                                                              "goerli",
+                                                              address,
+                                                              token0!.address,
+                                                              token1!.address
+                                                          )
+                                                      )
+                                                    : ""
+                                            }
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <IoLogoTwitter size={22} />
+                                        </a>
+                                    }
                                 />
                             </div>
                         </div>
