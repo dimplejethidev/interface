@@ -517,11 +517,11 @@ const PoolInteractionVisualization: NextPage = () => {
                     const transactionReceipt = await result.wait();
                     setIsDeleting(false);
 
+                    router.push("/my-streams");
                     showTransactionConfirmedToast(
                         "Deleted stream",
                         transactionReceipt.transactionHash
                     );
-                    router.push("/my-streams");
                 }
             }
         } catch (error) {
